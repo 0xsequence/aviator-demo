@@ -46,23 +46,6 @@ export default class Sea extends Group {
     this.add(this.mesh);
   }
 
-  getVertices(geom) {
-    const position = geom.getAttribute('position');
-    const vertices = [];
-    
-    for ( let i = 0; i < position.count / position.itemSize; i++ ) {
-     const vertex = new Vector3(
-       position.getX(i),
-       position.getY(i),
-       position.getZ(i)
-     );
-     
-     vertices.push(vertex);
-   }
-   
-   return vertices;
-  }
-
   moveWaves(deltaTime) {
     var vertices = this.mesh.geometry.attributes.position.array;
 

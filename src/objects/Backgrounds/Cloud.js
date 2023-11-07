@@ -13,6 +13,7 @@ export default class Cloud extends Group {
 	// create a material; a simple white material will do the trick
 	var mat = new MeshPhongMaterial({
 		color: new Color('white'),
+		flatShading: true
 	});
 	
 	// duplicate the geometry a random number of times

@@ -45,7 +45,7 @@ export default class MainScene extends Group {
     this.airplane.rotation.z = (targetY - this.airplane.position.y) * 0.0128;
     this.airplane.rotation.x = (this.airplane.position.y - targetY) * 0.0064;
 
-    this.airplane.propeller.rotation.x += deltaTime / 100;
+    this.airplane.tick(deltaTime);
   }
   
   normalize(v,vmin,vmax,tmin, tmax){
