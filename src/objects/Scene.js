@@ -17,21 +17,19 @@ export default class MainScene extends Group {
     this.sky.position.y = -600;
 
     this.airplane.scale.set(.25,.25,.25);
-	  this.airplane.position.y = 100;
+	  this.airplane.position.y = 200;
 
     this.add(this.sky, this.sea, this.airplane, this.lights);
   }
 
-  update(timeStamp, mousePos) {
-    this.airplane.propeller.rotation.x = timeStamp / 100;
-    this.sea.rotation.z = timeStamp / 10000;
-    this.sky.rotation.z = timeStamp / 10000;
+  update(deltaTime, mousePos) {
+    this.sky.rotation.z += deltaTime / 5000;
 
-    this.sea.moveWaves();
-    this.updatePlane(mousePos);
+    this.sea.moveWaves(deltaTime);
+    this.updatePlane(deltaTime, mousePos);
   }
 
-  updatePlane(mousePos){
+  updatePlane(deltaTime, mousePos){
     // let's move the airplane between -100 and 100 on the horizontal axis, 
     // and between 25 and 175 on the vertical axis,
     // depending on the mouse position which ranges between -1 and 1 on both axes;
@@ -46,6 +44,8 @@ export default class MainScene extends Group {
     // Rotate the plane proportionally to the remaining distance
     this.airplane.rotation.z = (targetY - this.airplane.position.y) * 0.0128;
     this.airplane.rotation.x = (this.airplane.position.y - targetY) * 0.0064;
+
+    this.airplane.propeller.rotation.x += deltaTime / 100;
   }
   
   normalize(v,vmin,vmax,tmin, tmax){

@@ -1,21 +1,40 @@
-import { Group, SpotLight, PointLight, AmbientLight, HemisphereLight, Color } from 'three';
+import { Group, DirectionalLight, AmbientLight, HemisphereLight, Color } from 'three';
 
 export default class BasicLights extends Group {
   constructor(...args) {
     super(...args);
 
-    const point = new PointLight(0xFFFFFF, 1, 10, 1);
-    const dir = new SpotLight(0xFFFFFF, 0.8, 7, 0.8, 1, 1);
-    const ambi = new AmbientLight( 0x404040 , 0.66);
-    const hemi = new HemisphereLight( 0xffffbb, 0x080820, 1.15 )
+    var hemisphereLight = new HemisphereLight(0xaaaaaa, 0x000000, .9)
+    
+    // A directional light shines from a specific direction. 
+    // It acts like the sun, that means that all the rays produced are parallel. 
+    var shadowLight = new DirectionalLight(0xffffff, .9);
 
-    dir.position.set(5, 1, 2);
-    dir.target.position.set(0,0,0);
+    // Set the direction of the light  
+    shadowLight.position.set(150, 350, 350);
+    
+    // Allow shadow casting 
+    shadowLight.castShadow = true;
 
-    point.position.set(0, 1, 5);
-    point.intensity = 0.5;
+    // define the visible area of the projected shadow
+    shadowLight.shadow.camera.left = -400;
+    shadowLight.shadow.camera.right = 400;
+    shadowLight.shadow.camera.top = 400;
+    shadowLight.shadow.camera.bottom = -400;
+    shadowLight.shadow.camera.near = 1;
+    shadowLight.shadow.camera.far = 1000;
 
-    this.add(point, ambi, hemi, dir);
+    // define the resolution of the shadow; the higher the better, 
+    // but also the more expensive and less performant
+    shadowLight.shadow.mapSize.width = 2048;
+    shadowLight.shadow.mapSize.height = 2048;
 
+    // an ambient light modifies the global color of a scene and makes the shadows softer
+    var ambientLight = new AmbientLight(0xdc8874, .5);
+    
+    // to activate the lights, just add them to the scene
+    this.add(hemisphereLight);  
+    this.add(shadowLight);
+    this.add(ambientLight);
   }
 }

@@ -26,7 +26,7 @@ scene.fog = new Fog(0xf7d9aa, 100, 950);
 scene.add(mainScene);
 
 // camera
-camera.position.set(0, 200, 200);
+camera.position.set(0, 200, 150);
 
 // renderer
 renderer.shadowMap.enabled = true;
@@ -36,9 +36,12 @@ renderer.setClearColor(0x7ec0ee, 1);
 
 // render loop
 var mousePos={x:0, y:0};
+var prevTimeStamp = 0;
 const onAnimationFrameHandler = (timeStamp) => {
+  const deltaTime = timeStamp - prevTimeStamp;
   renderer.render(scene, camera);
-  mainScene.update && mainScene.update(timeStamp, mousePos);
+  mainScene.update && mainScene.update(deltaTime, mousePos);
+  prevTimeStamp = timeStamp;
   window.requestAnimationFrame(onAnimationFrameHandler);
 }
 window.requestAnimationFrame(onAnimationFrameHandler);

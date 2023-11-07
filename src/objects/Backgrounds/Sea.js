@@ -1,5 +1,4 @@
 import { Group, CylinderGeometry, Matrix4, MeshPhongMaterial, Mesh, Color, Vector3 } from 'three';
-import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
 
 export default class Sea extends Group {
   constructor() {
@@ -15,36 +14,26 @@ export default class Sea extends Group {
     // rotate the geometry on the x axis
     geom.applyMatrix4(new Matrix4().makeRotationX(-Math.PI/2));
 
-    // important: by merging vertices we ensure the continuity of the waves
-    geom = mergeVertices(geom);
-
     // create an array to store new data associated to each vertex
     this.waves = [];
-    var vertices = this.getVertices(geom);
-
-    for (var i=0; i<vertices.length; i++){
-      // get each vertex
-      var v = vertices[i];
-
-      // store some data associated to it
-      this.waves.push({
-        y: v.y,
-        x: v.x,
-        z: v.z,
-        // a random angle
-        ang: Math.random()*Math.PI*2,
-        // a random distance
-        amp: 5 + Math.random()*15,
-        // a random speed between 0.016 and 0.048 radians / frame
-        speed: 0.016 + Math.random()*0.032
-      });
-    };
+    const vertices = geom.attributes.position.array;
+    for (let i = 0; i < vertices.length / 3; i++) {
+			this.waves.push({
+				x: vertices[i * 3 + 0],
+				y: vertices[i * 3 + 1],
+				z: vertices[i * 3 + 2],
+				ang: Math.random() * Math.PI * 2,
+				amp: 5 + Math.random() * 15,
+				speed: 0.001 + Math.random() * 0.003
+			})
+		}
     
     // create the material 
     var mat = new MeshPhongMaterial({
       color: new Color('blue'),
       transparent: true,
       opacity: .6,
+			flatShading: true,
     });
 
     // To create an object in Three.js, we have to create a mesh 
@@ -74,31 +63,18 @@ export default class Sea extends Group {
    return vertices;
   }
 
-  moveWaves() {
-    // get the vertices
-    var verts = this.getVertices(this.mesh.geometry);
-    var l = verts.length;
-    
-    for (var i=0; i<l; i++){
-      var v = verts[i];
-      
-      // get the data associated to it
-      var vprops = this.waves[i];
-      
-      // update the position of the vertex
-      v.x = vprops.x + Math.cos(vprops.ang) * vprops.amp;
-      v.y = vprops.y + Math.sin(vprops.ang) * vprops.amp;
+  moveWaves(deltaTime) {
+    var vertices = this.mesh.geometry.attributes.position.array;
 
-      // increment the angle for the next frame
-      vprops.ang += vprops.speed;
-    }
+		for (let i = 0; i < vertices.length / 3; i++) {
+			var wave = this.waves[i];
+			vertices[i * 3 + 0] = wave.x + Math.cos(wave.ang) * wave.amp;
+			vertices[i * 3 + 1] = wave.y + Math.sin(wave.ang) * wave.amp;
+			wave.ang += wave.speed * deltaTime;
+		}
 
-    // Tell the renderer that the geometry of the sea has changed.
-    // In fact, in order to maintain the best level of performance, 
-    // three.js caches the geometries and ignores any changes
-    // unless we add this line
-    this.mesh.geometry.verticesNeedUpdate = true;
+    this.mesh.geometry.attributes.position.needsUpdate = true;
 
-    this.mesh.rotation.z += .005;
+    this.mesh.rotation.z += deltaTime / 10000;
   }
 }
