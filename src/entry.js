@@ -35,9 +35,10 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setClearColor(0x7ec0ee, 1);
 
 // render loop
+var mousePos={x:0, y:0};
 const onAnimationFrameHandler = (timeStamp) => {
   renderer.render(scene, camera);
-  mainScene.update && mainScene.update(timeStamp);
+  mainScene.update && mainScene.update(timeStamp, mousePos);
   window.requestAnimationFrame(onAnimationFrameHandler);
 }
 window.requestAnimationFrame(onAnimationFrameHandler);
@@ -53,7 +54,6 @@ windowResizeHanlder();
 window.addEventListener('resize', windowResizeHanlder);
 
 // mouse
-var mousePos={x:0, y:0};
 function handleMouseMove(event) {
   const { innerHeight, innerWidth } = window;
 	// here we are converting the mouse position value received 
@@ -67,8 +67,6 @@ function handleMouseMove(event) {
 	
 	var ty = 1 - (event.clientY / innerHeight)*2;
 	mousePos = {x:tx, y:ty};
-
-  mainScene.updatePlane(mousePos);
 }
 document.addEventListener('mousemove', handleMouseMove, false);
 

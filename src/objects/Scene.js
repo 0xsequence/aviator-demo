@@ -22,12 +22,13 @@ export default class MainScene extends Group {
     this.add(this.sky, this.sea, this.airplane, this.lights);
   }
 
-  update(timeStamp) {
+  update(timeStamp, mousePos) {
     this.airplane.propeller.rotation.x = timeStamp / 100;
     this.sea.rotation.z = timeStamp / 10000;
     this.sky.rotation.z = timeStamp / 10000;
 
     this.sea.moveWaves();
+    this.updatePlane(mousePos);
   }
 
   updatePlane(mousePos){
@@ -35,13 +36,16 @@ export default class MainScene extends Group {
     // and between 25 and 175 on the vertical axis,
     // depending on the mouse position which ranges between -1 and 1 on both axes;
     // to achieve that we use a normalize function (see below)
+
+    var targetY = this.normalize(mousePos.y, -.75, .75, 25, 175) + 100;
+    // var targetX = this.normalize(mousePos.x, -.75, .75, -100, 100);
     
-    var targetX = this.normalize(mousePos.x, -1, 1, -100, 100);
-    var targetY = this.normalize(mousePos.y, -1, 1, 25, 175);
-  
-    // update the airplane's position
-    this.airplane.position.y = targetY + 100;
-    this.airplane.position.x = targetX;
+    // Move the plane at each frame by adding a fraction of the remaining distance
+    this.airplane.position.y += (targetY - this.airplane.position.y) * 0.1;
+
+    // Rotate the plane proportionally to the remaining distance
+    this.airplane.rotation.z = (targetY - this.airplane.position.y) * 0.0128;
+    this.airplane.rotation.x = (this.airplane.position.y - targetY) * 0.0064;
   }
   
   normalize(v,vmin,vmax,tmin, tmax){
