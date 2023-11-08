@@ -15,6 +15,7 @@
     "build": "webpack --mode production"
   },
   "dependencies": {
+    "pnpm": "^8.10.2",
     "three": "^0.158.0",
     "webpack-cli": "^5.0.1"
   },
@@ -22,8 +23,10 @@
     "@babel/core": "^7.20.5",
     "@babel/preset-env": "^7.20.2",
     "babel-loader": "^9.1.0",
+    "css-loader": "^6.8.1",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.0",
+    "mini-css-extract-plugin": "^2.7.6",
     "raw-loader": "^4.0.2",
     "rimraf": "^3.0.2",
     "webpack": "^5.75.0",

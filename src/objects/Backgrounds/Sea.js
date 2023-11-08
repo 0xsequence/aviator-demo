@@ -9,7 +9,7 @@ export default class Sea extends Group {
     // create the geometry (shape) of the cylinder;
     // the parameters are: 
     // radius top, radius bottom, height, number of segments on the radius, number of segments vertically
-    var geom = new CylinderGeometry(600,600,800,40,10);
+    var geom = new CylinderGeometry(600, 600, 800, 80, 20);
     
     // rotate the geometry on the x axis
     geom.applyMatrix4(new Matrix4().makeRotationX(-Math.PI/2));
@@ -23,14 +23,14 @@ export default class Sea extends Group {
 				y: vertices[i * 3 + 1],
 				z: vertices[i * 3 + 2],
 				ang: Math.random() * Math.PI * 2,
-				amp: 5 + Math.random() * 15,
+				amp: 5 + Math.random() * 10,
 				speed: 0.001 + Math.random() * 0.003
 			})
 		}
     
     // create the material 
     var mat = new MeshPhongMaterial({
-      color: new Color('blue'),
+      color: new Color(0x68c3c0),
       transparent: true,
       opacity: .6,
 			flatShading: true,
@@ -46,7 +46,7 @@ export default class Sea extends Group {
     this.add(this.mesh);
   }
 
-  moveWaves(deltaTime) {
+  tick(deltaTime) {
     var vertices = this.mesh.geometry.attributes.position.array;
 
 		for (let i = 0; i < vertices.length / 3; i++) {

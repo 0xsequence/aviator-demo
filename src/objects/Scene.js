@@ -4,28 +4,73 @@ import BasicLights from './Lights.js';
 import Sea from './Backgrounds/Sea.js';
 import Sky from './Backgrounds/Sky.js';
 
+const GameModes = {
+	Intro: "intro",
+	Playing: "playing",
+	Paused: "paused",
+	GameOver: "gameover"
+}
+
+
 export default class MainScene extends Group {
   constructor() {
     super();
+
+    this.game_mode = GameModes.Intro;
+    this.message_box = document.getElementById("replayMessage");
 
     this.sea = new Sea();
     this.sky = new Sky();
     this.airplane = new Airplane();
     this.lights = new BasicLights();
 
-    this.sea.position.y = -600;
-    this.sky.position.y = -600;
+    this.sea.position.y = -500;
+    this.sky.position.y = -400;
 
     this.airplane.scale.set(.25,.25,.25);
 	  this.airplane.position.y = 200;
+    this.airplane.position.x = -50;
 
     this.add(this.sky, this.sea, this.airplane, this.lights);
   }
 
-  update(deltaTime, mousePos) {
+  switchGameMode(new_game_mode) {
+    if (this.game_mode === new_game_mode) return;
+
+    this.game_mode = new_game_mode;
+
+    if (this.game_mode === GameModes.Intro) {
+      this.message_box.style.display = "block";
+      this.message_box.innerHTML = "Click to Start"
+    } else if (this.game_mode === GameModes.Playing) {
+      this.message_box.style.display = "none";
+    } else if (this.game_mode === GameModes.Paused) {
+      this.message_box.style.display = "block";
+      this.message_box.innerHTML = "Paused<br>Click to Resume"
+    } else if (this.game_mode === GameModes.GameOver) {
+      this.message_box.style.display = "block";
+      this.message_box.innerHTML = "Game Over<br>Click to Replay"
+    }
+  }
+
+  handleMouseClick() {
+    if (this.game_mode === GameModes.Intro) {
+      this.switchGameMode(GameModes.Playing);
+    } else if (this.game_mode === GameModes.Playing) {
+      this.switchGameMode(GameModes.Paused);
+    } else if (this.game_mode === GameModes.Paused) {
+      this.switchGameMode(GameModes.Playing);
+    } else if (this.game_mode === GameModes.GameOver) {
+      this.switchGameMode(GameModes.Playing);
+    }
+  }
+
+  tick(deltaTime, mousePos) {
+    if (this.game_mode === GameModes.Paused) return;
+
     this.sky.rotation.z += deltaTime / 5000;
 
-    this.sea.moveWaves(deltaTime);
+    this.sea.tick(deltaTime);
     this.updatePlane(deltaTime, mousePos);
   }
 

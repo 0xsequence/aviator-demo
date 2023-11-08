@@ -1,6 +1,7 @@
 const path = require('path');
 const pkg = require('./package.json');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const buildPath = './build/';
 
 module.exports = {
@@ -22,10 +23,19 @@ module.exports = {
         test: /\.(jpe?g|png|gif|svg|tga|glb|babylon|mtl|pcb|pcd|prwm|obj|mat|mp3|ogg)$/i,
         use: 'file-loader',
         exclude: path.resolve(__dirname, './node_modules/')
+      },{
+        test: /\.css$/i,
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
+        exclude: path.resolve(__dirname, './node_modules/')
       }
     ]
   },
   plugins: [
-    new HtmlWebpackPlugin({'title': 'aviator sequence demo'})
+    new HtmlWebpackPlugin({
+      'title': 'Aviator Sequence Demo',
+      'template': './src/index.html'
+    }),
+    new MiniCssExtractPlugin({
+    })
   ]
 }

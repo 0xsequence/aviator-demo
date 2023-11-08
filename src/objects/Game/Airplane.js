@@ -147,7 +147,7 @@ export default class Airplane extends Group {
 	}
 
   tick(deltaTime) {
-    this.propeller.rotation.x += deltaTime / 100;
+    this.propeller.rotation.x += deltaTime / 25;
     this.pilot.updateHairs(deltaTime);
   }
 }

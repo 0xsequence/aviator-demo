@@ -9,6 +9,7 @@
 
 import { WebGLRenderer, PerspectiveCamera, Scene, Fog } from 'three';
 import MainScene from './objects/Scene.js';
+import "./game.css";
 
 const { innerHeight, innerWidth } = window;
 var aspectRatio = innerHeight / innerWidth;
@@ -32,7 +33,7 @@ camera.position.set(0, 200, 150);
 renderer.shadowMap.enabled = true;
 renderer.setSize(innerWidth, innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setClearColor(0x7ec0ee, 1);
+// renderer.setClearColor(0x7ec0ee, 1);
 
 // render loop
 var mousePos={x:0, y:0};
@@ -40,7 +41,7 @@ var prevTimeStamp = 0;
 const onAnimationFrameHandler = (timeStamp) => {
   const deltaTime = timeStamp - prevTimeStamp;
   renderer.render(scene, camera);
-  mainScene.update && mainScene.update(deltaTime, mousePos);
+  mainScene.tick && mainScene.tick(deltaTime, mousePos);
   prevTimeStamp = timeStamp;
   window.requestAnimationFrame(onAnimationFrameHandler);
 }
@@ -73,6 +74,11 @@ function handleMouseMove(event) {
 }
 document.addEventListener('mousemove', handleMouseMove, false);
 
+function handleMouseUp(event) {
+  mainScene.handleMouseClick();
+}
+document.addEventListener('mouseup', handleMouseUp, false);
+
 // dom
 document.body.style.margin = 0;
-document.body.appendChild( renderer.domElement );
+document.getElementById("world").appendChild( renderer.domElement );
