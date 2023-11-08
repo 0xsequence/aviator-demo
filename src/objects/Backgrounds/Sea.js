@@ -46,7 +46,7 @@ export default class Sea extends Group {
     this.add(this.mesh);
   }
 
-  tick(deltaTime) {
+  tick(deltaTime, gameSpeed) {
     var vertices = this.mesh.geometry.attributes.position.array;
 
 		for (let i = 0; i < vertices.length / 3; i++) {
@@ -58,6 +58,6 @@ export default class Sea extends Group {
 
     this.mesh.geometry.attributes.position.needsUpdate = true;
 
-    this.mesh.rotation.z += deltaTime / 10000;
+    this.mesh.rotation.z += deltaTime * gameSpeed;
   }
 }

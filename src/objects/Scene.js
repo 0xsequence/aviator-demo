@@ -18,6 +18,8 @@ export default class MainScene extends Group {
 
     this.game_mode = GameModes.Intro;
     this.message_box = document.getElementById("replayMessage");
+    this.distance_box = document.getElementById("distValue");
+    this.score_box = document.getElementById("score");
 
     this.sea = new Sea();
     this.sky = new Sky();
@@ -32,6 +34,37 @@ export default class MainScene extends Group {
     this.airplane.position.x = -50;
 
     this.add(this.sky, this.sea, this.airplane, this.lights);
+    this.resetGame();
+  }
+
+  resetGame() {
+    this.game = {
+      speed: .00035,
+      baseSpeed: .00035,
+      distanceForSpeedUpdate: 100,
+      speedLastUpdate: 0,
+
+      distance: 0,
+      ratioSpeedDistance: 50
+    }
+  }
+
+  updateSpeed(deltaTime) {
+    if (this.game_mode !== GameModes.Playing) return;
+
+    this.game.speed += this.game.baseSpeed * deltaTime * 0.00002;
+  }
+
+  updateDistance(deltaTime) {
+    if (this.game_mode !== GameModes.Playing) return;
+
+    this.game.distance += this.game.speed * deltaTime * this.game.ratioSpeedDistance;
+    this.distance_box.innerHTML = Math.floor(this.game.distance);
+
+    if (Math.floor(this.game.distance) % this.game.distanceForSpeedUpdate == 0 && Math.floor(this.game.distance) > this.game.speedLastUpdate){
+      this.game.speedLastUpdate = Math.floor(this.game.distance);
+      this.game.targetBaseSpeed += this.game.incrementSpeedByTime * deltaTime;
+    }
   }
 
   switchGameMode(new_game_mode) {
@@ -41,13 +74,17 @@ export default class MainScene extends Group {
 
     if (this.game_mode === GameModes.Intro) {
       this.message_box.style.display = "block";
+      this.score_box.style.display = "none";
       this.message_box.innerHTML = "Click to Start"
     } else if (this.game_mode === GameModes.Playing) {
+      this.score_box.style.display = "block";
       this.message_box.style.display = "none";
     } else if (this.game_mode === GameModes.Paused) {
+      this.score_box.style.display = "block";
       this.message_box.style.display = "block";
       this.message_box.innerHTML = "Paused<br>Click to Resume"
     } else if (this.game_mode === GameModes.GameOver) {
+      this.score_box.style.display = "none";
       this.message_box.style.display = "block";
       this.message_box.innerHTML = "Game Over<br>Click to Replay"
     }
@@ -68,10 +105,12 @@ export default class MainScene extends Group {
   tick(deltaTime, mousePos) {
     if (this.game_mode === GameModes.Paused) return;
 
-    this.sky.rotation.z += deltaTime / 5000;
+    this.sky.rotation.z += deltaTime * this.game.speed / 2;
 
-    this.sea.tick(deltaTime);
+    this.sea.tick(deltaTime, this.game.speed);
     this.updatePlane(deltaTime, mousePos);
+    this.updateDistance(deltaTime);
+    this.updateSpeed(deltaTime);
   }
 
   updatePlane(deltaTime, mousePos){
