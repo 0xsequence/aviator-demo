@@ -108,6 +108,12 @@ img.logo {
 	width: 300px;
 }
 
+#leaderboard {
+	position: absolute;
+	top: 3vh;
+	right: 3vh;
+}
+
 .message {
 	font-weight: bold;
 	position: absolute;

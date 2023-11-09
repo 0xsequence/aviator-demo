@@ -1,4 +1,5 @@
-import { Group, Color } from 'three';
+import { Group, Color, MeshPhongMaterial, TetrahedronGeometry, Mesh } from 'three';
+import { gsap } from "gsap";
 import Airplane from './Game/Airplane.js';
 import BasicLights from './Lights.js';
 import Sea from './Backgrounds/Sea.js';
@@ -11,6 +12,7 @@ const GameModes = {
 	Intro: "intro",
 	Playing: "playing",
 	Paused: "paused",
+	GameEnding: "gameending",
 	GameOver: "gameover"
 }
 
@@ -25,6 +27,9 @@ const sequence = new Sequence({
   key: 'eyJzZWNyZXQiOiJ0YmQiLCJ0ZW5hbnQiOjksImlkZW50aXR5UG9vbElkIjoidXMtZWFzdC0yOjQyYzlmMzlkLWM5MzUtNGQ1Yy1hODQ1LTVjODgxNWM3OWVlMyIsImVtYWlsQ2xpZW50SWQiOiI1Zmw3ZGc3bXZ1NTM0bzl2ZmpiYzZoajMxcCJ9',
 }, defaults.TEMPLATE_NEXT);
 
+const API_URL = "http://taylanpince.pythonanywhere.com";
+
+
 export default class MainScene extends Group {
   constructor() {
     super();
@@ -34,11 +39,14 @@ export default class MainScene extends Group {
     this.authToken = null;
     this.authMode = AuthModes.Email;
     this.authWalletAddress = null;
+    
+    this.leaderboard = [];
 
     this.game_mode = GameModes.Intro;
     this.message_box = document.getElementById("replayMessage");
     this.distance_box = document.getElementById("distValue");
     this.score_box = document.getElementById("score");
+    this.leaderboardWrapper = document.getElementById("leaderboard");
 
     this.sea = new Sea();
     this.sky = new Sky();
@@ -63,7 +71,27 @@ export default class MainScene extends Group {
       if (signedIn) {
         this.fetchWalletAddress();
       }
-    })
+    });
+
+    this.loadLeaderboard();
+  }
+
+  loadLeaderboard() {
+    fetch(API_URL).then((response) => {
+      response.json().then((results) => {
+        this.leaderboard = results;
+        this.leaderboardWrapper.innerHTML = "";
+
+        const leaderboardList = this.leaderboardWrapper.appendChild(document.createElement("ol"));
+
+        for (let i = 0; i < this.leaderboard.length; i++) {
+          const listItem = leaderboardList.appendChild(document.createElement("li"));
+          const entry = this.leaderboard[i];
+
+          listItem.innerHTML = entry.email + " " + entry.score;
+        }
+      });
+    });
   }
 
   openLoginModal() {
@@ -230,6 +258,7 @@ export default class MainScene extends Group {
 
       planeDefaultHeight: 200,
       planeAmpHeight: 100,
+      planeFallSpeed: 0.001,
 
       seaRadius: 500,
     }
@@ -261,17 +290,28 @@ export default class MainScene extends Group {
     if (this.game_mode === GameModes.Intro) {
       this.message_box.style.display = "block";
       this.score_box.style.display = "none";
+      this.leaderboardWrapper.style.display = "block";
       this.message_box.innerHTML = "Click to Login";
     } else if (this.game_mode === GameModes.Playing) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "none";
+      this.leaderboardWrapper.style.display = "none";
     } else if (this.game_mode === GameModes.Paused) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
+      this.leaderboardWrapper.style.display = "block";
       this.message_box.innerHTML = "Paused<br>Click to Resume";
-    } else if (this.game_mode === GameModes.GameOver) {
-      this.score_box.style.display = "none";
+    } else if (this.game_mode === GameModes.GameEnding) {
+      this.score_box.style.display = "block";
       this.message_box.style.display = "block";
+      this.leaderboardWrapper.style.display = "block";
+      this.message_box.innerHTML = "Game Over";
+      
+      this.saveScore(this.game.distance);
+    } else if (this.game_mode === GameModes.GameOver) {
+      this.score_box.style.display = "block";
+      this.message_box.style.display = "block";
+      this.leaderboardWrapper.style.display = "block";
       this.message_box.innerHTML = "Game Over<br>Click to Replay";
     }
   }
@@ -289,8 +329,31 @@ export default class MainScene extends Group {
     } else if (this.game_mode === GameModes.Paused) {
       this.switchGameMode(GameModes.Playing);
     } else if (this.game_mode === GameModes.GameOver) {
+      for (const enemy of this.enemies) {
+        this.remove(enemy);
+        this.enemies.delete(enemy);
+      }
+
+      this.resetGame();
       this.switchGameMode(GameModes.Playing);
     }
+  }
+
+  saveScore(score) {
+    console.log("Saving score...");
+    console.log(score);
+    fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({email: this.authEmail, address: this.authWalletAddress, score: score})
+    }).then((response) => {
+      console.log(response);
+
+      this.loadLeaderboard();
+    });
   }
 
   collideCheck(mesh1, mesh2, tolerance) {
@@ -305,37 +368,50 @@ export default class MainScene extends Group {
     this.sky.rotation.z += deltaTime * this.game.speed / 2;
 
     this.sea.tick(deltaTime, this.game.speed);
-    this.updatePlane(deltaTime, mousePos);
 
     if (this.game_mode === GameModes.Playing) {
+      this.updatePlane(deltaTime, mousePos);
       this.updateDistance(deltaTime);
       
       if (Math.floor(this.game.distance) % this.game.distanceForEnemiesSpawn == 0 && Math.floor(this.game.distance) > this.game.enemyLastSpawn) {
         this.game.enemyLastSpawn = Math.floor(this.game.distance);
         this.spawnEnemies(4);
       }
-  
-      for (const enemy of this.enemies) {
-        enemy.tick(deltaTime);
-
-        enemy.angle += deltaTime * this.game.speed;
-        if (enemy.angle > Math.PI * 2) {
-          enemy.angle -= Math.PI * 2;
-        }
-
-        enemy.position.x = Math.cos(enemy.angle) * enemy.distance;
-        enemy.position.y = -this.game.seaRadius + Math.sin(enemy.angle) * enemy.distance;
-  
-        if (this.collideCheck(this.airplane, enemy, this.game.enemyDistanceTolerance)) {
-          this.explodeEnemy(enemy);
-          //airplane.gethit(enemy.position);
-        } else if (enemy.angle > Math.PI) {
-          this.remove(enemy);
-          this.enemies.delete(enemy);
-        }
-      }
 
       this.updateSpeed(deltaTime);
+    } else if (this.game_mode === GameModes.GameEnding) {
+      this.game.speed *= .99;
+      this.airplane.rotation.z += (-Math.PI/2 - this.airplane.rotation.z) * 0.0002 * deltaTime;
+      this.airplane.rotation.x += 0.0003 * deltaTime;
+      this.game.planeFallSpeed *= 1.05;
+      this.airplane.position.y -= this.game.planeFallSpeed * deltaTime;
+
+      if (this.airplane.position.y < -200) {
+        this.switchGameMode(GameModes.GameOver);
+      }
+    } else if (this.game_mode !== GameModes.GameOver) {
+      this.updatePlane(deltaTime, mousePos);
+    }
+
+    for (const enemy of this.enemies) {
+      enemy.tick(deltaTime);
+
+      enemy.angle += deltaTime * this.game.speed;
+
+      if (enemy.angle > Math.PI * 2) {
+        enemy.angle -= Math.PI * 2;
+      }
+
+      enemy.position.x = Math.cos(enemy.angle) * enemy.distance;
+      enemy.position.y = -this.game.seaRadius + Math.sin(enemy.angle) * enemy.distance;
+
+      if (this.collideCheck(this.airplane, enemy, this.game.enemyDistanceTolerance)) {
+        this.explodeEnemy(enemy);
+        this.switchGameMode(GameModes.GameEnding);
+      } else if (enemy.angle > Math.PI) {
+        this.remove(enemy);
+        this.enemies.delete(enemy);
+      }
     }
   }
 
@@ -378,7 +454,32 @@ export default class MainScene extends Group {
   }
 
   spawnParticles(pos, count, color, scale) {
-
+    for (let i = 0; i < count; i++) {
+      const geom = new TetrahedronGeometry(3, 0);
+      const mat = new MeshPhongMaterial({
+        color: 0x009999,
+        shininess: 0,
+        specular: 0xffffff,
+        flatShading: true,
+      });
+      const mesh = new Mesh(geom, mat);
+      this.add(mesh);
+  
+      mesh.visible = true;
+      mesh.position.copy(pos);
+      mesh.material.color = color;
+      mesh.material.needsUpdate = true;
+      mesh.scale.set(scale, scale, scale);
+      const targetX = pos.x + (-1 + Math.random()*2) * 50;
+      const targetY = pos.y + (-1 + Math.random()*2) * 50;
+      const targetZ = pos.z + (-1 + Math.random()*2) * 50;
+      const speed = 0.6 + Math.random() * 0.2;
+      gsap.to(mesh.rotation, speed, {x: Math.random() * 12, y: Math.random() * 12});
+      gsap.to(mesh.scale, speed, {x:.1, y:.1, z:.1});
+      gsap.to(mesh.position, speed, {x:targetX, y:targetY, z: targetZ, delay:Math.random() *.1, ease: "power2.out", onComplete: () => {
+        this.remove(mesh);
+      }});
+    }
   }
   
   normalize(v,vmin,vmax,tmin, tmax) {
