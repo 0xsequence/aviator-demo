@@ -27,7 +27,7 @@ const sequence = new Sequence({
   key: 'eyJzZWNyZXQiOiJ0YmQiLCJ0ZW5hbnQiOjksImlkZW50aXR5UG9vbElkIjoidXMtZWFzdC0yOjQyYzlmMzlkLWM5MzUtNGQ1Yy1hODQ1LTVjODgxNWM3OWVlMyIsImVtYWlsQ2xpZW50SWQiOiI1Zmw3ZGc3bXZ1NTM0bzl2ZmpiYzZoajMxcCJ9',
 }, defaults.TEMPLATE_NEXT);
 
-const API_URL = "http://taylanpince.pythonanywhere.com";
+const API_URL = "https://taylanpince.pythonanywhere.com";
 
 
 export default class MainScene extends Group {
