@@ -20,6 +20,7 @@
     "webpack-cli": "^5.0.1"
   },
   "devDependencies": {
+    "@0xsequence/waas": "0.0.0-20231108174744",
     "@babel/core": "^7.20.5",
     "@babel/preset-env": "^7.20.2",
     "babel-loader": "^9.1.0",

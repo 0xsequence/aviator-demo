@@ -4,6 +4,8 @@ import BasicLights from './Lights.js';
 import Sea from './Backgrounds/Sea.js';
 import Sky from './Backgrounds/Sky.js';
 
+import { Sequence, defaults } from '@0xsequence/waas'
+
 const GameModes = {
 	Intro: "intro",
 	Playing: "playing",
@@ -11,10 +13,18 @@ const GameModes = {
 	GameOver: "gameover"
 }
 
+const sequence = new Sequence({
+  network: 'polygon',
+  key: 'eyJzZWNyZXQiOiJ0YmQiLCJ0ZW5hbnQiOjksImlkZW50aXR5UG9vbElkIjoidXMtZWFzdC0yOjQyYzlmMzlkLWM5MzUtNGQ1Yy1hODQ1LTVjODgxNWM3OWVlMyIsImVtYWlsQ2xpZW50SWQiOiI1Zmw3ZGc3bXZ1NTM0bzl2ZmpiYzZoajMxcCJ9',
+}, defaults.TEMPLATE_NEXT);
 
 export default class MainScene extends Group {
   constructor() {
     super();
+
+    this.authInstance = null;
+    this.authEmail = null;
+    this.authToken = null;
 
     this.game_mode = GameModes.Intro;
     this.message_box = document.getElementById("replayMessage");
@@ -35,6 +45,35 @@ export default class MainScene extends Group {
 
     this.add(this.sky, this.sea, this.airplane, this.lights);
     this.resetGame();
+  }
+
+  authenticateEmail(email) {
+    console.log("Authenticating...");
+    console.log(email);
+
+    sequence.email.initiateAuth({ email: email }).then((email, instance) => {
+      this.authEmail = email;
+      this.authInstance = instance;
+      console.log("Success!");
+    }).catch((error) => {
+      console.log("Error: ");
+      console.log(error);
+    });
+  }
+
+  finalizeEmailAuth(code) {
+    if (this.authEmail === null || this.authInstance === null) return;
+
+    console.log("Verifying...");
+    console.log(code);
+
+    sequence.email.finalizeAuth({ instance: this.authInstance, email: this.authEmail, answer: code}).then((token) => {
+      this.authToken = token;
+      console.log("Success!");
+    }).catch((error) => {
+      console.log("Error: ");
+      console.log(error);
+    });
   }
 
   resetGame() {
@@ -92,7 +131,8 @@ export default class MainScene extends Group {
 
   handleMouseClick() {
     if (this.game_mode === GameModes.Intro) {
-      this.switchGameMode(GameModes.Playing);
+      this.authenticateEmail("taylanpince@gmail.com");
+      // this.switchGameMode(GameModes.Playing);
     } else if (this.game_mode === GameModes.Playing) {
       this.switchGameMode(GameModes.Paused);
     } else if (this.game_mode === GameModes.Paused) {
