@@ -21,8 +21,11 @@ module.exports = {
         exclude: path.resolve(__dirname, './node_modules/')
       },{
         test: /\.(jpe?g|png|gif|svg|tga|glb|babylon|mtl|pcb|pcd|prwm|obj|mat|mp3|ogg)$/i,
-        use: 'file-loader',
-        exclude: path.resolve(__dirname, './node_modules/')
+        loader: 'file-loader',
+        exclude: path.resolve(__dirname, './node_modules/'),
+        options: {
+          name: '/assets/[name].[ext]'
+        }
       },{
         test: /\.css$/i,
         use: [MiniCssExtractPlugin.loader, "css-loader"],

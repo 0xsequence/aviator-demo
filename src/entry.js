@@ -9,6 +9,7 @@
 
 import { WebGLRenderer, PerspectiveCamera, Scene, Fog } from 'three';
 import MainScene from './objects/Scene.js';
+
 import "./game.css";
 
 const { innerHeight, innerWidth } = window;
@@ -78,6 +79,16 @@ function handleMouseUp(event) {
   mainScene.handleMouseClick();
 }
 document.addEventListener('mouseup', handleMouseUp, false);
+
+window.closeModal = (event) => {
+  event.preventDefault();
+  mainScene.closeLoginModal();
+};
+
+window.triggerLogin = (event) => {
+  event.preventDefault();
+  mainScene.triggerLoginModalForm();
+};
 
 // dom
 document.body.style.margin = 0;

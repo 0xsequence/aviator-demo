@@ -1,3 +1,5 @@
+@import "~@picocss/pico";
+
 .game-holder {
 	position: absolute;
 	width: 100%;
@@ -91,6 +93,18 @@
 
 .score__value--dist {
 	font-size: 30px;
+}
+
+dialog input {
+	margin-top: 20px;
+}
+
+#codeVerify {
+	display: none;
+}
+
+img.logo {
+	background-image: url("../images/horizon-logo-alt.svg");
 }
 
 .message {

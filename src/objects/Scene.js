@@ -13,6 +13,12 @@ const GameModes = {
 	GameOver: "gameover"
 }
 
+const AuthModes = {
+  Email: "email",
+  Code: "code",
+  Completed: "completed"
+}
+
 const sequence = new Sequence({
   network: 'polygon',
   key: 'eyJzZWNyZXQiOiJ0YmQiLCJ0ZW5hbnQiOjksImlkZW50aXR5UG9vbElkIjoidXMtZWFzdC0yOjQyYzlmMzlkLWM5MzUtNGQ1Yy1hODQ1LTVjODgxNWM3OWVlMyIsImVtYWlsQ2xpZW50SWQiOiI1Zmw3ZGc3bXZ1NTM0bzl2ZmpiYzZoajMxcCJ9',
@@ -25,6 +31,8 @@ export default class MainScene extends Group {
     this.authInstance = null;
     this.authEmail = null;
     this.authToken = null;
+    this.authMode = AuthModes.Email;
+    this.authWalletAddress = null;
 
     this.game_mode = GameModes.Intro;
     this.message_box = document.getElementById("replayMessage");
@@ -45,19 +53,102 @@ export default class MainScene extends Group {
 
     this.add(this.sky, this.sea, this.airplane, this.lights);
     this.resetGame();
+
+    sequence.isSignedIn().then((signedIn) => {
+      console.log("Signed in?");
+      console.log(signedIn);
+      if (signedIn) {
+        this.fetchWalletAddress();
+      }
+    })
+  }
+
+  openLoginModal() {
+    var modal = document.getElementById("loginModal");
+    modal.setAttribute("open", true);
+  }
+
+  closeLoginModal() {
+    var modal = document.getElementById("loginModal");
+    modal.setAttribute("open", false);
+  }
+
+  switchAuthMode(mode) {
+    if (this.authMode === mode) return;
+
+    this.authMode = mode;
+
+    var emailVerifyForm = document.getElementById("emailVerify");
+    var codeVerifyForm = document.getElementById("codeVerify");
+
+    if (this.authMode === AuthModes.Email) {
+      emailVerifyForm.style.display = "block";
+      codeVerifyForm.style.display = "none";
+    } else if (this.authMode === AuthModes.Code) {
+      emailVerifyForm.style.display = "none";
+      codeVerifyForm.style.display = "block";
+    } else if (this.authMode === AuthModes.Completed) {
+      this.closeLoginModal();
+
+      this.message_box.innerHTML = "Welcome " + this.authEmail + "!<br>Click to Start";
+
+      emailVerifyForm.style.display = "block";
+      codeVerifyForm.style.display = "none";
+    }
+  }
+
+  triggerLoginModalForm() {
+    if (this.authMode === AuthModes.Email) {
+      var emailInput = document.getElementById("emailInput");
+      var emailValue = emailInput.value;
+  
+      if (emailValue === "" || !emailInput.validity.valid) {
+        emailInput.setAttribute("aria-invalid", true);
+        return;
+      }
+  
+      emailInput.setAttribute("aria-invalid", false);
+  
+      this.authenticateEmail(emailValue);
+    } else if (this.authMode === AuthModes.Code) {
+      var codeInput = document.getElementById("codeInput");
+      var codeValue = codeInput.value;
+  
+      if (codeValue.length !== 6) {
+        codeInput.setAttribute("aria-invalid", true);
+        return;
+      }
+  
+      codeInput.setAttribute("aria-invalid", false);
+  
+      this.finalizeEmailAuth(codeValue);
+    }
   }
 
   authenticateEmail(email) {
     console.log("Authenticating...");
     console.log(email);
 
-    sequence.email.initiateAuth({ email: email }).then((email, instance) => {
+    var loginButton = document.getElementById("loginButton");
+
+    loginButton.setAttribute("aria-busy", true);
+
+    sequence.email.initiateAuth({ email: email }).then(({ email, instance }) => {
       this.authEmail = email;
       this.authInstance = instance;
+      console.log(this.authInstance);
+      console.log(this.authEmail);
+
       console.log("Success!");
+      loginButton.setAttribute("aria-busy", false);
+
+      this.switchAuthMode(AuthModes.Code);
     }).catch((error) => {
-      console.log("Error: ");
-      console.log(error);
+      alert(error);
+
+      loginButton.setAttribute("aria-busy", false);
+      var emailInput = document.getElementById("emailInput");
+      emailInput.setAttribute("aria-invalid", true);
     });
   }
 
@@ -66,14 +157,57 @@ export default class MainScene extends Group {
 
     console.log("Verifying...");
     console.log(code);
+    console.log(this.authInstance);
+    console.log(this.authEmail);
 
-    sequence.email.finalizeAuth({ instance: this.authInstance, email: this.authEmail, answer: code}).then((token) => {
+    var loginButton = document.getElementById("loginButton");
+
+    loginButton.setAttribute("aria-busy", true);
+
+    sequence.email.finalizeAuth({ instance: this.authInstance, email: this.authEmail, answer: code }).then((token) => {
       this.authToken = token;
       console.log("Success!");
+      console.log(this.authToken);
+
+      loginButton.setAttribute("aria-busy", false);
+
+      this.createWalletAddress();
     }).catch((error) => {
-      console.log("Error: ");
-      console.log(error);
+      alert(error);
+
+      loginButton.setAttribute("aria-busy", false);
+      var codeInput = document.getElementById("codeInput");
+      codeInput.setAttribute("aria-invalid", true);
     });
+  }
+
+  createWalletAddress() {
+    console.log("Signing in...");
+    sequence.signIn(this.authToken, this.authEmail).then((address) => {
+      this.authWalletAddress = address;
+      console.log(this.authWalletAddress);
+      this.switchAuthMode(AuthModes.Completed);
+    }).catch((error) => {
+      alert(error);
+      this.authMode = AuthModes.Email;
+    });
+  }
+
+  fetchWalletAddress() {
+    console.log("Fetching wallet...");
+    sequence.getAddress().then((address) => {
+      this.authWalletAddress = address;
+
+      sequence.deviceName.get().then((deviceName) => {
+        this.authEmail = deviceName;
+        console.log(this.authWalletAddress);
+        console.log(this.authEmail);
+        this.switchAuthMode(AuthModes.Completed);
+      });
+    }).catch((error) => {
+      alert(error);
+      this.authMode = AuthModes.Email;
+    })
   }
 
   resetGame() {
@@ -114,7 +248,7 @@ export default class MainScene extends Group {
     if (this.game_mode === GameModes.Intro) {
       this.message_box.style.display = "block";
       this.score_box.style.display = "none";
-      this.message_box.innerHTML = "Click to Start"
+      this.message_box.innerHTML = "Click to Login"
     } else if (this.game_mode === GameModes.Playing) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "none";
@@ -130,9 +264,13 @@ export default class MainScene extends Group {
   }
 
   handleMouseClick() {
+    if (this.authMode !== AuthModes.Completed) {
+      this.openLoginModal();
+      return;
+    }
+
     if (this.game_mode === GameModes.Intro) {
-      this.authenticateEmail("taylanpince@gmail.com");
-      // this.switchGameMode(GameModes.Playing);
+      this.switchGameMode(GameModes.Playing);
     } else if (this.game_mode === GameModes.Playing) {
       this.switchGameMode(GameModes.Paused);
     } else if (this.game_mode === GameModes.Paused) {

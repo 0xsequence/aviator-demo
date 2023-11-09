@@ -12,7 +12,7 @@
 	<body>
 		<div class="game-holder" id="gameHolder">
 			<div class="header">
-				<h1><span>the</span>Aviator</h1>
+                <img src="assets/horizon-logo-alt.svg" alt="Horizon" class="logo">
 				<div class="score" id="score">
 					<div class="score__content" id="dist">
 						<div class="score__label">distance</div>
@@ -21,7 +21,23 @@
 				</div>
 			</div>
 			<div class="world" id="world"></div>
-			<div class="message message--replay" id="replayMessage">Click to Start</div>
+            <dialog id="loginModal">
+                <article>
+                    <div id="emailVerify">
+                        <p>Enter your email address to start playing. You will receive an email with a confirmation code shortly.</p>
+                        <input type="email" placeholder="you@email.com" id="emailInput" required>
+                    </div>
+                    <div id="codeVerify">
+                        <p>Check your email and enter the 6-digit confirmation code to verify your address:</p>
+                        <input type="text" id="codeInput">
+                    </div>
+                    <footer>
+                        <a href="#" role="button" class="secondary" onClick="closeModal(event)">Cancel</a>
+                        <a href="#" role="button" onClick="triggerLogin(event)" id="loginButton">Verify</a>
+                    </footer>
+                </article>
+            </dialog>
+			<div class="message message--replay" id="replayMessage">Click to Login</div>
 		</div>
 	</body>
 </html>
