@@ -1,8 +1,9 @@
-import { Group } from 'three';
+import { Group, Color } from 'three';
 import Airplane from './Game/Airplane.js';
 import BasicLights from './Lights.js';
 import Sea from './Backgrounds/Sea.js';
 import Sky from './Backgrounds/Sky.js';
+import Enemy from './Game/Enemy.js';
 
 import { Sequence, defaults } from '@0xsequence/waas'
 
@@ -50,6 +51,8 @@ export default class MainScene extends Group {
     this.airplane.scale.set(.25,.25,.25);
 	  this.airplane.position.y = 200;
     this.airplane.position.x = -50;
+
+    this.enemies = new Set();
 
     this.add(this.sky, this.sea, this.airplane, this.lights);
     this.resetGame();
@@ -218,7 +221,17 @@ export default class MainScene extends Group {
       speedLastUpdate: 0,
 
       distance: 0,
-      ratioSpeedDistance: 50
+      ratioSpeedDistance: 50,
+
+      enemyLastSpawn: 0,
+      enemyDistanceTolerance: 10,
+      enemiesSpeed: 0.3,
+      distanceForEnemiesSpawn: 30,
+
+      planeDefaultHeight: 200,
+      planeAmpHeight: 100,
+
+      seaRadius: 500,
     }
   }
 
@@ -248,18 +261,18 @@ export default class MainScene extends Group {
     if (this.game_mode === GameModes.Intro) {
       this.message_box.style.display = "block";
       this.score_box.style.display = "none";
-      this.message_box.innerHTML = "Click to Login"
+      this.message_box.innerHTML = "Click to Login";
     } else if (this.game_mode === GameModes.Playing) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "none";
     } else if (this.game_mode === GameModes.Paused) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
-      this.message_box.innerHTML = "Paused<br>Click to Resume"
+      this.message_box.innerHTML = "Paused<br>Click to Resume";
     } else if (this.game_mode === GameModes.GameOver) {
       this.score_box.style.display = "none";
       this.message_box.style.display = "block";
-      this.message_box.innerHTML = "Game Over<br>Click to Replay"
+      this.message_box.innerHTML = "Game Over<br>Click to Replay";
     }
   }
 
@@ -280,6 +293,12 @@ export default class MainScene extends Group {
     }
   }
 
+  collideCheck(mesh1, mesh2, tolerance) {
+		const diffPos = mesh1.position.clone().sub(mesh2.position.clone());
+		const d = diffPos.length();
+		return d < tolerance;
+	}
+
   tick(deltaTime, mousePos) {
     if (this.game_mode === GameModes.Paused) return;
 
@@ -287,11 +306,40 @@ export default class MainScene extends Group {
 
     this.sea.tick(deltaTime, this.game.speed);
     this.updatePlane(deltaTime, mousePos);
-    this.updateDistance(deltaTime);
-    this.updateSpeed(deltaTime);
+
+    if (this.game_mode === GameModes.Playing) {
+      this.updateDistance(deltaTime);
+      
+      if (Math.floor(this.game.distance) % this.game.distanceForEnemiesSpawn == 0 && Math.floor(this.game.distance) > this.game.enemyLastSpawn) {
+        this.game.enemyLastSpawn = Math.floor(this.game.distance);
+        this.spawnEnemies(4);
+      }
+  
+      for (const enemy of this.enemies) {
+        enemy.tick(deltaTime);
+
+        enemy.angle += deltaTime * this.game.speed;
+        if (enemy.angle > Math.PI * 2) {
+          enemy.angle -= Math.PI * 2;
+        }
+
+        enemy.position.x = Math.cos(enemy.angle) * enemy.distance;
+        enemy.position.y = -this.game.seaRadius + Math.sin(enemy.angle) * enemy.distance;
+  
+        if (this.collideCheck(this.airplane, enemy, this.game.enemyDistanceTolerance)) {
+          this.explodeEnemy(enemy);
+          //airplane.gethit(enemy.position);
+        } else if (enemy.angle > Math.PI) {
+          this.remove(enemy);
+          this.enemies.delete(enemy);
+        }
+      }
+
+      this.updateSpeed(deltaTime);
+    }
   }
 
-  updatePlane(deltaTime, mousePos){
+  updatePlane(deltaTime, mousePos) {
     // let's move the airplane between -100 and 100 on the horizontal axis, 
     // and between 25 and 175 on the vertical axis,
     // depending on the mouse position which ranges between -1 and 1 on both axes;
@@ -309,8 +357,31 @@ export default class MainScene extends Group {
 
     this.airplane.tick(deltaTime);
   }
+
+  spawnEnemies(count) {
+    for (let i = 0; i < count; i++) {
+      const enemy = new Enemy();
+      enemy.angle = -(i * 0.1);
+      enemy.distance = this.game.seaRadius + this.game.planeDefaultHeight + (-1 + Math.random() * 2) * (this.game.planeAmpHeight - 20);
+      enemy.position.x = Math.cos(enemy.angle) * enemy.distance;
+      enemy.position.y = -this.game.seaRadius + Math.sin(enemy.angle) * enemy.distance;
+      
+      this.add(enemy);
+      this.enemies.add(enemy);
+    }
+  }
+
+  explodeEnemy(enemy) {
+		this.spawnParticles(enemy.position.clone(), 15, new Color("red"), 3);
+		this.remove(enemy);
+    this.enemies.delete(enemy);
+  }
+
+  spawnParticles(pos, count, color, scale) {
+
+  }
   
-  normalize(v,vmin,vmax,tmin, tmax){
+  normalize(v,vmin,vmax,tmin, tmax) {
     var nv = Math.max(Math.min(v,vmax), vmin);
     var dv = vmax-vmin;
     var pc = (nv-vmin)/dv;

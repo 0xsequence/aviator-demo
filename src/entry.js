@@ -28,7 +28,7 @@ scene.fog = new Fog(0xf7d9aa, 100, 950);
 scene.add(mainScene);
 
 // camera
-camera.position.set(0, 200, 150);
+camera.position.set(0, 200, 200);
 
 // renderer
 renderer.shadowMap.enabled = true;

@@ -105,6 +105,7 @@ dialog input {
 
 img.logo {
 	background-image: url("../images/horizon-logo-alt.svg");
+	width: 300px;
 }
 
 .message {
