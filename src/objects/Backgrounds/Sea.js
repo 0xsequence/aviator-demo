@@ -1,4 +1,5 @@
-import { Group, CylinderGeometry, Matrix4, MeshPhongMaterial, Mesh, Color, Vector3 } from 'three';
+import { Group, CylinderGeometry, Matrix4, MeshPhongMaterial, Mesh, Color } from 'three';
+import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 
 export default class Sea extends Group {
   constructor() {
@@ -13,6 +14,10 @@ export default class Sea extends Group {
     
     // rotate the geometry on the x axis
     geom.applyMatrix4(new Matrix4().makeRotationX(-Math.PI/2));
+
+    geom.deleteAttribute('normal');
+    geom.deleteAttribute('uv');
+    geom = BufferGeometryUtils.mergeVertices(geom);
 
     // create an array to store new data associated to each vertex
     this.waves = [];
@@ -56,6 +61,7 @@ export default class Sea extends Group {
 			wave.ang += wave.speed * deltaTime;
 		}
 
+    this.mesh.geometry.computeVertexNormals();
     this.mesh.geometry.attributes.position.needsUpdate = true;
 
     this.mesh.rotation.z += deltaTime * gameSpeed;
