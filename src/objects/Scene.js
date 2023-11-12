@@ -5,8 +5,8 @@ import BasicLights from './Lights.js';
 import Sea from './Backgrounds/Sea.js';
 import Sky from './Backgrounds/Sky.js';
 import Enemy from './Game/Enemy.js';
-
-import { Sequence, defaults } from '@0xsequence/waas'
+import { SequenceAuth, AuthModes } from './API/waas.js';
+import { LeaderboardManager } from './API/leaderboard.js';
 
 const GameModes = {
 	Intro: "intro",
@@ -16,37 +16,18 @@ const GameModes = {
 	GameOver: "gameover"
 }
 
-const AuthModes = {
-  Email: "email",
-  Code: "code",
-  Completed: "completed"
-}
-
-const sequence = new Sequence({
-  network: 'polygon',
-  key: 'eyJzZWNyZXQiOiJ0YmQiLCJ0ZW5hbnQiOjksImlkZW50aXR5UG9vbElkIjoidXMtZWFzdC0yOjQyYzlmMzlkLWM5MzUtNGQ1Yy1hODQ1LTVjODgxNWM3OWVlMyIsImVtYWlsQ2xpZW50SWQiOiI1Zmw3ZGc3bXZ1NTM0bzl2ZmpiYzZoajMxcCJ9',
-}, defaults.TEMPLATE_NEXT);
-
-const API_URL = "https://taylanpince.pythonanywhere.com";
-
-
 export default class MainScene extends Group {
   constructor() {
     super();
 
-    this.authInstance = null;
-    this.authEmail = null;
-    this.authToken = null;
-    this.authMode = AuthModes.Email;
-    this.authWalletAddress = null;
-    
-    this.leaderboard = [];
+    this.authManager = new SequenceAuth();
+    this.authManager.authModeChangedCallback = this.authModeChanged.bind(this);
+    this.leaderboardManager = new LeaderboardManager();
 
     this.game_mode = GameModes.Intro;
     this.message_box = document.getElementById("replayMessage");
     this.distance_box = document.getElementById("distValue");
     this.score_box = document.getElementById("score");
-    this.leaderboardWrapper = document.getElementById("leaderboard");
 
     this.sea = new Sea();
     this.sky = new Sky();
@@ -64,34 +45,6 @@ export default class MainScene extends Group {
 
     this.add(this.sky, this.sea, this.airplane, this.lights);
     this.resetGame();
-
-    sequence.isSignedIn().then((signedIn) => {
-      console.log("Signed in?");
-      console.log(signedIn);
-      if (signedIn) {
-        this.fetchWalletAddress();
-      }
-    });
-
-    this.loadLeaderboard();
-  }
-
-  loadLeaderboard() {
-    fetch(API_URL).then((response) => {
-      response.json().then((results) => {
-        this.leaderboard = results;
-        this.leaderboardWrapper.innerHTML = "";
-
-        const leaderboardList = this.leaderboardWrapper.appendChild(document.createElement("ol"));
-
-        for (let i = 0; i < this.leaderboard.length; i++) {
-          const listItem = leaderboardList.appendChild(document.createElement("li"));
-          const entry = this.leaderboard[i];
-
-          listItem.innerHTML = entry.email + " " + entry.score;
-        }
-      });
-    });
   }
 
   openLoginModal() {
@@ -104,141 +57,12 @@ export default class MainScene extends Group {
     modal.setAttribute("open", false);
   }
 
-  switchAuthMode(mode) {
-    if (this.authMode === mode) return;
-
-    this.authMode = mode;
-
-    var emailVerifyForm = document.getElementById("emailVerify");
-    var codeVerifyForm = document.getElementById("codeVerify");
-
-    if (this.authMode === AuthModes.Email) {
-      emailVerifyForm.style.display = "block";
-      codeVerifyForm.style.display = "none";
-    } else if (this.authMode === AuthModes.Code) {
-      emailVerifyForm.style.display = "none";
-      codeVerifyForm.style.display = "block";
-    } else if (this.authMode === AuthModes.Completed) {
+  authModeChanged() {
+    if (this.authManager.mode === AuthModes.Completed) {
       this.closeLoginModal();
 
-      this.message_box.innerHTML = "Welcome " + this.authEmail + "!<br>Click to Start";
-
-      emailVerifyForm.style.display = "block";
-      codeVerifyForm.style.display = "none";
+      this.message_box.innerHTML = "Welcome " + this.authManager.email + "!<br>Click to Start";
     }
-  }
-
-  triggerLoginModalForm() {
-    if (this.authMode === AuthModes.Email) {
-      var emailInput = document.getElementById("emailInput");
-      var emailValue = emailInput.value;
-  
-      if (emailValue === "" || !emailInput.validity.valid) {
-        emailInput.setAttribute("aria-invalid", true);
-        return;
-      }
-  
-      emailInput.setAttribute("aria-invalid", false);
-  
-      this.authenticateEmail(emailValue);
-    } else if (this.authMode === AuthModes.Code) {
-      var codeInput = document.getElementById("codeInput");
-      var codeValue = codeInput.value;
-  
-      if (codeValue.length !== 6) {
-        codeInput.setAttribute("aria-invalid", true);
-        return;
-      }
-  
-      codeInput.setAttribute("aria-invalid", false);
-  
-      this.finalizeEmailAuth(codeValue);
-    }
-  }
-
-  authenticateEmail(email) {
-    console.log("Authenticating...");
-    console.log(email);
-
-    var loginButton = document.getElementById("loginButton");
-
-    loginButton.setAttribute("aria-busy", true);
-
-    sequence.email.initiateAuth({ email: email }).then(({ email, instance }) => {
-      this.authEmail = email;
-      this.authInstance = instance;
-      console.log(this.authInstance);
-      console.log(this.authEmail);
-
-      console.log("Success!");
-      loginButton.setAttribute("aria-busy", false);
-
-      this.switchAuthMode(AuthModes.Code);
-    }).catch((error) => {
-      alert(error);
-
-      loginButton.setAttribute("aria-busy", false);
-      var emailInput = document.getElementById("emailInput");
-      emailInput.setAttribute("aria-invalid", true);
-    });
-  }
-
-  finalizeEmailAuth(code) {
-    if (this.authEmail === null || this.authInstance === null) return;
-
-    console.log("Verifying...");
-    console.log(code);
-    console.log(this.authInstance);
-    console.log(this.authEmail);
-
-    var loginButton = document.getElementById("loginButton");
-
-    loginButton.setAttribute("aria-busy", true);
-
-    sequence.email.finalizeAuth({ instance: this.authInstance, email: this.authEmail, answer: code }).then((token) => {
-      this.authToken = token;
-      console.log("Success!");
-      console.log(this.authToken);
-
-      loginButton.setAttribute("aria-busy", false);
-
-      this.createWalletAddress();
-    }).catch((error) => {
-      alert(error);
-
-      loginButton.setAttribute("aria-busy", false);
-      var codeInput = document.getElementById("codeInput");
-      codeInput.setAttribute("aria-invalid", true);
-    });
-  }
-
-  createWalletAddress() {
-    console.log("Signing in...");
-    sequence.signIn(this.authToken, this.authEmail).then((address) => {
-      this.authWalletAddress = address;
-      console.log(this.authWalletAddress);
-      this.switchAuthMode(AuthModes.Completed);
-    }).catch((error) => {
-      alert(error);
-      this.authMode = AuthModes.Email;
-    });
-  }
-
-  fetchWalletAddress() {
-    console.log("Fetching wallet...");
-    sequence.getAddress().then((address) => {
-      this.authWalletAddress = address;
-
-      sequence.deviceName.get().then((deviceName) => {
-        this.authEmail = deviceName;
-        console.log(this.authWalletAddress);
-        console.log(this.authEmail);
-        this.switchAuthMode(AuthModes.Completed);
-      });
-    }).catch((error) => {
-      alert(error);
-      this.authMode = AuthModes.Email;
-    })
   }
 
   resetGame() {
@@ -290,34 +114,34 @@ export default class MainScene extends Group {
     if (this.game_mode === GameModes.Intro) {
       this.message_box.style.display = "block";
       this.score_box.style.display = "none";
-      this.leaderboardWrapper.style.display = "block";
+      this.leaderboardManager.leaderboardWrapper.style.display = "block";
       this.message_box.innerHTML = "Click to Login";
     } else if (this.game_mode === GameModes.Playing) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "none";
-      this.leaderboardWrapper.style.display = "none";
+      this.leaderboardManager.leaderboardWrapper.style.display = "none";
     } else if (this.game_mode === GameModes.Paused) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
-      this.leaderboardWrapper.style.display = "block";
+      this.leaderboardManager.leaderboardWrapper.style.display = "block";
       this.message_box.innerHTML = "Paused<br>Click to Resume";
     } else if (this.game_mode === GameModes.GameEnding) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
-      this.leaderboardWrapper.style.display = "block";
+      this.leaderboardManager.leaderboardWrapper.style.display = "block";
       this.message_box.innerHTML = "Game Over";
       
-      this.saveScore(this.game.distance);
+      this.leaderboardManager.saveScore(this.game.distance, this.authManager.email, this.authManager.walletAddress);
     } else if (this.game_mode === GameModes.GameOver) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
-      this.leaderboardWrapper.style.display = "block";
+      this.leaderboardManager.leaderboardWrapper.style.display = "block";
       this.message_box.innerHTML = "Game Over<br>Click to Replay";
     }
   }
 
   handleMouseClick() {
-    if (this.authMode !== AuthModes.Completed) {
+    if (this.authManager.mode !== AuthModes.Completed) {
       this.openLoginModal();
       return;
     }
@@ -337,23 +161,6 @@ export default class MainScene extends Group {
       this.resetGame();
       this.switchGameMode(GameModes.Playing);
     }
-  }
-
-  saveScore(score) {
-    console.log("Saving score...");
-    console.log(score);
-    fetch(API_URL, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({email: this.authEmail, address: this.authWalletAddress, score: score})
-    }).then((response) => {
-      console.log(response);
-
-      this.loadLeaderboard();
-    });
   }
 
   collideCheck(mesh1, mesh2, tolerance) {
