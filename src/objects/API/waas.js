@@ -31,118 +31,118 @@ class SequenceAuth {
     }
 
     switchAuthMode(mode) {
-        if (this.authMode === mode) return;
-    
-        this.mode = mode;
-    
-        if (this.mode === AuthModes.Email) {
-          this.emailVerifyForm.style.display = "block";
-          this.codeVerifyForm.style.display = "none";
-        } else if (this.authMode === AuthModes.Code) {
-          this.emailVerifyForm.style.display = "none";
-          this.codeVerifyForm.style.display = "block";
-        } else if (this.authMode === AuthModes.Completed) {
-          this.emailVerifyForm.style.display = "block";
-          this.codeVerifyForm.style.display = "none";
-        }
-
-        if (this.authModeChangedCallback !== null) this.authModeChangedCallback();
+      if (this.mode === mode) return;
+  
+      this.mode = mode;
+  
+      if (this.mode === AuthModes.Email) {
+        this.emailVerifyForm.style.display = "block";
+        this.codeVerifyForm.style.display = "none";
+      } else if (this.mode === AuthModes.Code) {
+        this.emailVerifyForm.style.display = "none";
+        this.codeVerifyForm.style.display = "block";
+      } else if (this.mode === AuthModes.Completed) {
+        this.emailVerifyForm.style.display = "block";
+        this.codeVerifyForm.style.display = "none";
       }
-    
-      triggerLoginModalForm() {
-        if (this.authMode === AuthModes.Email) {
-          var emailInput = document.getElementById("emailInput");
-          var emailValue = emailInput.value;
-      
-          if (emailValue === "" || !emailInput.validity.valid) {
-            emailInput.setAttribute("aria-invalid", true);
-            return;
-          }
-      
-          emailInput.setAttribute("aria-invalid", false);
-      
-          this.authenticateEmail(emailValue);
-        } else if (this.authMode === AuthModes.Code) {
-          var codeInput = document.getElementById("codeInput");
-          var codeValue = codeInput.value;
-      
-          if (codeValue.length !== 6) {
-            codeInput.setAttribute("aria-invalid", true);
-            return;
-          }
-      
-          codeInput.setAttribute("aria-invalid", false);
-      
-          this.finalizeEmailAuth(codeValue);
-        }
-      }
-    
-      authenticateEmail(email) {
-        var loginButton = document.getElementById("loginButton");
-    
-        loginButton.setAttribute("aria-busy", true);
-    
-        this.sequence.email.initiateAuth({ email: email }).then(({ email, instance }) => {
-          this.email = email;
-          this.authInstance = instance;
 
-          loginButton.setAttribute("aria-busy", false);
+      if (this.authModeChangedCallback !== null) this.authModeChangedCallback();
+    }
+  
+    triggerLoginModalForm() {
+      if (this.mode === AuthModes.Email) {
+        var emailInput = document.getElementById("emailInput");
+        var emailValue = emailInput.value;
     
-          this.switchAuthMode(AuthModes.Code);
-        }).catch((error) => {
-          alert(error);
-    
-          loginButton.setAttribute("aria-busy", false);
-          var emailInput = document.getElementById("emailInput");
+        if (emailValue === "" || !emailInput.validity.valid) {
           emailInput.setAttribute("aria-invalid", true);
-        });
-      }
+          return;
+        }
     
-      finalizeEmailAuth(code) {
-        if (this.email === null || this.authInstance === null) return;
+        emailInput.setAttribute("aria-invalid", false);
     
-        var loginButton = document.getElementById("loginButton");
+        this.authenticateEmail(emailValue);
+      } else if (this.mode === AuthModes.Code) {
+        var codeInput = document.getElementById("codeInput");
+        var codeValue = codeInput.value;
     
-        loginButton.setAttribute("aria-busy", true);
-    
-        this.sequence.email.finalizeAuth({ instance: this.authInstance, email: this.email, answer: code }).then((token) => {
-          this.token = token;
-
-          loginButton.setAttribute("aria-busy", false);
-    
-          this.createWalletAddress();
-        }).catch((error) => {
-          alert(error);
-    
-          loginButton.setAttribute("aria-busy", false);
-          var codeInput = document.getElementById("codeInput");
+        if (codeValue.length !== 6) {
           codeInput.setAttribute("aria-invalid", true);
-        });
-      }
+          return;
+        }
     
-      createWalletAddress() {
-        this.sequence.signIn(this.token, this.email).then((address) => {
-          this.walletAddress = address;
+        codeInput.setAttribute("aria-invalid", false);
+    
+        this.finalizeEmailAuth(codeValue);
+      }
+    }
+  
+    authenticateEmail(email) {
+      var loginButton = document.getElementById("loginButton");
+  
+      loginButton.setAttribute("aria-busy", true);
+  
+      this.sequence.email.initiateAuth({ email: email }).then(({ email, instance }) => {
+        this.email = email;
+        this.authInstance = instance;
+
+        loginButton.setAttribute("aria-busy", false);
+  
+        this.switchAuthMode(AuthModes.Code);
+      }).catch((error) => {
+        alert(error);
+  
+        loginButton.setAttribute("aria-busy", false);
+        var emailInput = document.getElementById("emailInput");
+        emailInput.setAttribute("aria-invalid", true);
+      });
+    }
+  
+    finalizeEmailAuth(code) {
+      if (this.email === null || this.authInstance === null) return;
+  
+      var loginButton = document.getElementById("loginButton");
+  
+      loginButton.setAttribute("aria-busy", true);
+  
+      this.sequence.email.finalizeAuth({ instance: this.authInstance, email: this.email, answer: code }).then((token) => {
+        this.token = token;
+
+        loginButton.setAttribute("aria-busy", false);
+  
+        this.createWalletAddress();
+      }).catch((error) => {
+        alert(error);
+  
+        loginButton.setAttribute("aria-busy", false);
+        var codeInput = document.getElementById("codeInput");
+        codeInput.setAttribute("aria-invalid", true);
+      });
+    }
+  
+    createWalletAddress() {
+      this.sequence.signIn(this.token, this.email).then((address) => {
+        this.walletAddress = address;
+        this.switchAuthMode(AuthModes.Completed);
+      }).catch((error) => {
+        alert(error);
+        this.mode = AuthModes.Email;
+      });
+    }
+  
+    fetchWalletAddress() {
+      this.sequence.getAddress().then((address) => {
+        this.walletAddress = address;
+  
+        this.sequence.deviceName.get().then((deviceName) => {
+          this.email = deviceName;
           this.switchAuthMode(AuthModes.Completed);
-        }).catch((error) => {
-          alert(error);
-          this.mode = AuthModes.Email;
         });
-      }
-    
-      fetchWalletAddress() {
-        this.sequence.getAddress().then((address) => {
-          this.walletAddress = address;
-    
-          this.sequence.deviceName.get().then((deviceName) => {
-            this.email = deviceName;
-            this.switchAuthMode(AuthModes.Completed);
-          });
-        }).catch((error) => {
-          alert(error);
-          this.mode = AuthModes.Email;
-        })
-      }
+      }).catch((error) => {
+        alert(error);
+        this.mode = AuthModes.Email;
+      })
+    }
 }
 
 export { SequenceAuth, AuthModes }
