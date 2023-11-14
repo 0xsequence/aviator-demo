@@ -6,7 +6,7 @@ const AuthModes = {
     Completed: "completed"
 }
 
-class SequenceAuth {
+class SequenceController {
     constructor() {
         this.sequence = new Sequence({
             network: 'polygon',
@@ -143,6 +143,22 @@ class SequenceAuth {
         this.mode = AuthModes.Email;
       })
     }
+
+    callContract(tokenId, cb) {
+      this.sequence.callContract({
+        chainId: 8453,
+        to: '0xcda5b0c46eadad293d81a47cad678ff9e603916b',
+        abi: 'store(uint[] memory _window)',
+        func: 'store',
+        args: {
+          window: [1,2,3],
+        },
+        value: 0                                           
+      }).then((tx)=> {
+        console.log(tx)
+        cb(tx)
+      })
+    }
 }
 
-export { SequenceAuth, AuthModes }
+export { SequenceController, AuthModes }

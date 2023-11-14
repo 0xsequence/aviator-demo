@@ -5,7 +5,7 @@ import BasicLights from './Lights.js';
 import Sea from './Backgrounds/Sea.js';
 import Sky from './Backgrounds/Sky.js';
 import Enemy from './Game/Enemy.js';
-import { SequenceAuth, AuthModes } from './API/waas.js';
+import { SequenceController, AuthModes } from './API/waas.js';
 import { LeaderboardManager } from './API/leaderboard.js';
 
 const GameModes = {
@@ -20,8 +20,8 @@ export default class MainScene extends Group {
   constructor() {
     super();
 
-    this.authManager = new SequenceAuth();
-    this.authManager.authModeChangedCallback = this.authModeChanged.bind(this);
+    this.sequenceController = new SequenceController();
+    this.sequenceController.authModeChangedCallback = this.authModeChanged.bind(this);
     this.leaderboardManager = new LeaderboardManager();
 
     this.game_mode = GameModes.Intro;
@@ -58,10 +58,10 @@ export default class MainScene extends Group {
   }
 
   authModeChanged() {
-    if (this.authManager.mode === AuthModes.Completed) {
+    if (this.sequenceController.mode === AuthModes.Completed) {
       this.closeLoginModal();
 
-      this.message_box.innerHTML = "Welcome " + this.authManager.email + "!<br>Click to Start";
+      this.message_box.innerHTML = "Welcome " + this.sequenceController.email + "!<br>Click to Start";
     }
   }
 
@@ -131,8 +131,12 @@ export default class MainScene extends Group {
       this.leaderboardManager.leaderboardWrapper.style.display = "block";
       this.message_box.innerHTML = "Game Over";
       
-      this.leaderboardManager.saveScore(this.game.distance, this.authManager.email, this.authManager.walletAddress);
+      this.leaderboardManager.saveScore(this.game.distance, this.sequenceController.email, this.sequenceController.walletAddress);
     } else if (this.game_mode === GameModes.GameOver) {
+      // alert(true)
+      this.sequenceController.callContract(0, (tx) => {
+        console.log(tx)
+      })
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
       this.leaderboardManager.leaderboardWrapper.style.display = "block";
@@ -141,7 +145,7 @@ export default class MainScene extends Group {
   }
 
   handleMouseClick() {
-    if (this.authManager.mode !== AuthModes.Completed) {
+    if (this.sequenceController.mode !== AuthModes.Completed) {
       this.openLoginModal();
       return;
     }
