@@ -147,13 +147,12 @@ class SequenceController {
     callContract(tokenId, cb) {
       this.sequence.callContract({
         chainId: 137,
-        to: '0x',
+        to: '0x2Fdf496353923C5F1bDd9fFdacE3Db555942B30d',
         abi: 'mint(uint256)',
         func: 'mint',
         args: [`${tokenId}`],
         value: 0                                           
       }).then((tx)=> {
-        console.log(tx)
         cb(tx)
       })
     }

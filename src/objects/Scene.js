@@ -44,6 +44,8 @@ export default class MainScene extends Group {
     this.enemies = new Set();
     this.isFirstPylonCrash = false;
 
+    this.enemiesTotal = 0;
+
     this.add(this.sky, this.sea, this.airplane, this.lights);
     this.resetGame();
   }
@@ -88,6 +90,7 @@ export default class MainScene extends Group {
       seaRadius: 500,
     }
     this.isFirstPylonCrash = false
+    this.enemiesTotal = 0;
   }
 
   updateSpeed(deltaTime) {
@@ -159,34 +162,28 @@ export default class MainScene extends Group {
       this.leaderboardManager.leaderboardWrapper.style.display = "block";
       this.message_box.innerHTML = "Game Over";
       
-      // updates progress
       this.updateLocalScores()
 
       this.leaderboardManager.saveScore(this.game.distance, this.sequenceController.email, this.sequenceController.walletAddress);
     } else if (this.game_mode === GameModes.GameOver) {
 
       if(this.game.distance >= 2500){
-        alert(3)
         this.sequenceController.callContract(3, (tx) => {
           console.log(tx)
         })
       } else if(this.isLast3RunsOver500Each()){
-        alert(2)
         this.sequenceController.callContract(2, (tx) => {
           console.log(tx)
         })
       } else if(this.game.distance >= 1000 && this.game.distance < 2500){
-        alert(1)
         this.sequenceController.callContract(1, (tx) => {
           console.log(tx)
         })
       } else if(this.isFirstCrash()){
-        alert(0)
         this.sequenceController.callContract(0, (tx) => {
           console.log(tx)
         })
       } else if (this.isFirstPylonCrash){
-        alert(4)
         this.sequenceController.callContract(4, (tx) => {
           console.log(tx)
         })
@@ -273,6 +270,7 @@ export default class MainScene extends Group {
 
       if (this.collideCheck(this.airplane, enemy, this.game.enemyDistanceTolerance)) {
         this.explodeEnemy(enemy);
+        console.log(enemy.name);
         if(enemy.name == 0) this.firstPylonCrash()
         this.switchGameMode(GameModes.GameEnding);
       } else if (enemy.angle > Math.PI) {
@@ -303,7 +301,8 @@ export default class MainScene extends Group {
 
   spawnEnemies(count) {
     for (let i = 0; i < count; i++) {
-      const enemy = new Enemy(i);
+      const enemy = new Enemy(this.enemiesTotal);
+      this.enemiesTotal += 1
       enemy.angle = -(i * 0.1);
       enemy.distance = this.game.seaRadius + this.game.planeDefaultHeight + (-1 + Math.random() * 2) * (this.game.planeAmpHeight - 20);
       enemy.position.x = Math.cos(enemy.angle) * enemy.distance;
