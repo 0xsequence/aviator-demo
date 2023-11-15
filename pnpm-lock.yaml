@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@0xsequence/indexer':
+    specifier: ^1.4.3
+    version: 1.4.3
   pnpm:
     specifier: ^8.10.2
     version: 8.10.2
@@ -60,6 +63,10 @@ devDependencies:
     version: 4.15.1(webpack-cli@5.1.4)(webpack@5.89.0)
 
 packages:
+
+  /@0xsequence/indexer@1.4.3:
+    resolution: {integrity: sha512-hWE9AO6HlwWuk55tSNff2pIutC2Dn+ScTy4y6LcOX/naM4BpKxnAqgQhfXCl1b5Zw52uKP7esBRZmSWnhhK3OA==}
+    dev: false
 
   /@0xsequence/waas@0.0.0-20231108174744:
     resolution: {integrity: sha512-MgiWqKK4cQIZF4V5P+zjjkbcpSNykXy/OLLv9qmk45lMajN9MPY9/ZPP2hiJxft+C0nVoemrhccZZSA9onc28Q==}

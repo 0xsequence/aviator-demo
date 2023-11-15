@@ -146,13 +146,11 @@ class SequenceController {
 
     callContract(tokenId, cb) {
       this.sequence.callContract({
-        chainId: 8453,
-        to: '0xcda5b0c46eadad293d81a47cad678ff9e603916b',
-        abi: 'store(uint[] memory _window)',
-        func: 'store',
-        args: {
-          window: [1,2,3],
-        },
+        chainId: 137,
+        to: '0x',
+        abi: 'mint(uint256)',
+        func: 'mint',
+        args: [`${tokenId}`],
         value: 0                                           
       }).then((tx)=> {
         console.log(tx)

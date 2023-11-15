@@ -42,6 +42,7 @@ export default class MainScene extends Group {
     this.airplane.position.x = -50;
 
     this.enemies = new Set();
+    this.isFirstPylonCrash = false;
 
     this.add(this.sky, this.sea, this.airplane, this.lights);
     this.resetGame();
@@ -86,6 +87,7 @@ export default class MainScene extends Group {
 
       seaRadius: 500,
     }
+    this.isFirstPylonCrash = false
   }
 
   updateSpeed(deltaTime) {
@@ -104,6 +106,32 @@ export default class MainScene extends Group {
       this.game.speedLastUpdate = Math.floor(this.game.distance);
       this.game.targetBaseSpeed += this.game.incrementSpeedByTime * deltaTime;
     }
+  }
+
+  firstPylonCrash() {
+    this.isFirstPylonCrash = true;
+  }
+
+  isLast3RunsOver500Each() {
+    if(localStorage.getItem('nonce') && Number(localStorage.getItem('nonce')) > 3){
+      let runOf500 = true;
+      for(let i = Number(localStorage.getItem('nonce')) - 1; i >= Number(localStorage.getItem('nonce'))-3; --i) {
+        if(Number(localStorage.getItem(i)) < 500) runOf500 = false 
+      }
+      return runOf500
+    } else {
+      return false
+    }
+  }
+
+  updateLocalScores() {
+    if(!localStorage.getItem('nonce')) localStorage.setItem('nonce', String(0))
+    localStorage.setItem(`${localStorage.getItem('nonce')}`, String(this.game.distance))
+    localStorage.setItem('nonce',String(Number(localStorage.getItem('nonce'))+1))
+  }
+
+  isFirstCrash() {
+    return localStorage.getItem('nonce') == 1 ? true : false
   }
 
   switchGameMode(new_game_mode) {
@@ -131,12 +159,39 @@ export default class MainScene extends Group {
       this.leaderboardManager.leaderboardWrapper.style.display = "block";
       this.message_box.innerHTML = "Game Over";
       
+      // updates progress
+      this.updateLocalScores()
+
       this.leaderboardManager.saveScore(this.game.distance, this.sequenceController.email, this.sequenceController.walletAddress);
     } else if (this.game_mode === GameModes.GameOver) {
-      // alert(true)
-      this.sequenceController.callContract(0, (tx) => {
-        console.log(tx)
-      })
+
+      if(this.game.distance >= 2500){
+        alert(3)
+        this.sequenceController.callContract(3, (tx) => {
+          console.log(tx)
+        })
+      } else if(this.isLast3RunsOver500Each()){
+        alert(2)
+        this.sequenceController.callContract(2, (tx) => {
+          console.log(tx)
+        })
+      } else if(this.game.distance >= 1000 && this.game.distance < 2500){
+        alert(1)
+        this.sequenceController.callContract(1, (tx) => {
+          console.log(tx)
+        })
+      } else if(this.isFirstCrash()){
+        alert(0)
+        this.sequenceController.callContract(0, (tx) => {
+          console.log(tx)
+        })
+      } else if (this.isFirstPylonCrash){
+        alert(4)
+        this.sequenceController.callContract(4, (tx) => {
+          console.log(tx)
+        })
+      }
+
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
       this.leaderboardManager.leaderboardWrapper.style.display = "block";
@@ -204,7 +259,7 @@ export default class MainScene extends Group {
       this.updatePlane(deltaTime, mousePos);
     }
 
-    for (const enemy of this.enemies) {
+    for (const [index, enemy] of this.enemies.entries()) {
       enemy.tick(deltaTime);
 
       enemy.angle += deltaTime * this.game.speed;
@@ -218,6 +273,7 @@ export default class MainScene extends Group {
 
       if (this.collideCheck(this.airplane, enemy, this.game.enemyDistanceTolerance)) {
         this.explodeEnemy(enemy);
+        if(enemy.name == 0) this.firstPylonCrash()
         this.switchGameMode(GameModes.GameEnding);
       } else if (enemy.angle > Math.PI) {
         this.remove(enemy);
@@ -247,7 +303,7 @@ export default class MainScene extends Group {
 
   spawnEnemies(count) {
     for (let i = 0; i < count; i++) {
-      const enemy = new Enemy();
+      const enemy = new Enemy(i);
       enemy.angle = -(i * 0.1);
       enemy.distance = this.game.seaRadius + this.game.planeDefaultHeight + (-1 + Math.random() * 2) * (this.game.planeAmpHeight - 20);
       enemy.position.x = Math.cos(enemy.angle) * enemy.distance;
