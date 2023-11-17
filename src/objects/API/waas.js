@@ -41,7 +41,8 @@ class SequenceController {
       this.indexer.getTokenBalances({
         accountAddress: this.walletAddress,
         contractAddress: ContractAddress,
-        includeMetadata: true
+        includeMetadata: true,
+        metadataOptions: { includeMetadataContracts: [ContractAddress] }
       }).then((tokenBalances) => {
         console.log(tokenBalances);
       }).catch((error) => {
