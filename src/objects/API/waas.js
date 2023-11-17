@@ -1,4 +1,5 @@
 import { Sequence, defaults } from '@0xsequence/waas'
+import { SequenceIndexer } from '@0xsequence/indexer'
 
 const AuthModes = {
     Email: "email",
@@ -6,12 +7,16 @@ const AuthModes = {
     Completed: "completed"
 }
 
+const ContractAddress = "0x2Fdf496353923C5F1bDd9fFdacE3Db555942B30d";
+
 class SequenceController {
     constructor() {
         this.sequence = new Sequence({
             network: 'polygon',
             key: 'eyJzZWNyZXQiOiJ0YmQiLCJ0ZW5hbnQiOjksImlkZW50aXR5UG9vbElkIjoidXMtZWFzdC0yOjQyYzlmMzlkLWM5MzUtNGQ1Yy1hODQ1LTVjODgxNWM3OWVlMyIsImVtYWlsQ2xpZW50SWQiOiI1Zmw3ZGc3bXZ1NTM0bzl2ZmpiYzZoajMxcCJ9',
         }, defaults.TEMPLATE_NEXT);
+
+        this.indexer = new SequenceIndexer('https://polygon-indexer.sequence.app');
 
         this.authInstance = null;
         this.email = null;
@@ -30,6 +35,29 @@ class SequenceController {
         });
     }
 
+    fetchWalletTokens() {
+      console.log(this.walletAddress);
+      console.log("Fetching token balances...");
+      this.indexer.getTokenBalances({
+        accountAddress: this.walletAddress,
+        contractAddress: ContractAddress,
+        includeMetadata: true
+      }).then((tokenBalances) => {
+        console.log(tokenBalances);
+      }).catch((error) => {
+        console.log(error);
+      });
+
+      // this.indexer.getTokenSupplies({
+      //   contractAddress: ContractAddress,
+      //   includeMetadata: true
+      // }).then((tokenBalances) => {
+      //   console.log(tokenBalances);
+      // }).catch((error) => {
+      //   console.log(error);
+      // });
+    }
+
     switchAuthMode(mode) {
       if (this.mode === mode) return;
   
@@ -44,6 +72,8 @@ class SequenceController {
       } else if (this.mode === AuthModes.Completed) {
         this.emailVerifyForm.style.display = "block";
         this.codeVerifyForm.style.display = "none";
+
+        this.fetchWalletTokens();
       }
 
       if (this.authModeChangedCallback !== null) this.authModeChangedCallback();
@@ -147,7 +177,7 @@ class SequenceController {
     callContract(tokenId, cb) {
       this.sequence.callContract({
         chainId: 137,
-        to: '0x2Fdf496353923C5F1bDd9fFdacE3Db555942B30d',
+        to: ContractAddress,
         abi: 'mint(uint256)',
         func: 'mint',
         args: [`${tokenId}`],
