@@ -24,6 +24,8 @@ class SequenceController {
         this.mode = AuthModes.Email;
         this.walletAddress = null;
         this.authModeChangedCallback = null;
+        this.balancesChangedCallback = null;
+        this.ownedTokenBalances = [];
 
         this.emailVerifyForm = document.getElementById("emailVerify");
         this.codeVerifyForm = document.getElementById("codeVerify");
@@ -45,18 +47,15 @@ class SequenceController {
         metadataOptions: { includeMetadataContracts: [ContractAddress] }
       }).then((tokenBalances) => {
         console.log(tokenBalances);
+        this.ownedTokenBalances = [];
+        for (let i = 0; i < tokenBalances.balances.length; i++) {
+          const balance = tokenBalances.balances[i];
+          this.ownedTokenBalances.push(balance.tokenID);
+        }
+        if (this.balancesChangedCallback !== null) this.balancesChangedCallback();
       }).catch((error) => {
         console.log(error);
       });
-
-      // this.indexer.getTokenSupplies({
-      //   contractAddress: ContractAddress,
-      //   includeMetadata: true
-      // }).then((tokenBalances) => {
-      //   console.log(tokenBalances);
-      // }).catch((error) => {
-      //   console.log(error);
-      // });
     }
 
     switchAuthMode(mode) {

@@ -13,7 +13,9 @@ const GameModes = {
 	Playing: "playing",
 	Paused: "paused",
 	GameEnding: "gameending",
-	GameOver: "gameover"
+	GameOver: "gameover",
+  CardWon: "cardwon",
+  CardReady: "cardready",
 }
 
 export default class MainScene extends Group {
@@ -22,12 +24,23 @@ export default class MainScene extends Group {
 
     this.sequenceController = new SequenceController();
     this.sequenceController.authModeChangedCallback = this.authModeChanged.bind(this);
+    this.sequenceController.balancesChangedCallback = this.walletBalancesChanged.bind(this);
     this.leaderboardManager = new LeaderboardManager();
 
     this.game_mode = GameModes.Intro;
     this.message_box = document.getElementById("replayMessage");
     this.distance_box = document.getElementById("distValue");
     this.score_box = document.getElementById("score");
+    this.card_slots = document.getElementById("cardSlots");
+    this.card_containers = [];
+
+    for (let i = 0; i < 5; i++) {
+      const cardContainer = document.getElementById("cardSlot" + (i + 1));
+
+      this.card_containers.push(cardContainer);
+    }
+
+    this.activeCardID = null;
 
     this.sea = new Sea();
     this.sky = new Sky();
@@ -50,6 +63,77 @@ export default class MainScene extends Group {
     this.resetGame();
   }
 
+  showCard(cardID) {
+    this.game_mode = GameModes.CardWon;
+    this.activeCardID = cardID;
+
+    const card = document.createElement("div");
+    const cardBack = document.createElement("div");
+    const cardContainer = document.getElementById("cardContainer");
+
+    card.id = "activeCard";
+    card.className = "card card-" + cardID;
+    cardBack.className = "card-backface";
+
+    cardContainer.appendChild(card);
+    card.appendChild(cardBack);
+
+    const tl = gsap.timeline({
+      onComplete: this.showCardCleanUp.bind(this)
+    });
+
+    tl.to(card, {
+        duration: 0.75, // Duration of the animation
+        y: 0, // Move to its original position
+        rotationY: 0, // Flip to show the front
+        ease: "power1.out"
+    });
+
+    tl.add(() => {}, "+=2");
+  }
+
+  showCardCleanUp() {
+    this.game_mode = GameModes.CardReady;
+  }
+
+  removeCard() {
+    if (this.activeCardID === null) return;
+
+    const cardID = this.activeCardID;
+    this.activeCardID = null;
+
+    const tl = gsap.timeline({
+      onComplete: this.cleanUpCard.bind(this),
+      onCompleteParams: [cardID]
+    });
+
+    const cardSlot = this.card_containers[parseInt(cardID)];
+    const { x, y, width, height } = cardSlot.getBoundingClientRect();
+    const card = document.getElementById("activeCard");
+
+    tl.to(card, {
+        duration: 1.25,
+        x: x - card.getBoundingClientRect().left + window.scrollX - width + 7,
+        y: y - card.getBoundingClientRect().top + window.scrollY - height + 7,
+        rotationY: 360,
+        scale: 0.33, // Adjust the scale as per the card size
+        ease: "power1.out"
+    });
+
+    tl.add(this.cleanUpCard.bind(this), "+=1");
+  }
+
+  cleanUpCard(cardID) {
+    if (cardID === undefined) return;
+    
+    this.addCard(cardID);
+    
+    const cardContainer = document.getElementById("cardContainer");
+    cardContainer.innerHTML = "";
+    
+    this.game_mode = GameModes.GameOver;
+  }
+
   openLoginModal() {
     var modal = document.getElementById("loginModal");
     modal.setAttribute("open", true);
@@ -58,6 +142,34 @@ export default class MainScene extends Group {
   closeLoginModal() {
     var modal = document.getElementById("loginModal");
     modal.setAttribute("open", false);
+  }
+
+  clearAllCards() {
+    for (let i = 0; i < 5; i++) {
+      const cardContainer = this.card_containers[i];
+      cardContainer.innerHTML = "";
+    }
+  }
+
+  addCard(cardID) {
+    const cardContainer = this.card_containers[parseInt(cardID)];
+    const card = document.createElement("div");
+
+    card.className = "card card-" + cardID;
+
+    cardContainer.appendChild(card);
+  }
+
+  walletBalancesChanged() {
+    console.log(this.sequenceController.ownedTokenBalances);
+
+    this.clearAllCards();
+
+    for (let i = 0; i < this.sequenceController.ownedTokenBalances.length; i++) {
+      const tokenID = this.sequenceController.ownedTokenBalances[i];
+
+      this.addCard(tokenID);
+    }
   }
 
   authModeChanged() {
@@ -145,20 +257,24 @@ export default class MainScene extends Group {
     if (this.game_mode === GameModes.Intro) {
       this.message_box.style.display = "block";
       this.score_box.style.display = "none";
+      this.card_slots.style.display = "none";
       this.leaderboardManager.leaderboardWrapper.style.display = "block";
       this.message_box.innerHTML = "Click to Login";
     } else if (this.game_mode === GameModes.Playing) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "none";
+      this.card_slots.style.display = "none";
       this.leaderboardManager.leaderboardWrapper.style.display = "none";
     } else if (this.game_mode === GameModes.Paused) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
+      this.card_slots.style.display = "block";
       this.leaderboardManager.leaderboardWrapper.style.display = "block";
       this.message_box.innerHTML = "Paused<br>Click to Resume";
     } else if (this.game_mode === GameModes.GameEnding) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
+      this.card_slots.style.display = "block";
       this.leaderboardManager.leaderboardWrapper.style.display = "block";
       this.message_box.innerHTML = "Game Over";
       
@@ -167,32 +283,40 @@ export default class MainScene extends Group {
       this.leaderboardManager.saveScore(this.game.distance, this.sequenceController.email, this.sequenceController.walletAddress);
     } else if (this.game_mode === GameModes.GameOver) {
 
-      if(this.game.distance >= 2500){
+      if (this.game.distance >= 2500) {
         this.sequenceController.callContract(3, (tx) => {
-          console.log(tx)
+          console.log(tx);
+          this.showCard(3);
         })
-      } else if(this.isLast3RunsOver500Each()){
+      } else if (this.isLast3RunsOver500Each()) {
         this.sequenceController.callContract(2, (tx) => {
-          console.log(tx)
+          console.log(tx);
+          this.showCard(2);
         })
-      } else if(this.game.distance >= 1000 && this.game.distance < 2500){
+      } else if (this.game.distance >= 1000 && this.game.distance < 2500) {
         this.sequenceController.callContract(1, (tx) => {
-          console.log(tx)
+          console.log(tx);
+          this.showCard(1);
         })
-      } else if(this.isFirstCrash()){
+      } else if (this.isFirstCrash()) {
         this.sequenceController.callContract(0, (tx) => {
-          console.log(tx)
+          console.log(tx);
+          this.showCard(0);
         })
-      } else if (this.isFirstPylonCrash){
+      } else if (this.isFirstPylonCrash) {
         this.sequenceController.callContract(4, (tx) => {
-          console.log(tx)
+          console.log(tx);
+          this.showCard(4);
         })
       }
 
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
+      this.card_slots.style.display = "block";
       this.leaderboardManager.leaderboardWrapper.style.display = "block";
       this.message_box.innerHTML = "Game Over<br>Click to Replay";
+
+      this.showCard(2);
     }
   }
 
@@ -208,7 +332,22 @@ export default class MainScene extends Group {
       this.switchGameMode(GameModes.Paused);
     } else if (this.game_mode === GameModes.Paused) {
       this.switchGameMode(GameModes.Playing);
+    } else if (this.game_mode === GameModes.GameEnding || this.game_mode === GameModes.CardWon) {
+      return;
+    } else if (this.game_mode === GameModes.CardReady) {
+      if (this.activeCardID !== null) {
+        this.removeCard(this.activeCardID);
+        this.activeCardID = null;
+      }
+
+      return;
     } else if (this.game_mode === GameModes.GameOver) {
+      if (this.activeCardID !== null) {
+        this.removeCard(this.activeCardID);
+        this.activeCardID = null;
+        return;
+      }
+
       for (const enemy of this.enemies) {
         this.remove(enemy);
         this.enemies.delete(enemy);
@@ -252,7 +391,7 @@ export default class MainScene extends Group {
       if (this.airplane.position.y < -200) {
         this.switchGameMode(GameModes.GameOver);
       }
-    } else if (this.game_mode !== GameModes.GameOver) {
+    } else if (this.game_mode !== GameModes.GameOver && this.game_mode !== GameModes.CardWon && this.game_mode !== GameModes.CardReady) {
       this.updatePlane(deltaTime, mousePos);
     }
 

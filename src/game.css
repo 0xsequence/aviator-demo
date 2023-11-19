@@ -103,9 +103,13 @@ dialog input {
 	display: none;
 }
 
-img.logo {
+div.logo {
 	background-image: url("../images/horizon-logo-alt.svg");
+	background-size: cover;
 	width: 300px;
+	height: 195px;
+	display: block;
+	margin: 0 auto;
 }
 
 #leaderboard {
@@ -170,4 +174,84 @@ img.logo {
 	.header h2 {
 		letter-spacing: 0.65em;
 	}
+}
+
+.card-container {
+	perspective: 1000px; /* Required for 3D effects */
+    position: fixed; /* Updated */
+    left: 50%; /* Center horizontally */
+	top: 50%;
+    transform: translateX(-50%) translateY(-50%); /* Adjust for the card's width */
+	transform-style: preserve-3d;
+	z-index: 2;
+}
+
+.card {
+	width: 300px; /* Adjust as needed */
+	height: 400px;
+	transform: translateY(100vh) rotateY(180deg); /* Start offscreen, flipped */
+	transform-style: preserve-3d;
+	transition: transform 1s;
+	position: relative;
+    backface-visibility: hidden; /* Ensures the back isn't visible when flipped */
+	background-size: cover;
+	background-position: center;
+}
+
+.card-0 {
+	background-image: url("../images/card1-firstcrash.png");
+}
+
+.card-1 {
+	background-image: url("../images/card2-1000m.png");
+}
+
+.card-2 {
+	background-image: url("../images/card3-3runs.png");
+}
+
+.card-3 {
+	background-image: url("../images/card4-2500m.png");
+}
+
+.card-4 {
+	background-image: url("../images/card5-firstpylon.png");
+}
+
+.card-backface {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+	background-image: url("../images/card-back.png");
+	background-size: cover;
+	background-position: center;
+    backface-visibility: hidden;
+    transform: rotateY(180deg); /* Flip the back side */
+}
+
+.card-slots {
+	position: fixed;
+	top: 10px;
+	left: 10px;
+}
+
+.card-slot {
+	width: 104px; /* Adjust as needed */
+	height: 138px; /* Adjust as needed */
+	border: 2px solid #333; /* Border for the slot */
+	border-radius: 5px;
+  	background: rgba(0, 0, 0, 0.8);;
+	/* opacity: 0.8; */
+	z-index: 1;
+	margin-bottom: 10px;
+}
+
+.card-slot .card {
+	width: 100px; /* Match card slot width */
+	height: 134px;
+	transform: none;
+	transition: none;
+	z-index: 4;
 }

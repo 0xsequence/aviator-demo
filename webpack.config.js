@@ -21,10 +21,10 @@ module.exports = {
         exclude: path.resolve(__dirname, './node_modules/')
       },{
         test: /\.(jpe?g|png|gif|svg|tga|glb|babylon|mtl|pcb|pcd|prwm|obj|mat|mp3|ogg)$/i,
-        loader: 'file-loader',
+        type: 'asset/resource',
         exclude: path.resolve(__dirname, './node_modules/'),
-        options: {
-          name: '/assets/[name].[ext]'
+        generator: {
+          filename: 'assets/[name].[ext]'
         }
       },{
         test: /\.css$/i,
