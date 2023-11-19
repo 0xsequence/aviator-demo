@@ -152,8 +152,10 @@ class SequenceController {
   
     createWalletAddress() {
       this.sequence.signIn(this.token, this.email).then((address) => {
-        this.walletAddress = address;
-        this.switchAuthMode(AuthModes.Completed);
+        console.log(address);
+        // this.walletAddress = address;
+        // this.switchAuthMode(AuthModes.Completed);
+        this.fetchWalletAddress();
       }).catch((error) => {
         alert(error);
         this.mode = AuthModes.Email;
