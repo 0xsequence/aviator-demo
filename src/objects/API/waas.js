@@ -203,6 +203,7 @@ class SequenceController {
     }
 
     callContract(tokenId, cb) {
+      console.log("Calling contract", tokenId);
       this.sequence.callContract({
         chainId: 137,
         to: ContractAddress,
@@ -212,7 +213,9 @@ class SequenceController {
         value: 0                                           
       }).then((tx)=> {
         cb(tx)
-      })
+      }).catch((error) => {
+        console.log(error);
+      });
     }
 }
 
