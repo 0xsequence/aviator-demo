@@ -247,6 +247,8 @@ export default class MainScene extends Group {
     this.card_label.innerHTML = "";
     
     this.game_mode = GameModes.GameOver;
+
+    this.sequenceController.fetchWalletTokens();
   }
 
   openLoginModal() {

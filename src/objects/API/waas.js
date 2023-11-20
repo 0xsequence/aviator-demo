@@ -58,6 +58,7 @@ class SequenceController {
     }
 
     fetchWalletTokens() {
+      if (this.mode !== AuthModes.Completed) return;
       console.log(this.walletAddress);
       console.log("Fetching token balances...");
       this.indexer.getTokenBalances({
