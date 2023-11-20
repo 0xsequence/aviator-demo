@@ -123,20 +123,6 @@ div.logo {
 	color: #d1b790;
 }
 
-.message--instructions {
-	font-family: 'Playfair Display';
-	font-size: 0.85em;
-	bottom: 8vh;
-	letter-spacing: 0.2em;
-	color: #68c3c0;
-}
-
-.message--instructions span {
-	display: block;
-	color: #d6483b;
-	white-space: nowrap;
-}
-
 @-webkit-keyframes blinking {
 	0% { opacity: 1; }
 	50% { opacity: 0; }
@@ -250,4 +236,15 @@ div.logo {
 	transform: none;
 	transition: none;
 	z-index: 4;
+	pointer-events: none;
+}
+
+.card-tooltip {
+	font-weight: bold;
+	font-size: 1.5em;
+	color: #d1b790;
+	background: rgba(0, 0, 0, 0.8);
+	padding: 4px;
+	border-radius: 5px;
+	display: none;
 }

@@ -51,6 +51,9 @@ export default class MainScene extends Group {
     for (let i = 0; i < 5; i++) {
       const cardContainer = document.getElementById("cardSlot" + (i + 1));
 
+      cardContainer.addEventListener('mouseover', this.handleCardSlotHover.bind(this), false);
+      cardContainer.addEventListener('mouseout', this.handleCardSlotHoverOut.bind(this), false);
+
       this.card_containers.push(cardContainer);
     }
 
@@ -77,8 +80,49 @@ export default class MainScene extends Group {
     this.resetGame();
   }
 
+  handleCardSlotHoverOut(event) {
+    let cardTooltipContainer = document.getElementById("cardTooltip");
+
+    cardTooltipContainer.innerHTML = "";
+    cardTooltipContainer.style.display = "none";
+  }
+
+  handleCardSlotHover(event) {
+    let cardID = this.card_containers.indexOf(event.target);
+    if (cardID === -1) return;
+    
+    let cardTooltipContainer = document.getElementById("cardTooltip");
+    
+    cardTooltipContainer.style.display = "block";
+
+    switch (cardID) {
+      case CardTypes.FirstCrash:
+        cardTooltipContainer.innerHTML = this.isCardWon(cardID) ? "First Crash!" : "???";
+        break;
+
+      case CardTypes.ThousandMeterRun:
+        cardTooltipContainer.innerHTML = this.isCardWon(cardID) ? "1000m Run!" : "???";
+        break;
+
+      case CardTypes.ThreeRuns:
+        cardTooltipContainer.innerHTML =  this.isCardWon(cardID) ? "Three 500m Runs in a Row!" : "???";
+        break;
+
+      case CardTypes.TwentyFiveHundredMeterRun:
+        cardTooltipContainer.innerHTML =  this.isCardWon(cardID) ? "2500m Run!" : "???";
+        break;
+
+      case CardTypes.FirstPylonCrash:
+        cardTooltipContainer.innerHTML =  this.isCardWon(cardID) ? "Crashed with First Pylon!" : "???";
+        break;
+  
+      default:
+        cardTooltipContainer.innerHTML = "";
+        break;
+    }
+  }
+
   showCard(cardID) {
-    console.log("Show card:", cardID);
     this.game_mode = GameModes.CardWon;
     this.activeCardID = cardID;
 
@@ -161,7 +205,7 @@ export default class MainScene extends Group {
         x: x - card.getBoundingClientRect().left + window.scrollX - width + 7,
         y: y - card.getBoundingClientRect().top + window.scrollY - height + 7,
         rotationY: 360,
-        scale: 0.33, // Adjust the scale as per the card size
+        scale: 0.33,
         ease: "power1.out"
     });
 
@@ -212,8 +256,6 @@ export default class MainScene extends Group {
   }
 
   walletBalancesChanged() {
-    console.log(this.sequenceController.ownedTokenBalances);
-
     this.clearAllCards();
 
     for (let i = 0; i < this.sequenceController.ownedTokenBalances.length; i++) {

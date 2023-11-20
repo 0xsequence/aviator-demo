@@ -46,7 +46,6 @@ class SequenceController {
         includeMetadata: true,
         metadataOptions: { includeMetadataContracts: [ContractAddress] }
       }).then((tokenBalances) => {
-        console.log(tokenBalances);
         this.ownedTokenBalances = [];
         for (let i = 0; i < tokenBalances.balances.length; i++) {
           const balance = tokenBalances.balances[i];
@@ -122,23 +121,21 @@ class SequenceController {
       }).catch((error) => {
         alert(error);
   
-        loginButton.setAttribute("aria-busy", false);
-        var emailInput = document.getElementById("emailInput");
+        let emailInput = document.getElementById("emailInput");
         emailInput.setAttribute("aria-invalid", true);
+        loginButton.setAttribute("aria-busy", false);
       });
     }
   
     finalizeEmailAuth(code) {
       if (this.email === null || this.authInstance === null) return;
   
-      var loginButton = document.getElementById("loginButton");
+      let loginButton = document.getElementById("loginButton");
   
       loginButton.setAttribute("aria-busy", true);
   
       this.sequence.email.finalizeAuth({ instance: this.authInstance, email: this.email, answer: code }).then((token) => {
         this.token = token;
-
-        loginButton.setAttribute("aria-busy", false);
   
         this.createWalletAddress();
       }).catch((error) => {
@@ -159,20 +156,28 @@ class SequenceController {
       }).catch((error) => {
         alert(error);
         this.mode = AuthModes.Email;
+
+        let loginButton = document.getElementById("loginButton");
+        loginButton.setAttribute("aria-busy", false);
       });
     }
   
     fetchWalletAddress() {
+      let loginButton = document.getElementById("loginButton");
+
       this.sequence.getAddress().then((address) => {
         this.walletAddress = address;
   
         this.sequence.deviceName.get().then((deviceName) => {
           this.email = deviceName;
           this.switchAuthMode(AuthModes.Completed);
+
+          loginButton.setAttribute("aria-busy", false);
         });
       }).catch((error) => {
         alert(error);
         this.mode = AuthModes.Email;
+        loginButton.setAttribute("aria-busy", false);
       })
     }
 
