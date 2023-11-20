@@ -16,6 +16,7 @@ const GameModes = {
 	GameOver: "gameover",
   CardWon: "cardwon",
   CardReady: "cardready",
+  SigningOut: "signingout",
 }
 
 const CardTypes = {
@@ -41,12 +42,15 @@ export default class MainScene extends Group {
     this.leaderboardManager = new LeaderboardManager();
 
     this.game_mode = GameModes.Intro;
+    this.signout_btn = document.getElementById("signOutBtn");
     this.message_box = document.getElementById("replayMessage");
     this.distance_box = document.getElementById("distValue");
     this.score_box = document.getElementById("score");
     this.card_slots = document.getElementById("cardSlots");
     this.card_label = document.getElementById("cardLabel");
     this.card_containers = [];
+
+    this.signout_btn.addEventListener('mouseup', this.handleSignOut.bind(this), false);
 
     for (let i = 0; i < 5; i++) {
       const cardContainer = document.getElementById("cardSlot" + (i + 1));
@@ -78,6 +82,22 @@ export default class MainScene extends Group {
 
     this.add(this.sky, this.sea, this.airplane, this.lights);
     this.resetGame();
+  }
+
+  handleSignOut(event) {
+    this.game_mode = GameModes.SigningOut;
+    this.signout_btn.style.display = "none";
+
+    this.sequenceController.closeSession((error) => {
+      if (error) {
+        this.signout_btn.style.display = "block";
+        return;
+      }
+
+      this.switchGameMode(GameModes.Intro);
+      this.resetGame();
+      this.clearLocalStores();
+    });
   }
 
   handleCardSlotHoverOut(event) {
@@ -270,6 +290,13 @@ export default class MainScene extends Group {
       this.closeLoginModal();
 
       this.message_box.innerHTML = "Welcome " + this.sequenceController.email + "!<br>Click to Start";
+      this.signout_btn.style.display = "block";
+      this.card_slots.style.display = "block";
+      this.leaderboardManager.leaderboardWrapper.style.display = "block";
+    } else {
+      this.signout_btn.style.display = "none";
+      this.card_slots.style.display = "none";
+      this.leaderboardManager.leaderboardWrapper.style.display = "none";
     }
   }
 
@@ -330,6 +357,22 @@ export default class MainScene extends Group {
     }
   }
 
+  clearLocalStores() {
+    if (!localStorage.getItem(LocalStorageKeys.LastRunID)) {
+      return;
+    }
+    
+    let lastRun = Number(localStorage.getItem(LocalStorageKeys.LastRunID));
+
+    for (let i = 0; i < lastRun; i++) {
+      let key = LocalStorageKeys.RunDistancePrefix + String(i);
+      if (!localStorage.getItem(key)) continue;
+      localStorage.removeItem(key);
+    }
+
+    localStorage.removeItem(LocalStorageKeys.LastRunID);
+  }
+
   updateLocalScores() {
     if (!localStorage.getItem(LocalStorageKeys.LastRunID)) {
       localStorage.setItem(LocalStorageKeys.LastRunID, String(0));
@@ -365,19 +408,22 @@ export default class MainScene extends Group {
       this.message_box.style.display = "none";
       this.card_slots.style.display = "none";
       this.leaderboardManager.leaderboardWrapper.style.display = "none";
+      this.signout_btn.style.display = "none";
     } else if (this.game_mode === GameModes.Paused) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
       this.card_slots.style.display = "block";
       this.leaderboardManager.leaderboardWrapper.style.display = "block";
       this.message_box.innerHTML = "Paused<br>Click to Resume";
+      this.signout_btn.style.display = "block";
     } else if (this.game_mode === GameModes.GameEnding) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
       this.card_slots.style.display = "block";
       this.leaderboardManager.leaderboardWrapper.style.display = "block";
       this.message_box.innerHTML = "Game Over";
-      
+      this.signout_btn.style.display = "none";
+
       this.updateLocalScores()
 
       this.leaderboardManager.saveScore(this.game.distance, this.sequenceController.email, this.sequenceController.walletAddress);
@@ -387,6 +433,7 @@ export default class MainScene extends Group {
       this.card_slots.style.display = "block";
       this.leaderboardManager.leaderboardWrapper.style.display = "block";
       this.message_box.innerHTML = "Game Over<br>Click to Replay";
+      this.signout_btn.style.display = "block";
 
       if (this.game.distance >= 2500 && !this.isCardWon(CardTypes.TwentyFiveHundredMeterRun)) {
         this.showCard(CardTypes.TwentyFiveHundredMeterRun);
@@ -418,6 +465,7 @@ export default class MainScene extends Group {
   }
 
   handleMouseClick() {
+    if (this.game_mode === GameModes.SigningOut) return;
     if (this.sequenceController.mode !== AuthModes.Completed) {
       this.openLoginModal();
       return;

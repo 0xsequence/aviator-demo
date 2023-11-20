@@ -99,6 +99,7 @@ div.logo {
 	position: absolute;
 	top: 3vh;
 	right: 3vh;
+	display: none;
 }
 
 #leaderboard ol li {
@@ -218,6 +219,7 @@ div.logo {
 	position: fixed;
 	top: 10px;
 	left: 10px;
+	display: none;
 }
 
 .card-slot {
@@ -246,5 +248,13 @@ div.logo {
 	background: rgba(0, 0, 0, 0.8);
 	padding: 4px;
 	border-radius: 5px;
+	display: none;
+}
+
+#signOutBtn {
+	width: 200px;
+	position: absolute;
+	right: 20px;
+	bottom: 10px;
 	display: none;
 }

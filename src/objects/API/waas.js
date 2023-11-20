@@ -37,6 +37,26 @@ class SequenceController {
         });
     }
 
+    closeSession(callback) {
+      this.sequence.getSessionID().then((sessionID) => {
+        this.sequence.dropSession({sessionId: sessionID}).then(() => {
+          this.authInstance = null;
+          this.email = null;
+          this.token = null;
+          this.mode = AuthModes.Email;
+          this.walletAddress = null;
+
+          callback(null);
+        }).catch((error) => {
+          console.log(error);
+          callback(error);
+        })
+      }).catch((error) => {
+        console.log(error);
+        callback(error);
+      });
+    }
+
     fetchWalletTokens() {
       console.log(this.walletAddress);
       console.log("Fetching token balances...");
