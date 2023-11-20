@@ -48,6 +48,7 @@ export default class MainScene extends Group {
     this.score_box = document.getElementById("score");
     this.card_slots = document.getElementById("cardSlots");
     this.card_label = document.getElementById("cardLabel");
+    this.leaderboard_wrapper = document.getElementById("leaderboardContainer");
     this.card_containers = [];
 
     this.signout_btn.addEventListener('mouseup', this.handleSignOut.bind(this), false);
@@ -294,11 +295,11 @@ export default class MainScene extends Group {
       this.message_box.innerHTML = "Welcome " + this.sequenceController.email + "!<br>Click to Start";
       this.signout_btn.style.display = "block";
       this.card_slots.style.display = "block";
-      this.leaderboardManager.leaderboardWrapper.style.display = "block";
+      this.leaderboard_wrapper.style.display = "block";
     } else {
       this.signout_btn.style.display = "none";
       this.card_slots.style.display = "none";
-      this.leaderboardManager.leaderboardWrapper.style.display = "none";
+      this.leaderboard_wrapper.style.display = "none";
     }
   }
 
@@ -403,26 +404,26 @@ export default class MainScene extends Group {
       this.message_box.style.display = "block";
       this.score_box.style.display = "none";
       this.card_slots.style.display = "none";
-      this.leaderboardManager.leaderboardWrapper.style.display = "block";
+      this.leaderboard_wrapper.style.display = "block";
       this.message_box.innerHTML = "Click to Login";
     } else if (this.game_mode === GameModes.Playing) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "none";
       this.card_slots.style.display = "none";
-      this.leaderboardManager.leaderboardWrapper.style.display = "none";
+      this.leaderboard_wrapper.style.display = "none";
       this.signout_btn.style.display = "none";
     } else if (this.game_mode === GameModes.Paused) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
       this.card_slots.style.display = "block";
-      this.leaderboardManager.leaderboardWrapper.style.display = "block";
+      this.leaderboard_wrapper.style.display = "block";
       this.message_box.innerHTML = "Paused<br>Click to Resume";
       this.signout_btn.style.display = "block";
     } else if (this.game_mode === GameModes.GameEnding) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
       this.card_slots.style.display = "block";
-      this.leaderboardManager.leaderboardWrapper.style.display = "block";
+      this.leaderboard_wrapper.style.display = "block";
       this.message_box.innerHTML = "Game Over";
       this.signout_btn.style.display = "none";
 
@@ -433,7 +434,7 @@ export default class MainScene extends Group {
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
       this.card_slots.style.display = "block";
-      this.leaderboardManager.leaderboardWrapper.style.display = "block";
+      this.leaderboard_wrapper.style.display = "block";
       this.message_box.innerHTML = "Game Over<br>Click to Replay";
       this.signout_btn.style.display = "block";
 

@@ -16,11 +16,11 @@ class LeaderboardManager {
 
             const leaderboardList = this.leaderboardWrapper.appendChild(document.createElement("ol"));
 
-            for (let i = 0; i < this.leaderboard.length; i++) {
+            for (let i = 0; i < Math.min(this.leaderboard.length, 5); i++) {
                 const listItem = leaderboardList.appendChild(document.createElement("li"));
                 const entry = this.leaderboard[i];
 
-                listItem.innerHTML = entry.email + " " + entry.score;
+                listItem.innerHTML = "<mark>" + entry.email + "</mark><small>" + entry.score + "</small>";
             }
             });
         });
