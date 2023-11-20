@@ -24,23 +24,6 @@
 	pointer-events: none;
 }
 
-.header h1 {
-	font-family: 'Playfair Display';
-	font-size: 4.5em;
-	line-height: 1;
-	margin: 0;
-	letter-spacing: -0.025em;
-	color: #d1b790;
-}
-
-.header h1 span {
-	font-size: 0.2em;
-	font-style: italic;
-	display: block;
-	margin: 0 0 -1.5em -7em;
-	letter-spacing: 0px;
-}
-
 .header h2 {
 	font-size: 0.585em;
 	margin: 0.25em 0;
@@ -176,24 +159,38 @@ div.logo {
 	}
 }
 
+.card-label {
+	position: absolute;
+	bottom: 10vh;
+	width: 100%;
+	text-align: center;
+	font-size: 4.5em;
+	line-height: 1;
+	margin: 0;
+	color: #d1b790;
+	opacity: 0;
+	pointer-events: none;
+}
+
 .card-container {
-	perspective: 1000px; /* Required for 3D effects */
-    position: fixed; /* Updated */
-    left: 50%; /* Center horizontally */
+	perspective: 1000px;
+    position: fixed;
+    left: 50%;
 	top: 50%;
-    transform: translateX(-50%) translateY(-50%); /* Adjust for the card's width */
+    transform: translateX(-50%) translateY(-50%);
 	transform-style: preserve-3d;
 	z-index: 2;
+	pointer-events: none;
 }
 
 .card {
-	width: 300px; /* Adjust as needed */
+	width: 300px;
 	height: 400px;
-	transform: translateY(100vh) rotateY(180deg); /* Start offscreen, flipped */
+	transform: translateY(100vh) rotateY(180deg);
 	transform-style: preserve-3d;
 	transition: transform 1s;
 	position: relative;
-    backface-visibility: hidden; /* Ensures the back isn't visible when flipped */
+    backface-visibility: hidden;
 	background-size: cover;
 	background-position: center;
 }
@@ -228,7 +225,7 @@ div.logo {
 	background-size: cover;
 	background-position: center;
     backface-visibility: hidden;
-    transform: rotateY(180deg); /* Flip the back side */
+    transform: rotateY(180deg);
 }
 
 .card-slots {
@@ -238,18 +235,17 @@ div.logo {
 }
 
 .card-slot {
-	width: 104px; /* Adjust as needed */
-	height: 138px; /* Adjust as needed */
-	border: 2px solid #333; /* Border for the slot */
+	width: 104px;
+	height: 138px;
+	border: 2px solid #333;
 	border-radius: 5px;
-  	background: rgba(0, 0, 0, 0.8);;
-	/* opacity: 0.8; */
+  	background: rgba(0, 0, 0, 0.8);
 	z-index: 1;
 	margin-bottom: 10px;
 }
 
 .card-slot .card {
-	width: 100px; /* Match card slot width */
+	width: 100px;
 	height: 134px;
 	transform: none;
 	transition: none;

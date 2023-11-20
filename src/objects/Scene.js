@@ -45,6 +45,7 @@ export default class MainScene extends Group {
     this.distance_box = document.getElementById("distValue");
     this.score_box = document.getElementById("score");
     this.card_slots = document.getElementById("cardSlots");
+    this.card_label = document.getElementById("cardLabel");
     this.card_containers = [];
 
     for (let i = 0; i < 5; i++) {
@@ -77,8 +78,34 @@ export default class MainScene extends Group {
   }
 
   showCard(cardID) {
+    console.log("Show card:", cardID);
     this.game_mode = GameModes.CardWon;
     this.activeCardID = cardID;
+
+    switch (cardID) {
+      case CardTypes.FirstCrash:
+        this.card_label.innerHTML = "First Crash!";
+        break;
+
+      case CardTypes.ThousandMeterRun:
+        this.card_label.innerHTML = "1000m Run!";
+        break;
+
+      case CardTypes.ThreeRuns:
+        this.card_label.innerHTML = "Three 500m Runs in a Row!";
+        break;
+
+      case CardTypes.TwentyFiveHundredMeterRun:
+        this.card_label.innerHTML = "2500m Run!";
+        break;
+
+      case CardTypes.FirstPylonCrash:
+        this.card_label.innerHTML = "Crashed with First Pylon!";
+        break;
+  
+      default:
+        break;
+    }
 
     const card = document.createElement("div");
     const cardBack = document.createElement("div");
@@ -100,6 +127,11 @@ export default class MainScene extends Group {
         y: 0, // Move to its original position
         rotationY: 0, // Flip to show the front
         ease: "power1.out"
+    });
+
+    tl.to(this.card_label, {
+      duration: 0.75,
+      opacity: 1.0,
     });
 
     tl.add(() => {}, "+=2");
@@ -133,6 +165,11 @@ export default class MainScene extends Group {
         ease: "power1.out"
     });
 
+    tl.to(this.card_label, {
+      duration: 1.25,
+      opacity: 0.0,
+    });
+
     tl.add(this.cleanUpCard.bind(this), "+=1");
   }
 
@@ -143,6 +180,7 @@ export default class MainScene extends Group {
     
     const cardContainer = document.getElementById("cardContainer");
     cardContainer.innerHTML = "";
+    this.card_label.innerHTML = "";
     
     this.game_mode = GameModes.GameOver;
   }
