@@ -18,6 +18,19 @@ const GameModes = {
   CardReady: "cardready",
 }
 
+const CardTypes = {
+  FirstCrash: 0,
+  ThousandMeterRun: 1,
+  ThreeRuns: 2,
+  TwentyFiveHundredMeterRun: 3,
+  FirstPylonCrash: 4,
+}
+
+const LocalStorageKeys = {
+  LastRunID: "last_run_id",
+  RunDistancePrefix: "run_distance_",
+}
+
 export default class MainScene extends Group {
   constructor() {
     super();
@@ -201,6 +214,7 @@ export default class MainScene extends Group {
 
       seaRadius: 500,
     }
+
     this.isFirstPylonCrash = false
     this.enemiesTotal = 0;
   }
@@ -223,30 +237,36 @@ export default class MainScene extends Group {
     }
   }
 
-  firstPylonCrash() {
-    this.isFirstPylonCrash = true;
-  }
-
   isLast3RunsOver500Each() {
-    if(localStorage.getItem('nonce') && Number(localStorage.getItem('nonce')) > 3){
+    let lastRun = localStorage.getItem(LocalStorageKeys.LastRunID);
+    if (lastRun && Number(lastRun) > 3) {
       let runOf500 = true;
-      for(let i = Number(localStorage.getItem('nonce')) - 1; i >= Number(localStorage.getItem('nonce'))-3; --i) {
-        if(Number(localStorage.getItem(i)) < 500) runOf500 = false 
+      for (let i = Number(lastRun) - 1; i >= Number(lastRun) - 3; i--) {
+        if (Number(localStorage.getItem(LocalStorageKeys.RunDistancePrefix + String(i))) < 500) runOf500 = false;
       }
-      return runOf500
+      return runOf500;
     } else {
       return false
     }
   }
 
   updateLocalScores() {
-    if(!localStorage.getItem('nonce')) localStorage.setItem('nonce', String(0))
-    localStorage.setItem(`${localStorage.getItem('nonce')}`, String(this.game.distance))
-    localStorage.setItem('nonce',String(Number(localStorage.getItem('nonce'))+1))
+    if (!localStorage.getItem(LocalStorageKeys.LastRunID)) {
+      localStorage.setItem(LocalStorageKeys.LastRunID, String(0));
+    }
+    
+    let lastRun = Number(localStorage.getItem(LocalStorageKeys.LastRunID));
+
+    localStorage.setItem(LocalStorageKeys.RunDistancePrefix + String(lastRun), String(this.game.distance));
+    localStorage.setItem(LocalStorageKeys.LastRunID, String(lastRun + 1));
   }
 
   isFirstCrash() {
-    return localStorage.getItem('nonce') == 1 ? true : false
+    return Number(localStorage.getItem(LocalStorageKeys.LastRunID)) === 1;
+  }
+
+  isCardWon(cardID) {
+    return (this.sequenceController.ownedTokenBalances.includes(String(cardID)));
   }
 
   switchGameMode(new_game_mode) {
@@ -282,41 +302,38 @@ export default class MainScene extends Group {
 
       this.leaderboardManager.saveScore(this.game.distance, this.sequenceController.email, this.sequenceController.walletAddress);
     } else if (this.game_mode === GameModes.GameOver) {
-
-      if (this.game.distance >= 2500) {
-        this.sequenceController.callContract(3, (tx) => {
-          console.log(tx);
-          this.showCard(3);
-        })
-      } else if (this.isLast3RunsOver500Each()) {
-        this.sequenceController.callContract(2, (tx) => {
-          console.log(tx);
-          this.showCard(2);
-        })
-      } else if (this.game.distance >= 1000 && this.game.distance < 2500) {
-        this.sequenceController.callContract(1, (tx) => {
-          console.log(tx);
-          this.showCard(1);
-        })
-      } else if (this.isFirstCrash()) {
-        this.sequenceController.callContract(0, (tx) => {
-          console.log(tx);
-          this.showCard(0);
-        })
-      } else if (this.isFirstPylonCrash) {
-        this.sequenceController.callContract(4, (tx) => {
-          console.log(tx);
-          this.showCard(4);
-        })
-      }
-
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
       this.card_slots.style.display = "block";
       this.leaderboardManager.leaderboardWrapper.style.display = "block";
       this.message_box.innerHTML = "Game Over<br>Click to Replay";
 
-      this.showCard(2);
+      if (this.game.distance >= 2500 && !this.isCardWon(CardTypes.TwentyFiveHundredMeterRun)) {
+        this.showCard(CardTypes.TwentyFiveHundredMeterRun);
+        this.sequenceController.callContract(CardTypes.TwentyFiveHundredMeterRun, (tx) => {
+          console.log(tx);
+        })
+      } else if (this.isLast3RunsOver500Each() && !this.isCardWon(CardTypes.ThreeRuns)) {
+        this.showCard(CardTypes.ThreeRuns);
+        this.sequenceController.callContract(CardTypes.ThreeRuns, (tx) => {
+          console.log(tx);
+        })
+      } else if (this.game.distance >= 1000 && this.game.distance < 2500 && !this.isCardWon(CardTypes.ThousandMeterRun)) {
+        this.showCard(CardTypes.ThousandMeterRun);
+        this.sequenceController.callContract(CardTypes.ThousandMeterRun, (tx) => {
+          console.log(tx);
+        })
+      } else if (this.isFirstCrash() && !this.isCardWon(CardTypes.FirstCrash)) {
+        this.showCard(CardTypes.FirstCrash);
+        this.sequenceController.callContract(CardTypes.FirstCrash, (tx) => {
+          console.log(tx);
+        })
+      } else if (this.isFirstPylonCrash && !this.isCardWon(CardTypes.FirstPylonCrash)) {
+        this.showCard(CardTypes.FirstPylonCrash);
+        this.sequenceController.callContract(CardTypes.FirstPylonCrash, (tx) => {
+          console.log(tx);
+        })
+      }
     }
   }
 
@@ -409,8 +426,11 @@ export default class MainScene extends Group {
 
       if (this.collideCheck(this.airplane, enemy, this.game.enemyDistanceTolerance)) {
         this.explodeEnemy(enemy);
-        console.log(enemy.name);
-        if(enemy.name == 0) this.firstPylonCrash()
+
+        if (enemy.name === 0) {
+          this.isFirstPylonCrash = true;
+        }
+
         this.switchGameMode(GameModes.GameEnding);
       } else if (enemy.angle > Math.PI) {
         this.remove(enemy);
