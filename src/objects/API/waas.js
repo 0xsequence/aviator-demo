@@ -1,4 +1,4 @@
-import { Sequence, defaults } from '@0xsequence/waas'
+import { Sequence, defaults, isSentTransactionResponse } from '@0xsequence/waas'
 import { SequenceIndexer } from '@0xsequence/indexer'
 
 const AuthModes = {
@@ -37,6 +37,57 @@ class SequenceController {
         });
     }
 
+    burnToken(token, callback) {
+      // const txn = this.sequence.sendTransaction({
+      //   chainId: token.chainId,
+      //   transactions: [{
+      //     to: token.contractAddress,
+      //     value: token.balance,
+      //   }]
+      // }).then((response) => {
+      //   console.log(response);
+      //   callback(response, null);
+      // }).catch((error) => {
+      //   console.log("Error:", error);
+      //   callback(null, error);
+      // });
+
+      // if (isSentTransactionResponse(txn)) {
+      //   console.log(txn);
+      // } else {
+      //   callback(null, "Invalid txn");
+      // }
+
+      this.sequence.sendERC1155({
+        chainId: Number(token.chainId),
+        token: token.contractAddress,
+        to: token.contractAddress,
+        values: [{
+          id: token.tokenID,
+          value: token.balance,
+        }]
+      }).then((response) => {
+        console.log(response);
+        callback(response, null);
+      }).catch((error) => {
+          console.log("Error:", error);
+          callback(null, error);
+      });
+
+      // this.sequence.callContract({
+      //   chainId: token.chainId,
+      //   to: token.contractAddress,
+      //   abi: 'burn(uint256,uint256)',
+      //   func: 'burn',
+      //   args: [parseInt(token.tokenID), parseInt(token.balance)],
+      //   value: 0
+      // }).then((tx)=> {
+      //   callback(tx, null);
+      // }).catch((error) => {
+      //   callback(null, error);
+      // });
+    }
+
     closeSession(callback) {
       this.sequence.getSessionID().then((sessionID) => {
         this.sequence.dropSession({sessionId: sessionID}).then(() => {
@@ -67,11 +118,14 @@ class SequenceController {
         includeMetadata: true,
         metadataOptions: { includeMetadataContracts: [ContractAddress] }
       }).then((tokenBalances) => {
+        console.log(tokenBalances);
         this.ownedTokenBalances = [];
+        
         for (let i = 0; i < tokenBalances.balances.length; i++) {
           const balance = tokenBalances.balances[i];
-          this.ownedTokenBalances.push(balance.tokenID);
+          this.ownedTokenBalances.push(balance);
         }
+
         if (this.balancesChangedCallback !== null) this.balancesChangedCallback();
       }).catch((error) => {
         console.log(error);
@@ -171,8 +225,6 @@ class SequenceController {
     createWalletAddress() {
       this.sequence.signIn(this.token, this.email).then((address) => {
         console.log(address);
-        // this.walletAddress = address;
-        // this.switchAuthMode(AuthModes.Completed);
         this.fetchWalletAddress();
       }).catch((error) => {
         alert(error);
@@ -199,7 +251,7 @@ class SequenceController {
         alert(error);
         this.mode = AuthModes.Email;
         loginButton.setAttribute("aria-busy", false);
-      })
+      });
     }
 
     callContract(tokenId, cb) {
@@ -210,7 +262,7 @@ class SequenceController {
         abi: 'mint(uint256)',
         func: 'mint',
         args: [`${tokenId}`],
-        value: 0                                           
+        value: 0
       }).then((tx)=> {
         cb(tx)
       }).catch((error) => {

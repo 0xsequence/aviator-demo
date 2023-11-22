@@ -17,6 +17,7 @@ const GameModes = {
   CardWon: "cardwon",
   CardReady: "cardready",
   SigningOut: "signingout",
+  CardDetails: "carddetails",
 }
 
 const CardTypes = {
@@ -42,6 +43,7 @@ export default class MainScene extends Group {
     this.leaderboardManager = new LeaderboardManager();
 
     this.game_mode = GameModes.Intro;
+    this.game_mode_previous = null;
     this.signout_btn = document.getElementById("signOutBtn");
     this.message_box = document.getElementById("replayMessage");
     this.distance_box = document.getElementById("distValue");
@@ -58,11 +60,13 @@ export default class MainScene extends Group {
 
       cardContainer.addEventListener('mouseover', this.handleCardSlotHover.bind(this), false);
       cardContainer.addEventListener('mouseout', this.handleCardSlotHoverOut.bind(this), false);
+      cardContainer.addEventListener('mouseup', this.handleCardSlotClick.bind(this), false);
 
       this.card_containers.push(cardContainer);
     }
 
     this.activeCardID = null;
+    this.activeToken = null;
 
     this.sea = new Sea();
     this.sky = new Sky();
@@ -83,6 +87,59 @@ export default class MainScene extends Group {
 
     this.add(this.sky, this.sea, this.airplane, this.lights);
     this.resetGame();
+  }
+
+  handleCardSlotClick(event) {
+    let cardID = this.card_containers.indexOf(event.target);
+
+    if (cardID === -1) return;
+    if (!this.isCardWon(cardID)) return;
+
+    this.game_mode = GameModes.CardDetails;
+
+    for (let i = 0; i < this.sequenceController.ownedTokenBalances.length; i++) {
+      const balance = this.sequenceController.ownedTokenBalances[i];
+      
+      if (Number(balance.tokenID) === cardID) this.showCardModal(balance);
+    }
+  }
+
+  showCardModal(token) {
+    this.activeToken = token;
+    var modal = document.getElementById("cardModal");
+    modal.setAttribute("open", true);
+    
+    var modalContent = document.getElementById("cardModalContent");
+    modalContent.innerHTML = `<p>${token.tokenID}</p>`;
+  }
+
+  closeCardModal() {
+    this.activeToken = null;
+    var modal = document.getElementById("cardModal");
+    modal.setAttribute("open", false);
+    if (this.game_mode_previous == null) {
+      this.game_mode = GameModes.Intro;
+    } else {
+      this.game_mode = this.game_mode_previous;
+      this.game_mode_previous = null;
+    }
+  }
+
+  burnActiveCard() {
+    if (this.activeToken === null) return;
+
+    const burnButton = document.getElementById("burnButton");
+
+    burnButton.setAttribute("aria-busy", true);
+
+    this.sequenceController.burnToken(this.activeToken, ((response, error) => {
+      console.log(response, error);
+      burnButton.setAttribute("aria-busy", false);
+
+      if (error === null) {
+        this.closeCardModal();
+      }
+    }));
   }
 
   handleSignOut(event) {
@@ -282,9 +339,9 @@ export default class MainScene extends Group {
     this.clearAllCards();
 
     for (let i = 0; i < this.sequenceController.ownedTokenBalances.length; i++) {
-      const tokenID = this.sequenceController.ownedTokenBalances[i];
+      const tokenBalance = this.sequenceController.ownedTokenBalances[i];
 
-      this.addCard(tokenID);
+      this.addCard(tokenBalance.tokenID);
     }
   }
 
@@ -392,7 +449,12 @@ export default class MainScene extends Group {
   }
 
   isCardWon(cardID) {
-    return (this.sequenceController.ownedTokenBalances.includes(String(cardID)));
+    for (let i = 0; i < this.sequenceController.ownedTokenBalances.length; i++) {
+      const balance = this.sequenceController.ownedTokenBalances[i];
+      if (Number(balance.tokenID) === cardID) return true;
+    }
+
+    return false;
   }
 
   switchGameMode(new_game_mode) {
@@ -468,7 +530,7 @@ export default class MainScene extends Group {
   }
 
   handleMouseClick() {
-    if (this.game_mode === GameModes.SigningOut) return;
+    if (this.game_mode === GameModes.SigningOut || this.game_mode === GameModes.CardDetails) return;
     if (this.sequenceController.mode !== AuthModes.Completed) {
       this.openLoginModal();
       return;

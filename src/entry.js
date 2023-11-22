@@ -90,6 +90,16 @@ window.triggerLogin = (event) => {
   mainScene.sequenceController.triggerLoginModalForm();
 };
 
+window.burnCard = (event) => {
+  event.preventDefault();
+  mainScene.burnActiveCard();
+};
+
+window.closeCardModal = (event) => {
+  event.preventDefault();
+  mainScene.closeCardModal();
+};
+
 // dom
 document.body.style.margin = 0;
 document.getElementById("world").appendChild( renderer.domElement );
