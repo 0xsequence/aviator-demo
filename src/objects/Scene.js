@@ -21,11 +21,11 @@ const GameModes = {
 }
 
 const CardTypes = {
-  FirstCrash: 0,
-  ThousandMeterRun: 1,
-  ThreeRuns: 2,
-  TwentyFiveHundredMeterRun: 3,
-  FirstPylonCrash: 4,
+  FirstCrash: 1,
+  ThousandMeterRun: 2,
+  ThreeRuns: 3,
+  TwentyFiveHundredMeterRun: 4,
+  FirstPylonCrash: 5,
 }
 
 const LocalStorageKeys = {
@@ -93,6 +93,7 @@ export default class MainScene extends Group {
     let cardID = this.card_containers.indexOf(event.target);
 
     if (cardID === -1) return;
+    cardID += 1;
     if (!this.isCardWon(cardID)) return;
 
     this.game_mode = GameModes.CardDetails;
@@ -117,6 +118,7 @@ export default class MainScene extends Group {
     this.activeToken = null;
     var modal = document.getElementById("cardModal");
     modal.setAttribute("open", false);
+
     if (this.game_mode_previous == null) {
       this.game_mode = GameModes.Intro;
     } else {
@@ -138,6 +140,7 @@ export default class MainScene extends Group {
 
       if (error === null) {
         this.closeCardModal();
+        this.sequenceController.fetchWalletTokens();
       }
     }));
   }
@@ -168,7 +171,7 @@ export default class MainScene extends Group {
   handleCardSlotHover(event) {
     let cardID = this.card_containers.indexOf(event.target);
     if (cardID === -1) return;
-    
+    cardID += 1;
     let cardTooltipContainer = document.getElementById("cardTooltip");
     
     cardTooltipContainer.style.display = "block";
@@ -274,7 +277,7 @@ export default class MainScene extends Group {
       onCompleteParams: [cardID]
     });
 
-    const cardSlot = this.card_containers[parseInt(cardID)];
+    const cardSlot = this.card_containers[parseInt(cardID) - 1];
     const { x, y, width, height } = cardSlot.getBoundingClientRect();
     const card = document.getElementById("activeCard");
 
@@ -306,7 +309,7 @@ export default class MainScene extends Group {
     
     this.game_mode = GameModes.GameOver;
 
-    this.sequenceController.fetchWalletTokens();
+    // this.sequenceController.fetchWalletTokens();
   }
 
   openLoginModal() {
@@ -327,7 +330,7 @@ export default class MainScene extends Group {
   }
 
   addCard(cardID) {
-    const cardContainer = this.card_containers[parseInt(cardID)];
+    const cardContainer = this.card_containers[parseInt(cardID) - 1];
     const card = document.createElement("div");
 
     card.className = "card card-" + cardID;
@@ -502,28 +505,53 @@ export default class MainScene extends Group {
 
       if (this.game.distance >= 2500 && !this.isCardWon(CardTypes.TwentyFiveHundredMeterRun)) {
         this.showCard(CardTypes.TwentyFiveHundredMeterRun);
-        this.sequenceController.callContract(CardTypes.TwentyFiveHundredMeterRun, (tx) => {
+        this.sequenceController.callContract(CardTypes.TwentyFiveHundredMeterRun, (tx, error) => {
+          if (error) {
+            console.log(error);
+            return;
+          }
           console.log(tx);
+          this.sequenceController.fetchWalletTokens();
         })
       } else if (this.isLast3RunsOver500Each() && !this.isCardWon(CardTypes.ThreeRuns)) {
         this.showCard(CardTypes.ThreeRuns);
-        this.sequenceController.callContract(CardTypes.ThreeRuns, (tx) => {
+        this.sequenceController.callContract(CardTypes.ThreeRuns, (tx, error) => {
+          if (error) {
+            console.log(error);
+            return;
+          }
           console.log(tx);
+          this.sequenceController.fetchWalletTokens();
         })
       } else if (this.game.distance >= 1000 && this.game.distance < 2500 && !this.isCardWon(CardTypes.ThousandMeterRun)) {
         this.showCard(CardTypes.ThousandMeterRun);
-        this.sequenceController.callContract(CardTypes.ThousandMeterRun, (tx) => {
+        this.sequenceController.callContract(CardTypes.ThousandMeterRun, (tx, error) => {
+          if (error) {
+            console.log(error);
+            return;
+          }
           console.log(tx);
+          this.sequenceController.fetchWalletTokens();
         })
       } else if (this.isFirstCrash() && !this.isCardWon(CardTypes.FirstCrash)) {
         this.showCard(CardTypes.FirstCrash);
-        this.sequenceController.callContract(CardTypes.FirstCrash, (tx) => {
+        this.sequenceController.callContract(CardTypes.FirstCrash, (tx, error) => {
+          if (error) {
+            console.log(error);
+            return;
+          }
           console.log(tx);
+          this.sequenceController.fetchWalletTokens();
         })
       } else if (this.isFirstPylonCrash && !this.isCardWon(CardTypes.FirstPylonCrash)) {
         this.showCard(CardTypes.FirstPylonCrash);
-        this.sequenceController.callContract(CardTypes.FirstPylonCrash, (tx) => {
+        this.sequenceController.callContract(CardTypes.FirstPylonCrash, (tx, error) => {
+          if (error) {
+            console.log(error);
+            return;
+          }
           console.log(tx);
+          this.sequenceController.fetchWalletTokens();
         })
       }
     }

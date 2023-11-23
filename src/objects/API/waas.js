@@ -7,16 +7,21 @@ const AuthModes = {
     Completed: "completed"
 }
 
-const ContractAddress = "0x2Fdf496353923C5F1bDd9fFdacE3Db555942B30d";
+const ContractAddress = "0xa68eb569682a63e330eda29d703c10c6dde721bb";
 
 class SequenceController {
     constructor() {
         this.sequence = new Sequence({
-            network: 'polygon',
+            network: 'mumbai',
             key: 'eyJzZWNyZXQiOiJ0YmQiLCJ0ZW5hbnQiOjksImlkZW50aXR5UG9vbElkIjoidXMtZWFzdC0yOjQyYzlmMzlkLWM5MzUtNGQ1Yy1hODQ1LTVjODgxNWM3OWVlMyIsImVtYWlsQ2xpZW50SWQiOiI1Zmw3ZGc3bXZ1NTM0bzl2ZmpiYzZoajMxcCJ9',
         }, defaults.TEMPLATE_NEXT);
 
-        this.indexer = new SequenceIndexer('https://polygon-indexer.sequence.app');
+        this.indexer = new SequenceIndexer('https://mumbai-indexer.sequence.app');
+
+        this.chainId = null;
+        this.indexer.getChainID(({chainID}) => {
+          this.chainId = chainID;
+        });
 
         this.authInstance = null;
         this.email = null;
@@ -38,54 +43,21 @@ class SequenceController {
     }
 
     burnToken(token, callback) {
-      // const txn = this.sequence.sendTransaction({
-      //   chainId: token.chainId,
-      //   transactions: [{
-      //     to: token.contractAddress,
-      //     value: token.balance,
-      //   }]
-      // }).then((response) => {
-      //   console.log(response);
-      //   callback(response, null);
-      // }).catch((error) => {
-      //   console.log("Error:", error);
-      //   callback(null, error);
-      // });
-
-      // if (isSentTransactionResponse(txn)) {
-      //   console.log(txn);
-      // } else {
-      //   callback(null, "Invalid txn");
-      // }
-
-      this.sequence.sendERC1155({
-        chainId: Number(token.chainId),
-        token: token.contractAddress,
+      this.sequence.callContract({
+        chainId: token.chainId,
         to: token.contractAddress,
-        values: [{
-          id: token.tokenID,
-          value: token.balance,
-        }]
-      }).then((response) => {
-        console.log(response);
-        callback(response, null);
+        abi: 'burn(uint256 tokenId, uint256 amount)',
+        func: 'burn',
+        args: {
+          tokenId: token.tokenID, 
+          amount: token.balance
+        },
+        value: 0
+      }).then((tx)=> {
+        callback(tx, null);
       }).catch((error) => {
-          console.log("Error:", error);
-          callback(null, error);
+        callback(null, error);
       });
-
-      // this.sequence.callContract({
-      //   chainId: token.chainId,
-      //   to: token.contractAddress,
-      //   abi: 'burn(uint256,uint256)',
-      //   func: 'burn',
-      //   args: [parseInt(token.tokenID), parseInt(token.balance)],
-      //   value: 0
-      // }).then((tx)=> {
-      //   callback(tx, null);
-      // }).catch((error) => {
-      //   callback(null, error);
-      // });
     }
 
     closeSession(callback) {
@@ -254,19 +226,25 @@ class SequenceController {
       });
     }
 
-    callContract(tokenId, cb) {
-      console.log("Calling contract", tokenId);
+    callContract(tokenId, callback) {
+      console.log("Minting token:", tokenId);
       this.sequence.callContract({
-        chainId: 137,
+        chainId: this.chainId,
         to: ContractAddress,
-        abi: 'mint(uint256)',
+        abi: 'mint(address to, uint256 tokenId, uint256 amount, bytes data)',
         func: 'mint',
-        args: [`${tokenId}`],
+        args: {
+          to: this.walletAddress, 
+          tokenId: `${tokenId}`, 
+          amount: "1", 
+          data: "0x00"
+        },
         value: 0
       }).then((tx)=> {
-        cb(tx)
+        callback(tx, null);
       }).catch((error) => {
         console.log(error);
+        callback(null, error);
       });
     }
 }
