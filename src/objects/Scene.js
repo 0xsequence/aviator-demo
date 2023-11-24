@@ -118,23 +118,23 @@ export default class MainScene extends Group {
 
     switch (cardID) {
       case CardTypes.FirstCrash:
-        cardTooltipContainer.innerHTML = this.isCardWon(cardID) ? "First Crash!" : "???";
+        cardTooltipContainer.innerHTML = this.isCardWon(cardID) ? "First Crash!" : "Try crashing once";
         break;
 
       case CardTypes.ThousandMeterRun:
-        cardTooltipContainer.innerHTML = this.isCardWon(cardID) ? "1000m Run!" : "???";
+        cardTooltipContainer.innerHTML = this.isCardWon(cardID) ? "1000m Run!" : "Can you pass 1000m?";
         break;
 
       case CardTypes.ThreeRuns:
-        cardTooltipContainer.innerHTML =  this.isCardWon(cardID) ? "Three 500m Runs in a Row!" : "???";
+        cardTooltipContainer.innerHTML =  this.isCardWon(cardID) ? "Three 500m Runs in a Row!" : "Can you do 3x 500m runs in a row?";
         break;
 
       case CardTypes.TwentyFiveHundredMeterRun:
-        cardTooltipContainer.innerHTML =  this.isCardWon(cardID) ? "2500m Run!" : "???";
+        cardTooltipContainer.innerHTML =  this.isCardWon(cardID) ? "2500m Run!" : "Can you go past 2500m?";
         break;
 
       case CardTypes.FirstPylonCrash:
-        cardTooltipContainer.innerHTML =  this.isCardWon(cardID) ? "Crashed with First Pylon!" : "???";
+        cardTooltipContainer.innerHTML =  this.isCardWon(cardID) ? "Crashed with First Pylon!" : "Try hitting the first pylon!";
         break;
   
       default:
