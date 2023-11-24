@@ -8,12 +8,14 @@ const AuthModes = {
 }
 
 const ContractAddress = "0xa68eb569682a63e330eda29d703c10c6dde721bb";
+const WaaSAPIKey = "eyJzZWNyZXQiOiJ0YmQiLCJ0ZW5hbnQiOjksImlkZW50aXR5UG9vbElkIjoidXMtZWFzdC0yOjQyYzlmMzlkLWM5MzUtNGQ1Yy1hODQ1LTVjODgxNWM3OWVlMyIsImVtYWlsQ2xpZW50SWQiOiI1Zmw3ZGc3bXZ1NTM0bzl2ZmpiYzZoajMxcCJ9"
+const BuilderAPIKey = ""
 
 class SequenceController {
     constructor() {
         this.sequence = new Sequence({
             network: 'mumbai',
-            key: 'eyJzZWNyZXQiOiJ0YmQiLCJ0ZW5hbnQiOjksImlkZW50aXR5UG9vbElkIjoidXMtZWFzdC0yOjQyYzlmMzlkLWM5MzUtNGQ1Yy1hODQ1LTVjODgxNWM3OWVlMyIsImVtYWlsQ2xpZW50SWQiOiI1Zmw3ZGc3bXZ1NTM0bzl2ZmpiYzZoajMxcCJ9',
+            key: WaaSAPIKey,
         }, defaults.TEMPLATE_NEXT);
 
         this.indexer = new SequenceIndexer('https://mumbai-indexer.sequence.app');
