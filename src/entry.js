@@ -87,7 +87,7 @@ window.closeModal = (event) => {
 
 window.triggerLogin = (event) => {
   event.preventDefault();
-  mainScene.authManager.triggerLoginModalForm();
+  mainScene.sequenceController.triggerLoginModalForm();
 };
 
 // dom

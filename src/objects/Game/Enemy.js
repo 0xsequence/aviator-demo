@@ -1,10 +1,10 @@
 import { Group, TetrahedronGeometry, BufferGeometry, BufferAttribute, DoubleSide, MeshPhongMaterial, Mesh, Color, Matrix4 } from 'three';
 
 export default class Enemy extends Group {
-  constructor() {
+  constructor(name) {
     super();
 
-    this.name = 'enemy';
+    this.name = name;
 
     var geom = new TetrahedronGeometry(8, 2);
     var mat = new MeshPhongMaterial({

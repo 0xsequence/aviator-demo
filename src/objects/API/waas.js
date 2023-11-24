@@ -1,4 +1,5 @@
 import { Sequence, defaults } from '@0xsequence/waas'
+import { SequenceIndexer } from '@0xsequence/indexer'
 
 const AuthModes = {
     Email: "email",
@@ -6,12 +7,16 @@ const AuthModes = {
     Completed: "completed"
 }
 
-class SequenceAuth {
+const ContractAddress = "0x2Fdf496353923C5F1bDd9fFdacE3Db555942B30d";
+
+class SequenceController {
     constructor() {
         this.sequence = new Sequence({
             network: 'polygon',
             key: 'eyJzZWNyZXQiOiJ0YmQiLCJ0ZW5hbnQiOjksImlkZW50aXR5UG9vbElkIjoidXMtZWFzdC0yOjQyYzlmMzlkLWM5MzUtNGQ1Yy1hODQ1LTVjODgxNWM3OWVlMyIsImVtYWlsQ2xpZW50SWQiOiI1Zmw3ZGc3bXZ1NTM0bzl2ZmpiYzZoajMxcCJ9',
         }, defaults.TEMPLATE_NEXT);
+
+        this.indexer = new SequenceIndexer('https://polygon-indexer.sequence.app');
 
         this.authInstance = null;
         this.email = null;
@@ -19,6 +24,8 @@ class SequenceAuth {
         this.mode = AuthModes.Email;
         this.walletAddress = null;
         this.authModeChangedCallback = null;
+        this.balancesChangedCallback = null;
+        this.ownedTokenBalances = [];
 
         this.emailVerifyForm = document.getElementById("emailVerify");
         this.codeVerifyForm = document.getElementById("codeVerify");
@@ -28,6 +35,47 @@ class SequenceAuth {
                 this.fetchWalletAddress();
             }
         });
+    }
+
+    closeSession(callback) {
+      this.sequence.getSessionID().then((sessionID) => {
+        this.sequence.dropSession({sessionId: sessionID}).then(() => {
+          this.authInstance = null;
+          this.email = null;
+          this.token = null;
+          this.mode = AuthModes.Email;
+          this.walletAddress = null;
+
+          callback(null);
+        }).catch((error) => {
+          console.log(error);
+          callback(error);
+        })
+      }).catch((error) => {
+        console.log(error);
+        callback(error);
+      });
+    }
+
+    fetchWalletTokens() {
+      if (this.mode !== AuthModes.Completed) return;
+      console.log(this.walletAddress);
+      console.log("Fetching token balances...");
+      this.indexer.getTokenBalances({
+        accountAddress: this.walletAddress,
+        contractAddress: ContractAddress,
+        includeMetadata: true,
+        metadataOptions: { includeMetadataContracts: [ContractAddress] }
+      }).then((tokenBalances) => {
+        this.ownedTokenBalances = [];
+        for (let i = 0; i < tokenBalances.balances.length; i++) {
+          const balance = tokenBalances.balances[i];
+          this.ownedTokenBalances.push(balance.tokenID);
+        }
+        if (this.balancesChangedCallback !== null) this.balancesChangedCallback();
+      }).catch((error) => {
+        console.log(error);
+      });
     }
 
     switchAuthMode(mode) {
@@ -44,6 +92,8 @@ class SequenceAuth {
       } else if (this.mode === AuthModes.Completed) {
         this.emailVerifyForm.style.display = "block";
         this.codeVerifyForm.style.display = "none";
+
+        this.fetchWalletTokens();
       }
 
       if (this.authModeChangedCallback !== null) this.authModeChangedCallback();
@@ -92,23 +142,21 @@ class SequenceAuth {
       }).catch((error) => {
         alert(error);
   
-        loginButton.setAttribute("aria-busy", false);
-        var emailInput = document.getElementById("emailInput");
+        let emailInput = document.getElementById("emailInput");
         emailInput.setAttribute("aria-invalid", true);
+        loginButton.setAttribute("aria-busy", false);
       });
     }
   
     finalizeEmailAuth(code) {
       if (this.email === null || this.authInstance === null) return;
   
-      var loginButton = document.getElementById("loginButton");
+      let loginButton = document.getElementById("loginButton");
   
       loginButton.setAttribute("aria-busy", true);
   
       this.sequence.email.finalizeAuth({ instance: this.authInstance, email: this.email, answer: code }).then((token) => {
         this.token = token;
-
-        loginButton.setAttribute("aria-busy", false);
   
         this.createWalletAddress();
       }).catch((error) => {
@@ -122,27 +170,53 @@ class SequenceAuth {
   
     createWalletAddress() {
       this.sequence.signIn(this.token, this.email).then((address) => {
-        this.walletAddress = address;
-        this.switchAuthMode(AuthModes.Completed);
+        console.log(address);
+        // this.walletAddress = address;
+        // this.switchAuthMode(AuthModes.Completed);
+        this.fetchWalletAddress();
       }).catch((error) => {
         alert(error);
         this.mode = AuthModes.Email;
+
+        let loginButton = document.getElementById("loginButton");
+        loginButton.setAttribute("aria-busy", false);
       });
     }
   
     fetchWalletAddress() {
+      let loginButton = document.getElementById("loginButton");
+
       this.sequence.getAddress().then((address) => {
         this.walletAddress = address;
   
         this.sequence.deviceName.get().then((deviceName) => {
           this.email = deviceName;
           this.switchAuthMode(AuthModes.Completed);
+
+          loginButton.setAttribute("aria-busy", false);
         });
       }).catch((error) => {
         alert(error);
         this.mode = AuthModes.Email;
+        loginButton.setAttribute("aria-busy", false);
       })
+    }
+
+    callContract(tokenId, cb) {
+      console.log("Calling contract", tokenId);
+      this.sequence.callContract({
+        chainId: 137,
+        to: ContractAddress,
+        abi: 'mint(uint256)',
+        func: 'mint',
+        args: [`${tokenId}`],
+        value: 0                                           
+      }).then((tx)=> {
+        cb(tx)
+      }).catch((error) => {
+        console.log(error);
+      });
     }
 }
 
-export { SequenceAuth, AuthModes }
+export { SequenceController, AuthModes }

@@ -24,23 +24,6 @@
 	pointer-events: none;
 }
 
-.header h1 {
-	font-family: 'Playfair Display';
-	font-size: 4.5em;
-	line-height: 1;
-	margin: 0;
-	letter-spacing: -0.025em;
-	color: #d1b790;
-}
-
-.header h1 span {
-	font-size: 0.2em;
-	font-style: italic;
-	display: block;
-	margin: 0 0 -1.5em -7em;
-	letter-spacing: 0px;
-}
-
 .header h2 {
 	font-size: 0.585em;
 	margin: 0.25em 0;
@@ -103,19 +86,13 @@ dialog input {
 	display: none;
 }
 
-img.logo {
+div.logo {
 	background-image: url("../images/horizon-logo-alt.svg");
+	background-size: cover;
 	width: 300px;
-}
-
-#leaderboard {
-	position: absolute;
-	top: 3vh;
-	right: 3vh;
-}
-
-#leaderboard ol li {
-	color: #d1b790;
+	height: 195px;
+	display: block;
+	margin: 0 auto;
 }
 
 .message {
@@ -134,20 +111,6 @@ img.logo {
 	text-indent: 0.5em;
 	letter-spacing: 0.5em;
 	color: #d1b790;
-}
-
-.message--instructions {
-	font-family: 'Playfair Display';
-	font-size: 0.85em;
-	bottom: 8vh;
-	letter-spacing: 0.2em;
-	color: #68c3c0;
-}
-
-.message--instructions span {
-	display: block;
-	color: #d6483b;
-	white-space: nowrap;
 }
 
 @-webkit-keyframes blinking {
@@ -170,4 +133,293 @@ img.logo {
 	.header h2 {
 		letter-spacing: 0.65em;
 	}
+}
+
+.card-label {
+	position: absolute;
+	bottom: 10vh;
+	width: 100%;
+	text-align: center;
+	font-size: 4.5em;
+	line-height: 1;
+	margin: 0;
+	color: #d1b790;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.card-container {
+	perspective: 1000px;
+    position: fixed;
+    left: 50%;
+	top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+	transform-style: preserve-3d;
+	z-index: 2;
+	pointer-events: none;
+}
+
+.card {
+	width: 300px;
+	height: 400px;
+	transform: translateY(100vh) rotateY(180deg);
+	transform-style: preserve-3d;
+	transition: transform 1s;
+	position: relative;
+    backface-visibility: hidden;
+	background-size: cover;
+	background-position: center;
+}
+
+.card-0 {
+	background-image: url("../images/card1-firstcrash.png");
+}
+
+.card-1 {
+	background-image: url("../images/card2-1000m.png");
+}
+
+.card-2 {
+	background-image: url("../images/card3-3runs.png");
+}
+
+.card-3 {
+	background-image: url("../images/card4-2500m.png");
+}
+
+.card-4 {
+	background-image: url("../images/card5-firstpylon.png");
+}
+
+.card-backface {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+	background-image: url("../images/card-back.png");
+	background-size: cover;
+	background-position: center;
+    backface-visibility: hidden;
+    transform: rotateY(180deg);
+}
+
+.card-slots {
+	position: fixed;
+	top: 2vh;
+	left: 2vh;
+	display: none;
+}
+
+.card-slot {
+	width: 104px;
+	height: 138px;
+	border: 2px solid #333;
+	border-radius: 5px;
+  	background: rgba(0, 0, 0, 0.8);
+	z-index: 1;
+	margin-bottom: 10px;
+}
+
+.card-slot .card {
+	width: 100px;
+	height: 134px;
+	transform: none;
+	transition: none;
+	z-index: 4;
+	pointer-events: none;
+}
+
+.card-tooltip {
+	font-weight: bold;
+	font-size: 1.5em;
+	color: #d1b790;
+	background: rgba(0, 0, 0, 0.8);
+	padding: 4px;
+	border-radius: 5px;
+	display: none;
+}
+
+#signOutBtn {
+	width: 200px;
+	position: absolute;
+	right: 20px;
+	bottom: 10px;
+	display: none;
+}
+
+/*--------------------
+Leaderboard
+--------------------*/
+.leaderboard {
+	position: absolute;
+	top: 2vh;
+	right: 2vh;
+	width: 285px;
+	height: 308px;
+	background: linear-gradient(to bottom, #3a404d, #181c26);
+	border-radius: 10px;
+	box-shadow: 0 7px 30px rgba(62, 9, 11, 0.3);
+}
+.leaderboard h1 {
+	font-size: 18px;
+	color: #e1e1e1;
+	padding: 12px 13px 18px;
+	margin: 0;
+}
+.leaderboard h1 svg {
+	width: 25px;
+	height: 26px;
+	position: relative;
+	top: 3px;
+	margin-right: 6px;
+	vertical-align: baseline;
+}
+.leaderboard ol {
+	counter-reset: leaderboard;
+	padding: 0;
+}
+.leaderboard ol li {
+	position: relative;
+	z-index: 1;
+	font-size: 14px;
+	padding: 18px 10px 18px 50px;
+	cursor: pointer;
+	counter-increment: leaderboard;
+	-webkit-backface-visibility: hidden;
+			backface-visibility: hidden;
+	transform: translateZ(0) scale(1, 1);
+	margin: 0;
+	list-style-type: none;
+}
+.leaderboard ol li::before {
+	content: counter(leaderboard);
+	position: absolute;
+	z-index: 2;
+	top: 15px;
+	left: 15px;
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
+	color: #c24448;
+	background: #fff;
+	border-radius: 20px;
+	text-align: center;
+}
+.leaderboard ol li mark {
+	position: absolute;
+	z-index: 2;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	padding: 18px 10px 18px 50px;
+	margin: 0;
+	background: none;
+	color: #fff;
+}
+.leaderboard ol li mark::before, .leaderboard ol li mark::after {
+	content: "";
+	position: absolute;
+	z-index: 1;
+	bottom: -11px;
+	left: -9px;
+	border-top: 10px solid #c24448;
+	border-left: 10px solid transparent;
+	transition: all 0.1s ease-in-out;
+	opacity: 0;
+}
+.leaderboard ol li mark::after {
+	left: auto;
+	right: -9px;
+	border-left: none;
+	border-right: 10px solid transparent;
+}
+.leaderboard ol li small {
+	position: relative;
+	z-index: 2;
+	display: block;
+	text-align: right;
+	color: #fff;
+}
+.leaderboard ol li::after {
+	content: "";
+	position: absolute;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #fa6855;
+	box-shadow: 0 3px 0 rgba(0, 0, 0, 0.08);
+	transition: all 0.3s ease-in-out;
+	opacity: 0;
+}
+.leaderboard ol li:nth-child(1) {
+	background: #fa6855;
+}
+.leaderboard ol li:nth-child(1)::after {
+	background: #fa6855;
+}
+.leaderboard ol li:nth-child(2) {
+	background: #e0574f;
+}
+.leaderboard ol li:nth-child(2)::after {
+	background: #e0574f;
+	box-shadow: 0 2px 0 rgba(0, 0, 0, 0.08);
+}
+.leaderboard ol li:nth-child(2) mark::before, .leaderboard ol li:nth-child(2) mark::after {
+	border-top: 6px solid #ba4741;
+	bottom: -7px;
+}
+.leaderboard ol li:nth-child(3) {
+	background: #d7514d;
+}
+.leaderboard ol li:nth-child(3)::after {
+	background: #d7514d;
+	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.11);
+}
+.leaderboard ol li:nth-child(3) mark::before, .leaderboard ol li:nth-child(3) mark::after {
+	border-top: 2px solid #b0433f;
+	bottom: -3px;
+}
+.leaderboard ol li:nth-child(4) {
+	background: #cd4b4b;
+}
+.leaderboard ol li:nth-child(4)::after {
+	background: #cd4b4b;
+	box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.15);
+}
+.leaderboard ol li:nth-child(4) mark::before, .leaderboard ol li:nth-child(4) mark::after {
+	top: -7px;
+	bottom: auto;
+	border-top: none;
+	border-bottom: 6px solid #a63d3d;
+}
+.leaderboard ol li:nth-child(5) {
+	background: #c24448;
+	border-radius: 0 0 10px 10px;
+}
+.leaderboard ol li:nth-child(5)::after {
+	background: #c24448;
+	box-shadow: 0 -2.5px 0 rgba(0, 0, 0, 0.12);
+	border-radius: 0 0 10px 10px;
+}
+.leaderboard ol li:nth-child(5) mark::before, .leaderboard ol li:nth-child(5) mark::after {
+	top: -9px;
+	bottom: auto;
+	border-top: none;
+	border-bottom: 8px solid #993639;
+}
+.leaderboard ol li:hover {
+	z-index: 2;
+	overflow: visible;
+}
+.leaderboard ol li:hover::after {
+	opacity: 1;
+	transform: scaleX(1.06) scaleY(1.03);
+}
+.leaderboard ol li:hover mark::before, .leaderboard ol li:hover mark::after {
+	opacity: 1;
+	transition: all 0.35s ease-in-out;
 }

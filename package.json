@@ -15,6 +15,9 @@
     "build": "webpack --mode production"
   },
   "dependencies": {
+    "0xsequence": "0.0.0-20231117190010",
+    "@0xsequence/indexer": "0.0.0-20231117190010",
+    "ethers": "^6.8.1",
     "pnpm": "^8.10.2",
     "three": "^0.158.0",
     "webpack-cli": "^5.0.1"

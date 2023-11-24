@@ -5,7 +5,7 @@ import BasicLights from './Lights.js';
 import Sea from './Backgrounds/Sea.js';
 import Sky from './Backgrounds/Sky.js';
 import Enemy from './Game/Enemy.js';
-import { SequenceAuth, AuthModes } from './API/waas.js';
+import { SequenceController, AuthModes } from './API/waas.js';
 import { LeaderboardManager } from './API/leaderboard.js';
 
 const GameModes = {
@@ -13,21 +13,56 @@ const GameModes = {
 	Playing: "playing",
 	Paused: "paused",
 	GameEnding: "gameending",
-	GameOver: "gameover"
+	GameOver: "gameover",
+  CardWon: "cardwon",
+  CardReady: "cardready",
+  SigningOut: "signingout",
+}
+
+const CardTypes = {
+  FirstCrash: 0,
+  ThousandMeterRun: 1,
+  ThreeRuns: 2,
+  TwentyFiveHundredMeterRun: 3,
+  FirstPylonCrash: 4,
+}
+
+const LocalStorageKeys = {
+  LastRunID: "last_run_id",
+  RunDistancePrefix: "run_distance_",
 }
 
 export default class MainScene extends Group {
   constructor() {
     super();
 
-    this.authManager = new SequenceAuth();
-    this.authManager.authModeChangedCallback = this.authModeChanged.bind(this);
+    this.sequenceController = new SequenceController();
+    this.sequenceController.authModeChangedCallback = this.authModeChanged.bind(this);
+    this.sequenceController.balancesChangedCallback = this.walletBalancesChanged.bind(this);
     this.leaderboardManager = new LeaderboardManager();
 
     this.game_mode = GameModes.Intro;
+    this.signout_btn = document.getElementById("signOutBtn");
     this.message_box = document.getElementById("replayMessage");
     this.distance_box = document.getElementById("distValue");
     this.score_box = document.getElementById("score");
+    this.card_slots = document.getElementById("cardSlots");
+    this.card_label = document.getElementById("cardLabel");
+    this.leaderboard_wrapper = document.getElementById("leaderboardContainer");
+    this.card_containers = [];
+
+    this.signout_btn.addEventListener('mouseup', this.handleSignOut.bind(this), false);
+
+    for (let i = 0; i < 5; i++) {
+      const cardContainer = document.getElementById("cardSlot" + (i + 1));
+
+      cardContainer.addEventListener('mouseover', this.handleCardSlotHover.bind(this), false);
+      cardContainer.addEventListener('mouseout', this.handleCardSlotHoverOut.bind(this), false);
+
+      this.card_containers.push(cardContainer);
+    }
+
+    this.activeCardID = null;
 
     this.sea = new Sea();
     this.sky = new Sky();
@@ -42,9 +77,179 @@ export default class MainScene extends Group {
     this.airplane.position.x = -50;
 
     this.enemies = new Set();
+    this.isFirstPylonCrash = false;
+
+    this.enemiesTotal = 0;
 
     this.add(this.sky, this.sea, this.airplane, this.lights);
     this.resetGame();
+  }
+
+  handleSignOut(event) {
+    this.game_mode = GameModes.SigningOut;
+    this.signout_btn.style.display = "none";
+
+    this.sequenceController.closeSession((error) => {
+      if (error) {
+        this.signout_btn.style.display = "block";
+        return;
+      }
+
+      this.switchGameMode(GameModes.Intro);
+      this.resetGame();
+      this.clearLocalStores();
+    });
+  }
+
+  handleCardSlotHoverOut(event) {
+    let cardTooltipContainer = document.getElementById("cardTooltip");
+
+    cardTooltipContainer.innerHTML = "";
+    cardTooltipContainer.style.display = "none";
+  }
+
+  handleCardSlotHover(event) {
+    let cardID = this.card_containers.indexOf(event.target);
+    if (cardID === -1) return;
+    
+    let cardTooltipContainer = document.getElementById("cardTooltip");
+    
+    cardTooltipContainer.style.display = "block";
+
+    switch (cardID) {
+      case CardTypes.FirstCrash:
+        cardTooltipContainer.innerHTML = this.isCardWon(cardID) ? "First Crash!" : "Try crashing once";
+        break;
+
+      case CardTypes.ThousandMeterRun:
+        cardTooltipContainer.innerHTML = this.isCardWon(cardID) ? "1000m Run!" : "Can you pass 1000m?";
+        break;
+
+      case CardTypes.ThreeRuns:
+        cardTooltipContainer.innerHTML =  this.isCardWon(cardID) ? "Three 500m Runs in a Row!" : "Can you do 3x 500m runs in a row?";
+        break;
+
+      case CardTypes.TwentyFiveHundredMeterRun:
+        cardTooltipContainer.innerHTML =  this.isCardWon(cardID) ? "2500m Run!" : "Can you go past 2500m?";
+        break;
+
+      case CardTypes.FirstPylonCrash:
+        cardTooltipContainer.innerHTML =  this.isCardWon(cardID) ? "Crashed with First Pylon!" : "Try hitting the first pylon!";
+        break;
+  
+      default:
+        cardTooltipContainer.innerHTML = "";
+        break;
+    }
+  }
+
+  showCard(cardID) {
+    this.game_mode = GameModes.CardWon;
+    this.activeCardID = cardID;
+
+    switch (cardID) {
+      case CardTypes.FirstCrash:
+        this.card_label.innerHTML = "First Crash!";
+        break;
+
+      case CardTypes.ThousandMeterRun:
+        this.card_label.innerHTML = "1000m Run!";
+        break;
+
+      case CardTypes.ThreeRuns:
+        this.card_label.innerHTML = "Three 500m Runs in a Row!";
+        break;
+
+      case CardTypes.TwentyFiveHundredMeterRun:
+        this.card_label.innerHTML = "2500m Run!";
+        break;
+
+      case CardTypes.FirstPylonCrash:
+        this.card_label.innerHTML = "Crashed with First Pylon!";
+        break;
+  
+      default:
+        break;
+    }
+
+    const card = document.createElement("div");
+    const cardBack = document.createElement("div");
+    const cardContainer = document.getElementById("cardContainer");
+
+    card.id = "activeCard";
+    card.className = "card card-" + cardID;
+    cardBack.className = "card-backface";
+
+    cardContainer.appendChild(card);
+    card.appendChild(cardBack);
+
+    const tl = gsap.timeline({
+      onComplete: this.showCardCleanUp.bind(this)
+    });
+
+    tl.to(card, {
+        duration: 0.75, // Duration of the animation
+        y: 0, // Move to its original position
+        rotationY: 0, // Flip to show the front
+        ease: "power1.out"
+    });
+
+    tl.to(this.card_label, {
+      duration: 0.75,
+      opacity: 1.0,
+    });
+
+    tl.add(() => {}, "+=2");
+  }
+
+  showCardCleanUp() {
+    this.game_mode = GameModes.CardReady;
+  }
+
+  removeCard() {
+    if (this.activeCardID === null) return;
+
+    const cardID = this.activeCardID;
+    this.activeCardID = null;
+
+    const tl = gsap.timeline({
+      onComplete: this.cleanUpCard.bind(this),
+      onCompleteParams: [cardID]
+    });
+
+    const cardSlot = this.card_containers[parseInt(cardID)];
+    const { x, y, width, height } = cardSlot.getBoundingClientRect();
+    const card = document.getElementById("activeCard");
+
+    tl.to(card, {
+        duration: 1.25,
+        x: x - card.getBoundingClientRect().left + window.scrollX - width + 7,
+        y: y - card.getBoundingClientRect().top + window.scrollY - height + 7,
+        rotationY: 360,
+        scale: 0.33,
+        ease: "power1.out"
+    });
+
+    tl.to(this.card_label, {
+      duration: 1.25,
+      opacity: 0.0,
+    });
+
+    tl.add(this.cleanUpCard.bind(this), "+=1");
+  }
+
+  cleanUpCard(cardID) {
+    if (cardID === undefined) return;
+    
+    this.addCard(cardID);
+    
+    const cardContainer = document.getElementById("cardContainer");
+    cardContainer.innerHTML = "";
+    this.card_label.innerHTML = "";
+    
+    this.game_mode = GameModes.GameOver;
+
+    this.sequenceController.fetchWalletTokens();
   }
 
   openLoginModal() {
@@ -57,11 +262,44 @@ export default class MainScene extends Group {
     modal.setAttribute("open", false);
   }
 
+  clearAllCards() {
+    for (let i = 0; i < 5; i++) {
+      const cardContainer = this.card_containers[i];
+      cardContainer.innerHTML = "";
+    }
+  }
+
+  addCard(cardID) {
+    const cardContainer = this.card_containers[parseInt(cardID)];
+    const card = document.createElement("div");
+
+    card.className = "card card-" + cardID;
+
+    cardContainer.appendChild(card);
+  }
+
+  walletBalancesChanged() {
+    this.clearAllCards();
+
+    for (let i = 0; i < this.sequenceController.ownedTokenBalances.length; i++) {
+      const tokenID = this.sequenceController.ownedTokenBalances[i];
+
+      this.addCard(tokenID);
+    }
+  }
+
   authModeChanged() {
-    if (this.authManager.mode === AuthModes.Completed) {
+    if (this.sequenceController.mode === AuthModes.Completed) {
       this.closeLoginModal();
 
-      this.message_box.innerHTML = "Welcome " + this.authManager.email + "!<br>Click to Start";
+      this.message_box.innerHTML = "Welcome " + this.sequenceController.email + "!<br>Click to Start";
+      this.signout_btn.style.display = "block";
+      this.card_slots.style.display = "block";
+      this.leaderboard_wrapper.style.display = "block";
+    } else {
+      this.signout_btn.style.display = "none";
+      this.card_slots.style.display = "none";
+      this.leaderboard_wrapper.style.display = "none";
     }
   }
 
@@ -86,6 +324,9 @@ export default class MainScene extends Group {
 
       seaRadius: 500,
     }
+
+    this.isFirstPylonCrash = false
+    this.enemiesTotal = 0;
   }
 
   updateSpeed(deltaTime) {
@@ -106,6 +347,54 @@ export default class MainScene extends Group {
     }
   }
 
+  isLast3RunsOver500Each() {
+    let lastRun = localStorage.getItem(LocalStorageKeys.LastRunID);
+    if (lastRun && Number(lastRun) > 3) {
+      let runOf500 = true;
+      for (let i = Number(lastRun) - 1; i >= Number(lastRun) - 3; i--) {
+        if (Number(localStorage.getItem(LocalStorageKeys.RunDistancePrefix + String(i))) < 500) runOf500 = false;
+      }
+      return runOf500;
+    } else {
+      return false
+    }
+  }
+
+  clearLocalStores() {
+    if (!localStorage.getItem(LocalStorageKeys.LastRunID)) {
+      return;
+    }
+    
+    let lastRun = Number(localStorage.getItem(LocalStorageKeys.LastRunID));
+
+    for (let i = 0; i < lastRun; i++) {
+      let key = LocalStorageKeys.RunDistancePrefix + String(i);
+      if (!localStorage.getItem(key)) continue;
+      localStorage.removeItem(key);
+    }
+
+    localStorage.removeItem(LocalStorageKeys.LastRunID);
+  }
+
+  updateLocalScores() {
+    if (!localStorage.getItem(LocalStorageKeys.LastRunID)) {
+      localStorage.setItem(LocalStorageKeys.LastRunID, String(0));
+    }
+    
+    let lastRun = Number(localStorage.getItem(LocalStorageKeys.LastRunID));
+
+    localStorage.setItem(LocalStorageKeys.RunDistancePrefix + String(lastRun), String(this.game.distance));
+    localStorage.setItem(LocalStorageKeys.LastRunID, String(lastRun + 1));
+  }
+
+  isFirstCrash() {
+    return Number(localStorage.getItem(LocalStorageKeys.LastRunID)) === 1;
+  }
+
+  isCardWon(cardID) {
+    return (this.sequenceController.ownedTokenBalances.includes(String(cardID)));
+  }
+
   switchGameMode(new_game_mode) {
     if (this.game_mode === new_game_mode) return;
 
@@ -114,34 +403,73 @@ export default class MainScene extends Group {
     if (this.game_mode === GameModes.Intro) {
       this.message_box.style.display = "block";
       this.score_box.style.display = "none";
-      this.leaderboardManager.leaderboardWrapper.style.display = "block";
+      this.card_slots.style.display = "none";
+      this.leaderboard_wrapper.style.display = "block";
       this.message_box.innerHTML = "Click to Login";
     } else if (this.game_mode === GameModes.Playing) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "none";
-      this.leaderboardManager.leaderboardWrapper.style.display = "none";
+      this.card_slots.style.display = "none";
+      this.leaderboard_wrapper.style.display = "none";
+      this.signout_btn.style.display = "none";
     } else if (this.game_mode === GameModes.Paused) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
-      this.leaderboardManager.leaderboardWrapper.style.display = "block";
+      this.card_slots.style.display = "block";
+      this.leaderboard_wrapper.style.display = "block";
       this.message_box.innerHTML = "Paused<br>Click to Resume";
+      this.signout_btn.style.display = "block";
     } else if (this.game_mode === GameModes.GameEnding) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
-      this.leaderboardManager.leaderboardWrapper.style.display = "block";
+      this.card_slots.style.display = "block";
+      this.leaderboard_wrapper.style.display = "block";
       this.message_box.innerHTML = "Game Over";
-      
-      this.leaderboardManager.saveScore(this.game.distance, this.authManager.email, this.authManager.walletAddress);
+      this.signout_btn.style.display = "none";
+
+      this.updateLocalScores()
+
+      this.leaderboardManager.saveScore(this.game.distance, this.sequenceController.email, this.sequenceController.walletAddress);
     } else if (this.game_mode === GameModes.GameOver) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
-      this.leaderboardManager.leaderboardWrapper.style.display = "block";
+      this.card_slots.style.display = "block";
+      this.leaderboard_wrapper.style.display = "block";
       this.message_box.innerHTML = "Game Over<br>Click to Replay";
+      this.signout_btn.style.display = "block";
+
+      if (this.game.distance >= 2500 && !this.isCardWon(CardTypes.TwentyFiveHundredMeterRun)) {
+        this.showCard(CardTypes.TwentyFiveHundredMeterRun);
+        this.sequenceController.callContract(CardTypes.TwentyFiveHundredMeterRun, (tx) => {
+          console.log(tx);
+        })
+      } else if (this.isLast3RunsOver500Each() && !this.isCardWon(CardTypes.ThreeRuns)) {
+        this.showCard(CardTypes.ThreeRuns);
+        this.sequenceController.callContract(CardTypes.ThreeRuns, (tx) => {
+          console.log(tx);
+        })
+      } else if (this.game.distance >= 1000 && this.game.distance < 2500 && !this.isCardWon(CardTypes.ThousandMeterRun)) {
+        this.showCard(CardTypes.ThousandMeterRun);
+        this.sequenceController.callContract(CardTypes.ThousandMeterRun, (tx) => {
+          console.log(tx);
+        })
+      } else if (this.isFirstCrash() && !this.isCardWon(CardTypes.FirstCrash)) {
+        this.showCard(CardTypes.FirstCrash);
+        this.sequenceController.callContract(CardTypes.FirstCrash, (tx) => {
+          console.log(tx);
+        })
+      } else if (this.isFirstPylonCrash && !this.isCardWon(CardTypes.FirstPylonCrash)) {
+        this.showCard(CardTypes.FirstPylonCrash);
+        this.sequenceController.callContract(CardTypes.FirstPylonCrash, (tx) => {
+          console.log(tx);
+        })
+      }
     }
   }
 
   handleMouseClick() {
-    if (this.authManager.mode !== AuthModes.Completed) {
+    if (this.game_mode === GameModes.SigningOut) return;
+    if (this.sequenceController.mode !== AuthModes.Completed) {
       this.openLoginModal();
       return;
     }
@@ -152,7 +480,22 @@ export default class MainScene extends Group {
       this.switchGameMode(GameModes.Paused);
     } else if (this.game_mode === GameModes.Paused) {
       this.switchGameMode(GameModes.Playing);
+    } else if (this.game_mode === GameModes.GameEnding || this.game_mode === GameModes.CardWon) {
+      return;
+    } else if (this.game_mode === GameModes.CardReady) {
+      if (this.activeCardID !== null) {
+        this.removeCard(this.activeCardID);
+        this.activeCardID = null;
+      }
+
+      return;
     } else if (this.game_mode === GameModes.GameOver) {
+      if (this.activeCardID !== null) {
+        this.removeCard(this.activeCardID);
+        this.activeCardID = null;
+        return;
+      }
+
       for (const enemy of this.enemies) {
         this.remove(enemy);
         this.enemies.delete(enemy);
@@ -196,11 +539,11 @@ export default class MainScene extends Group {
       if (this.airplane.position.y < -200) {
         this.switchGameMode(GameModes.GameOver);
       }
-    } else if (this.game_mode !== GameModes.GameOver) {
+    } else if (this.game_mode !== GameModes.GameOver && this.game_mode !== GameModes.CardWon && this.game_mode !== GameModes.CardReady) {
       this.updatePlane(deltaTime, mousePos);
     }
 
-    for (const enemy of this.enemies) {
+    for (const [index, enemy] of this.enemies.entries()) {
       enemy.tick(deltaTime);
 
       enemy.angle += deltaTime * this.game.speed;
@@ -214,6 +557,11 @@ export default class MainScene extends Group {
 
       if (this.collideCheck(this.airplane, enemy, this.game.enemyDistanceTolerance)) {
         this.explodeEnemy(enemy);
+
+        if (enemy.name === 0) {
+          this.isFirstPylonCrash = true;
+        }
+
         this.switchGameMode(GameModes.GameEnding);
       } else if (enemy.angle > Math.PI) {
         this.remove(enemy);
@@ -243,7 +591,8 @@ export default class MainScene extends Group {
 
   spawnEnemies(count) {
     for (let i = 0; i < count; i++) {
-      const enemy = new Enemy();
+      const enemy = new Enemy(this.enemiesTotal);
+      this.enemiesTotal += 1
       enemy.angle = -(i * 0.1);
       enemy.distance = this.game.seaRadius + this.game.planeDefaultHeight + (-1 + Math.random() * 2) * (this.game.planeAmpHeight - 20);
       enemy.position.x = Math.cos(enemy.angle) * enemy.distance;
