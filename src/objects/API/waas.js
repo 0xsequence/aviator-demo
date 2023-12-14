@@ -8,6 +8,7 @@ const AuthModes = {
 }
 
 const ContractAddress = "0xa68eb569682a63e330eda29d703c10c6dde721bb";
+const MinterContractAddress = "0x3d33ad6e2210ae3957b26f8099fe3d517bdfdf1f";
 const WaaSAPIKey = "eyJzZWNyZXQiOiJ0YmQiLCJ0ZW5hbnQiOjksImlkZW50aXR5UG9vbElkIjoidXMtZWFzdC0yOjQyYzlmMzlkLWM5MzUtNGQ1Yy1hODQ1LTVjODgxNWM3OWVlMyIsImVtYWlsQ2xpZW50SWQiOiI1Zmw3ZGc3bXZ1NTM0bzl2ZmpiYzZoajMxcCJ9"
 const BuilderAPIKey = ""
 
