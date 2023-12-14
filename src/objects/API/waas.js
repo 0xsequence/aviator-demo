@@ -106,6 +106,18 @@ class SequenceController {
       });
     }
 
+    resetForm() {
+      this.switchAuthMode(AuthModes.Email);
+      var emailInput = document.getElementById("emailInput");
+      var codeInput = document.getElementById("codeInput");
+
+      emailInput.removeAttribute("aria-invalid");
+      codeInput.removeAttribute("aria-invalid");
+
+      emailInput.value = "";
+      codeInput.value = "";
+    }
+
     switchAuthMode(mode) {
       if (this.mode === mode) return;
   

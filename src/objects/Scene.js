@@ -320,6 +320,8 @@ export default class MainScene extends Group {
   closeLoginModal() {
     var modal = document.getElementById("loginModal");
     modal.setAttribute("open", false);
+
+    this.sequenceController.resetForm();
   }
 
   clearAllCards() {
