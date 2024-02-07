@@ -16,7 +16,8 @@ class SequenceController {
     constructor() {
         this.sequence = new Sequence({
             network: 'mumbai',
-            key: WaaSAPIKey,
+            projectAccessKey: `8lupVLeeuZ21enmfdmojLKLAAAAAAAAAA`,
+            waasConfigKey: `eyJwcm9qZWN0SWQiOjExLCJpZGVudGl0eVBvb2xJZCI6InVzLWVhc3QtMjpkZDQzMWVhMy0wNDMzLTQyYjAtODIyNC1kMTZhOGI2ZTVlOGEiLCJlbWFpbENsaWVudElkIjoiNWZwa3F1bm84bjJ1bXAycDIzNnNwczNnNjIiLCJpZHBSZWdpb24iOiJ1cy1lYXN0LTIiLCJycGNTZXJ2ZXIiOiJodHRwczovL2Rldi13YWFzLnNlcXVlbmNlLmFwcCIsImttc1JlZ2lvbiI6InVzLWVhc3QtMiIsImVtYWlsUmVnaW9uIjoidXMtZWFzdC0yIiwia2V5SWQiOiJhcm46YXdzOmttczp1cy1lYXN0LTI6MzgxNDkyMjQ3Njk3OmtleS8xODgxZTY3My1mMThkLTQ1NTgtODI5YS0xM2I4MThjMDMwNjUifQ`,
         }, defaults.TEMPLATE_NEXT);
 
         this.indexer = new SequenceIndexer('https://mumbai-indexer.sequence.app');

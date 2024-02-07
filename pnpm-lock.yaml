@@ -6,11 +6,11 @@ settings:
 
 dependencies:
   0xsequence:
-    specifier: 0.0.0-20231117190010
-    version: 0.0.0-20231117190010(ethers@6.8.1)
+    specifier: 1.8.3
+    version: 1.8.3(ethers@6.8.1)
   '@0xsequence/indexer':
-    specifier: 0.0.0-20231117190010
-    version: 0.0.0-20231117190010
+    specifier: 1.8.3
+    version: 1.8.3
   ethers:
     specifier: ^6.8.1
     version: 6.8.1
@@ -26,8 +26,8 @@ dependencies:
 
 devDependencies:
   '@0xsequence/waas':
-    specifier: 0.0.0-20231108174744
-    version: 0.0.0-20231108174744
+    specifier: 0.0.0-20240131180030
+    version: 0.0.0-20240131180030(ethers@6.8.1)
   '@babel/core':
     specifier: ^7.20.5
     version: 7.23.2
@@ -70,97 +70,111 @@ devDependencies:
 
 packages:
 
-  /0xsequence@0.0.0-20231117190010(ethers@6.8.1):
-    resolution: {integrity: sha512-LSuMpaBo4W1ai0YcGhn+yMsEAEdj2LXEkRO2M4KTtEBYd4Za/tOeLQycZc3LFncETSbDWGkJwPXIiB5d7EPvKA==}
+  /0xsequence@1.8.3(ethers@6.8.1):
+    resolution: {integrity: sha512-oSXTz24Fz158WEbEMMPc+KviVPYBPpeIKtUUQkoXj8VrvOisH2iIbZWNjKEN68K6nzNsP6gbNOmzTDIH79GMjg==}
     peerDependencies:
       ethers: '>=5.5 < 6'
     dependencies:
-      '@0xsequence/abi': 0.0.0-20231117190010
-      '@0xsequence/account': 0.0.0-20231117190010
-      '@0xsequence/api': 0.0.0-20231117190010
-      '@0xsequence/auth': 0.0.0-20231117190010(ethers@6.8.1)
-      '@0xsequence/core': 0.0.0-20231117190010(ethers@6.8.1)
-      '@0xsequence/guard': 0.0.0-20231117190010
-      '@0xsequence/indexer': 0.0.0-20231117190010
-      '@0xsequence/metadata': 0.0.0-20231117190010
-      '@0xsequence/migration': 0.0.0-20231117190010
-      '@0xsequence/multicall': 0.0.0-20231117190010(ethers@6.8.1)
-      '@0xsequence/network': 0.0.0-20231117190010(ethers@6.8.1)
-      '@0xsequence/provider': 0.0.0-20231117190010(ethers@6.8.1)
-      '@0xsequence/relayer': 0.0.0-20231117190010(ethers@6.8.1)
-      '@0xsequence/sessions': 0.0.0-20231117190010
-      '@0xsequence/signhub': 0.0.0-20231117190010
-      '@0xsequence/utils': 0.0.0-20231117190010(ethers@6.8.1)
-      '@0xsequence/wallet': 0.0.0-20231117190010(ethers@6.8.1)
+      '@0xsequence/abi': 1.8.3
+      '@0xsequence/account': 1.8.3
+      '@0xsequence/api': 1.8.3
+      '@0xsequence/auth': 1.8.3(ethers@6.8.1)
+      '@0xsequence/core': 1.8.3(ethers@6.8.1)
+      '@0xsequence/guard': 1.8.3
+      '@0xsequence/indexer': 1.8.3
+      '@0xsequence/metadata': 1.8.3
+      '@0xsequence/migration': 1.8.3
+      '@0xsequence/multicall': 1.8.3(ethers@6.8.1)
+      '@0xsequence/network': 1.8.3(ethers@6.8.1)
+      '@0xsequence/provider': 1.8.3(ethers@6.8.1)
+      '@0xsequence/relayer': 1.8.3(ethers@6.8.1)
+      '@0xsequence/sessions': 1.8.3
+      '@0xsequence/signhub': 1.8.3
+      '@0xsequence/utils': 1.8.3(ethers@6.8.1)
+      '@0xsequence/wallet': 1.8.3(ethers@6.8.1)
       ethers: 6.8.1
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
     dev: false
 
-  /@0xsequence/abi@0.0.0-20231117190010:
-    resolution: {integrity: sha512-rixQTxxWoOW+zkKf6vPtkK71sLBre1QCpYkcoJ3bZ723N2k7mPyWq7PCyXIykcCnuhCUCunzy5f8QZXd2L1drA==}
+  /@0xsequence/abi@0.0.0-20240131180030:
+    resolution: {integrity: sha512-64S/iZcz3ji1vic4+ul2uI+8PNzIV5jsfQbXsxUOaVUZ8uVP4RSbbUC4wsnI8GLzQe8pObkwMqrioZddDQ0x3w==}
+    dev: true
+
+  /@0xsequence/abi@1.8.3:
+    resolution: {integrity: sha512-2m48U+Uc8PAg0x0DT4WvXg+yQkdnoQj35rCl7qYwMLUExvop8XGiz/X+3XNowseIPuqJ5GS1lW38nomsvF5AxA==}
     dev: false
 
-  /@0xsequence/account@0.0.0-20231117190010:
-    resolution: {integrity: sha512-8kxe51GmUgtANyMgVyjwBOmtp8SnaYOA0Y07H+JdKzXfenQCd/j7vHenMbLIQKO327D1GDH8BkV+15xOoaDRQw==}
+  /@0xsequence/account@1.8.3:
+    resolution: {integrity: sha512-unI4rD63/ks/xu32pzkJmc/kX9P9uw5CSiZkCPXWxQrFnV1KaIEqRKzpPaB3J/rxrINIHD0fGNb1tN3rtXCaqA==}
     dependencies:
-      '@0xsequence/core': 0.0.0-20231117190010(ethers@5.7.2)
-      '@0xsequence/migration': 0.0.0-20231117190010
-      '@0xsequence/network': 0.0.0-20231117190010(ethers@5.7.2)
-      '@0xsequence/relayer': 0.0.0-20231117190010(ethers@5.7.2)
-      '@0xsequence/sessions': 0.0.0-20231117190010
-      '@0xsequence/utils': 0.0.0-20231117190010(ethers@5.7.2)
-      '@0xsequence/wallet': 0.0.0-20231117190010(ethers@5.7.2)
+      '@0xsequence/abi': 1.8.3
+      '@0xsequence/core': 1.8.3(ethers@5.7.2)
+      '@0xsequence/migration': 1.8.3
+      '@0xsequence/network': 1.8.3(ethers@5.7.2)
+      '@0xsequence/relayer': 1.8.3(ethers@5.7.2)
+      '@0xsequence/sessions': 1.8.3
+      '@0xsequence/utils': 1.8.3(ethers@5.7.2)
+      '@0xsequence/wallet': 1.8.3(ethers@5.7.2)
       ethers: 5.7.2
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
     dev: false
 
-  /@0xsequence/api@0.0.0-20231117190010:
-    resolution: {integrity: sha512-jBF6EE0rCj/LgCcxTpQFBf+z0PGaSgffgl0CY1VJfQ6eTb8QwvzidAO2EnK8h4nD+0ReKca/wxD5y5m0QKcPDQ==}
+  /@0xsequence/api@1.8.3:
+    resolution: {integrity: sha512-6dZF1NaJ4dqtkpBdnIY72d6zpDcqFrWrVR0+9tjdISJP0moAAYKJ2IINVT3+w+OIkztDXpKFqrhRVzBhaNsBXQ==}
     dev: false
 
-  /@0xsequence/auth@0.0.0-20231117190010(ethers@6.8.1):
-    resolution: {integrity: sha512-jRmUBRrLlD+5Rr2PvvepZZCX6c6JRLGvZ00SbnH1/JdPWpUbZA8dGpxKz6kVIqTYFNtPbExL+CzUiYVIR5v9SA==}
+  /@0xsequence/auth@1.8.3(ethers@6.8.1):
+    resolution: {integrity: sha512-D6ZWOrH8sFZ1l7VCJOfWe5hVXJ2kSHbjLLUiJUonZSFfSzwhg4Ok4au7IlHk8VVLLlE+fxIDHq/S58MN5FhPRQ==}
     peerDependencies:
       ethers: '>=5.5 < 6'
     dependencies:
-      '@0xsequence/abi': 0.0.0-20231117190010
-      '@0xsequence/account': 0.0.0-20231117190010
-      '@0xsequence/api': 0.0.0-20231117190010
-      '@0xsequence/core': 0.0.0-20231117190010(ethers@6.8.1)
+      '@0xsequence/abi': 1.8.3
+      '@0xsequence/account': 1.8.3
+      '@0xsequence/api': 1.8.3
+      '@0xsequence/core': 1.8.3(ethers@6.8.1)
       '@0xsequence/ethauth': 0.8.1(ethers@6.8.1)
-      '@0xsequence/indexer': 0.0.0-20231117190010
-      '@0xsequence/metadata': 0.0.0-20231117190010
-      '@0xsequence/migration': 0.0.0-20231117190010
-      '@0xsequence/network': 0.0.0-20231117190010(ethers@6.8.1)
-      '@0xsequence/sessions': 0.0.0-20231117190010
-      '@0xsequence/signhub': 0.0.0-20231117190010
-      '@0xsequence/utils': 0.0.0-20231117190010(ethers@6.8.1)
-      '@0xsequence/wallet': 0.0.0-20231117190010(ethers@6.8.1)
+      '@0xsequence/indexer': 1.8.3
+      '@0xsequence/metadata': 1.8.3
+      '@0xsequence/migration': 1.8.3
+      '@0xsequence/network': 1.8.3(ethers@6.8.1)
+      '@0xsequence/sessions': 1.8.3
+      '@0xsequence/signhub': 1.8.3
+      '@0xsequence/utils': 1.8.3(ethers@6.8.1)
+      '@0xsequence/wallet': 1.8.3(ethers@6.8.1)
       ethers: 6.8.1
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
     dev: false
 
-  /@0xsequence/core@0.0.0-20231117190010(ethers@5.7.2):
-    resolution: {integrity: sha512-F1rLAb8s/GXxOyerXNW/8UeKIUdVSiXRHuQGaauRWkbcw+wgRsOMTrpU8/KnrCRMYRYXYqo2X5Q96zDoip77dQ==}
+  /@0xsequence/core@0.0.0-20240131180030(ethers@6.8.1):
+    resolution: {integrity: sha512-o1VL0KyodOo9P3kKK90F2ni75dWbov5tANE6Gw/1cGuwC1yFHOLE9K8RQvm5H/KX2QZ+t5Cs8gHUvA7Fcb268A==}
     peerDependencies:
       ethers: '>=5.5'
     dependencies:
-      '@0xsequence/abi': 0.0.0-20231117190010
+      '@0xsequence/abi': 0.0.0-20240131180030
+      ethers: 6.8.1
+    dev: true
+
+  /@0xsequence/core@1.8.3(ethers@5.7.2):
+    resolution: {integrity: sha512-owcgfqY5dcKbiOQULLumMI4JoriLWz/Pp/bKPuKKfXv7PQ9ei2Y9yasqFtEWJTi7/CZOUDAhadnyUZx6YWSIow==}
+    peerDependencies:
+      ethers: '>=5.5'
+    dependencies:
+      '@0xsequence/abi': 1.8.3
       ethers: 5.7.2
     dev: false
 
-  /@0xsequence/core@0.0.0-20231117190010(ethers@6.8.1):
-    resolution: {integrity: sha512-F1rLAb8s/GXxOyerXNW/8UeKIUdVSiXRHuQGaauRWkbcw+wgRsOMTrpU8/KnrCRMYRYXYqo2X5Q96zDoip77dQ==}
+  /@0xsequence/core@1.8.3(ethers@6.8.1):
+    resolution: {integrity: sha512-owcgfqY5dcKbiOQULLumMI4JoriLWz/Pp/bKPuKKfXv7PQ9ei2Y9yasqFtEWJTi7/CZOUDAhadnyUZx6YWSIow==}
     peerDependencies:
       ethers: '>=5.5'
     dependencies:
-      '@0xsequence/abi': 0.0.0-20231117190010
+      '@0xsequence/abi': 1.8.3
       ethers: 6.8.1
     dev: false
 
@@ -173,88 +187,105 @@ packages:
       js-base64: 3.7.5
     dev: false
 
-  /@0xsequence/guard@0.0.0-20231117190010:
-    resolution: {integrity: sha512-ervaheyJ7ke0HGKU1CAc4Zs2feexzKHo2J63/DwqZX9F9UytzOfVGTjXwgUinY1D5naf4QvsrOdXWKZt9TpIgg==}
+  /@0xsequence/guard@1.8.3:
+    resolution: {integrity: sha512-uss71iGVxrhfTzUF/mK4zweyWJvboO2Bo9XRUy+aap43cXK8cdnfSxPEWbTgS10DHG9zTHZoW74tRKkofzKZ+A==}
     dependencies:
-      '@0xsequence/account': 0.0.0-20231117190010
-      '@0xsequence/core': 0.0.0-20231117190010(ethers@5.7.2)
-      '@0xsequence/signhub': 0.0.0-20231117190010
-      '@0xsequence/utils': 0.0.0-20231117190010(ethers@5.7.2)
+      '@0xsequence/account': 1.8.3
+      '@0xsequence/core': 1.8.3(ethers@5.7.2)
+      '@0xsequence/signhub': 1.8.3
+      '@0xsequence/utils': 1.8.3(ethers@5.7.2)
       ethers: 5.7.2
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
     dev: false
 
-  /@0xsequence/indexer@0.0.0-20231117190010:
-    resolution: {integrity: sha512-QeAbtWnZqu4HpYb+YoldQ1Twe3zOPTn+vfPWp7CKuYWcp86M+XghZd0Lafn9Kqp9M8DrjTGSaxPc87mebIOi1w==}
+  /@0xsequence/indexer@0.0.0-20240131180030:
+    resolution: {integrity: sha512-CD5JMtP+gHrFsG7n0yWCJP1p6GIRN2fsgH8O5Cf6rFyrrXDnKDuDK/6spTLGVf7GhDY2pyC6LXLMnD7mRG2Shw==}
+    dev: true
+
+  /@0xsequence/indexer@1.8.3:
+    resolution: {integrity: sha512-ulk1u1BQBwfkwAP7RGgRrhMmnqcAfdHGu4pdAIRWT00LhqBUKolXXRz3Lo1LzJXVymUa2AH9+xovee1N4Vy6lg==}
     dev: false
 
-  /@0xsequence/metadata@0.0.0-20231117190010:
-    resolution: {integrity: sha512-V4scu7ORvxrEYa/h6bKjPZmMlVBf7raYE9rhFL4eD2Pusgb4bNokvwx9WxTn0fshiHFl2gSYvJzZMum1CMkXpA==}
+  /@0xsequence/metadata@1.8.3:
+    resolution: {integrity: sha512-/deVY7f2L+E1rE4/E2JxCgWS9zzIUrhChSKISvRytOmf9m8RpaEaF64v9FzIS36malHuYU/nBj76mmWN/p6wRA==}
     dev: false
 
-  /@0xsequence/migration@0.0.0-20231117190010:
-    resolution: {integrity: sha512-0hTXiPaLVkB3dgOvZXGz4r7PWJnC87o5+IVJ0BwylBYqbb/7rNaCUADNj2oiuzgGPi6aedWbjdJpnCZlYP9jSA==}
+  /@0xsequence/migration@1.8.3:
+    resolution: {integrity: sha512-Q+tNLd3F4PiQlEr6aF59Vy5+H9+G6tyMI2lwukT0KN+XiYJj/X2W3rHx/8e3ni1tw6gI9cVnOWgTF/Vc+6ouaQ==}
     dependencies:
-      '@0xsequence/abi': 0.0.0-20231117190010
-      '@0xsequence/core': 0.0.0-20231117190010(ethers@5.7.2)
-      '@0xsequence/wallet': 0.0.0-20231117190010(ethers@5.7.2)
+      '@0xsequence/abi': 1.8.3
+      '@0xsequence/core': 1.8.3(ethers@5.7.2)
+      '@0xsequence/wallet': 1.8.3(ethers@5.7.2)
       ethers: 5.7.2
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
     dev: false
 
-  /@0xsequence/multicall@0.0.0-20231117190010(ethers@6.8.1):
-    resolution: {integrity: sha512-xgn3KICp8m9odFFw7rfFbOwvv+qUw1Oiv/ujN9kcSmSRc+Pl1aiXBUyWaqv76uRLIGuT/ypgrFdN8yw68IXm+w==}
+  /@0xsequence/multicall@1.8.3(ethers@6.8.1):
+    resolution: {integrity: sha512-safVbhRSm8GxCKBi/1ybZiKpWDijWj6LekR0MRYN1I5NTxfGC/bpJ//5PTAOaQ39MSu+pZQeDD5WVgsg4s+V/w==}
     peerDependencies:
       ethers: '>=5.5 < 6'
     dependencies:
-      '@0xsequence/abi': 0.0.0-20231117190010
-      '@0xsequence/network': 0.0.0-20231117190010(ethers@6.8.1)
-      '@0xsequence/utils': 0.0.0-20231117190010(ethers@6.8.1)
+      '@0xsequence/abi': 1.8.3
+      '@0xsequence/network': 1.8.3(ethers@6.8.1)
+      '@0xsequence/utils': 1.8.3(ethers@6.8.1)
       ethers: 6.8.1
     dev: false
 
-  /@0xsequence/network@0.0.0-20231117190010(ethers@5.7.2):
-    resolution: {integrity: sha512-DFQs8yoaOFPBQ0k8+A7hTwOvuK6XEycEKUOeTov90psWs7X31h/osFAMJzd6agdDTHx52jmbIpkrr2GM7gdWBw==}
+  /@0xsequence/network@0.0.0-20240131180030(ethers@6.8.1):
+    resolution: {integrity: sha512-dIKhq4ascoCsQ4rMAEakIDaG/H25EqT/ErnwVFLOfLenQ5xvUZBbUfqbnzbxPhQkdtT9E5c8YmKkdIkKWYRFQw==}
     peerDependencies:
       ethers: '>=5.5 < 6'
     dependencies:
-      '@0xsequence/core': 0.0.0-20231117190010(ethers@5.7.2)
-      '@0xsequence/indexer': 0.0.0-20231117190010
-      '@0xsequence/relayer': 0.0.0-20231117190010(ethers@5.7.2)
-      '@0xsequence/utils': 0.0.0-20231117190010(ethers@5.7.2)
+      '@0xsequence/core': 0.0.0-20240131180030(ethers@6.8.1)
+      '@0xsequence/indexer': 0.0.0-20240131180030
+      '@0xsequence/relayer': 0.0.0-20240131180030(ethers@6.8.1)
+      '@0xsequence/utils': 0.0.0-20240131180030(ethers@6.8.1)
+      ethers: 6.8.1
+    dev: true
+
+  /@0xsequence/network@1.8.3(ethers@5.7.2):
+    resolution: {integrity: sha512-eTHzT3yaohePi16nX+WgwRBkk9oyO9dQcQ6mei2AaD8Q/am6w6m75FNGFDVxisOZgjdm9H8Rn7iV+7jHrSBP9Q==}
+    peerDependencies:
+      ethers: '>=5.5 < 6'
+    dependencies:
+      '@0xsequence/core': 1.8.3(ethers@5.7.2)
+      '@0xsequence/indexer': 1.8.3
+      '@0xsequence/relayer': 1.8.3(ethers@5.7.2)
+      '@0xsequence/utils': 1.8.3(ethers@5.7.2)
       ethers: 5.7.2
     dev: false
 
-  /@0xsequence/network@0.0.0-20231117190010(ethers@6.8.1):
-    resolution: {integrity: sha512-DFQs8yoaOFPBQ0k8+A7hTwOvuK6XEycEKUOeTov90psWs7X31h/osFAMJzd6agdDTHx52jmbIpkrr2GM7gdWBw==}
+  /@0xsequence/network@1.8.3(ethers@6.8.1):
+    resolution: {integrity: sha512-eTHzT3yaohePi16nX+WgwRBkk9oyO9dQcQ6mei2AaD8Q/am6w6m75FNGFDVxisOZgjdm9H8Rn7iV+7jHrSBP9Q==}
     peerDependencies:
       ethers: '>=5.5 < 6'
     dependencies:
-      '@0xsequence/core': 0.0.0-20231117190010(ethers@6.8.1)
-      '@0xsequence/indexer': 0.0.0-20231117190010
-      '@0xsequence/relayer': 0.0.0-20231117190010(ethers@6.8.1)
-      '@0xsequence/utils': 0.0.0-20231117190010(ethers@6.8.1)
+      '@0xsequence/core': 1.8.3(ethers@6.8.1)
+      '@0xsequence/indexer': 1.8.3
+      '@0xsequence/relayer': 1.8.3(ethers@6.8.1)
+      '@0xsequence/utils': 1.8.3(ethers@6.8.1)
       ethers: 6.8.1
     dev: false
 
-  /@0xsequence/provider@0.0.0-20231117190010(ethers@6.8.1):
-    resolution: {integrity: sha512-70vwVrIhdHZIwKxeXgb2C3fB/O371nIhDsGpJs4PtkXccqLgezdveWDlJcb/gpv/oXg6vo83d1VeZLcykv50VA==}
+  /@0xsequence/provider@1.8.3(ethers@6.8.1):
+    resolution: {integrity: sha512-a8LWDNi0LAW1J2IMB6V/51fUXN5AT0sR4oQC0tJDzQmtXPlvfIfNEgea4+AHPDzhNgIvCP6V6rSjNVUzkVyqiQ==}
     peerDependencies:
       ethers: '>=5.5 < 6'
     dependencies:
-      '@0xsequence/abi': 0.0.0-20231117190010
-      '@0xsequence/account': 0.0.0-20231117190010
-      '@0xsequence/auth': 0.0.0-20231117190010(ethers@6.8.1)
-      '@0xsequence/core': 0.0.0-20231117190010(ethers@6.8.1)
-      '@0xsequence/migration': 0.0.0-20231117190010
-      '@0xsequence/network': 0.0.0-20231117190010(ethers@6.8.1)
-      '@0xsequence/relayer': 0.0.0-20231117190010(ethers@6.8.1)
-      '@0xsequence/utils': 0.0.0-20231117190010(ethers@6.8.1)
-      '@0xsequence/wallet': 0.0.0-20231117190010(ethers@6.8.1)
+      '@0xsequence/abi': 1.8.3
+      '@0xsequence/account': 1.8.3
+      '@0xsequence/auth': 1.8.3(ethers@6.8.1)
+      '@0xsequence/core': 1.8.3(ethers@6.8.1)
+      '@0xsequence/migration': 1.8.3
+      '@0xsequence/network': 1.8.3(ethers@6.8.1)
+      '@0xsequence/relayer': 1.8.3(ethers@6.8.1)
+      '@0xsequence/utils': 1.8.3(ethers@6.8.1)
+      '@0xsequence/wallet': 1.8.3(ethers@6.8.1)
+      '@databeat/tracker': 0.8.2
       ethers: 6.8.1
       eventemitter2: 6.4.9
       webextension-polyfill: 0.10.0
@@ -263,44 +294,55 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@0xsequence/relayer@0.0.0-20231117190010(ethers@5.7.2):
-    resolution: {integrity: sha512-L6DO0XK8q5zVBRXMdhvotXXRHucNftU+r5OsgHx5zZ5bP316/JyNCUMtlcsllJKqHnfUhtEHl+7J+D/Ywt+PfA==}
+  /@0xsequence/relayer@0.0.0-20240131180030(ethers@6.8.1):
+    resolution: {integrity: sha512-8ELbSoB3soUWe/y4QepBdfKMNELAtzkPCOkIuGNMwA3tUddskyRXkbPhS+eS8Rgjnf5BOblS+GDQqmkybUoJ0Q==}
     peerDependencies:
       ethers: '>=5.5 < 6'
     dependencies:
-      '@0xsequence/abi': 0.0.0-20231117190010
-      '@0xsequence/core': 0.0.0-20231117190010(ethers@5.7.2)
-      '@0xsequence/utils': 0.0.0-20231117190010(ethers@5.7.2)
+      '@0xsequence/abi': 0.0.0-20240131180030
+      '@0xsequence/core': 0.0.0-20240131180030(ethers@6.8.1)
+      '@0xsequence/utils': 0.0.0-20240131180030(ethers@6.8.1)
+      ethers: 6.8.1
+    dev: true
+
+  /@0xsequence/relayer@1.8.3(ethers@5.7.2):
+    resolution: {integrity: sha512-/aOSFtxnoDwsZy/OQJyCTygooTomJAUJzBWQUCGIsQvRt7BNrHmBZBGdPiv903qo5npbWMfm2WFDzzeHp07w4g==}
+    peerDependencies:
+      ethers: '>=5.5 < 6'
+    dependencies:
+      '@0xsequence/abi': 1.8.3
+      '@0xsequence/core': 1.8.3(ethers@5.7.2)
+      '@0xsequence/utils': 1.8.3(ethers@5.7.2)
       ethers: 5.7.2
     dev: false
 
-  /@0xsequence/relayer@0.0.0-20231117190010(ethers@6.8.1):
-    resolution: {integrity: sha512-L6DO0XK8q5zVBRXMdhvotXXRHucNftU+r5OsgHx5zZ5bP316/JyNCUMtlcsllJKqHnfUhtEHl+7J+D/Ywt+PfA==}
+  /@0xsequence/relayer@1.8.3(ethers@6.8.1):
+    resolution: {integrity: sha512-/aOSFtxnoDwsZy/OQJyCTygooTomJAUJzBWQUCGIsQvRt7BNrHmBZBGdPiv903qo5npbWMfm2WFDzzeHp07w4g==}
     peerDependencies:
       ethers: '>=5.5 < 6'
     dependencies:
-      '@0xsequence/abi': 0.0.0-20231117190010
-      '@0xsequence/core': 0.0.0-20231117190010(ethers@6.8.1)
-      '@0xsequence/utils': 0.0.0-20231117190010(ethers@6.8.1)
+      '@0xsequence/abi': 1.8.3
+      '@0xsequence/core': 1.8.3(ethers@6.8.1)
+      '@0xsequence/utils': 1.8.3(ethers@6.8.1)
       ethers: 6.8.1
     dev: false
 
-  /@0xsequence/replacer@0.0.0-20231117190010(ethers@5.7.2):
-    resolution: {integrity: sha512-LfxHU5ZC3FWCEIRqlp8rwcinBhKaNxavjsTzHmxbI1ezz1WLJ8qpZoQI+j7/IwUbZWWq+PxHmBOoq4ELdAb+Tg==}
+  /@0xsequence/replacer@1.8.3(ethers@5.7.2):
+    resolution: {integrity: sha512-GyGKrDzxUFF+7i84zDGPpalaBn/e1NwFzEE0yI9HsnXVqrrcGEPRfYHftYDLj1sRfuLvv6l+KqQCjWN6d4xTsA==}
     peerDependencies:
       ethers: '>=5.5'
     dependencies:
-      '@0xsequence/abi': 0.0.0-20231117190010
-      '@0xsequence/core': 0.0.0-20231117190010(ethers@5.7.2)
+      '@0xsequence/abi': 1.8.3
+      '@0xsequence/core': 1.8.3(ethers@5.7.2)
       ethers: 5.7.2
     dev: false
 
-  /@0xsequence/sessions@0.0.0-20231117190010:
-    resolution: {integrity: sha512-mtnmJEYViMVDFT2p28NMQKYJ7YxmEDfcrBR6+UDv9pGW1TCvLJ3oc2s+/t7DHgS5h2LJqPjacmUae0Ci7MQLBw==}
+  /@0xsequence/sessions@1.8.3:
+    resolution: {integrity: sha512-o0gVM7DlVw4j4uWI1+NeybRdbvCbVl5ykeaT5n5VHdeo0cAcN+sfVfc4b78YKOow2nDZyFhco15Gg6vILT0nMg==}
     dependencies:
-      '@0xsequence/core': 0.0.0-20231117190010(ethers@5.7.2)
-      '@0xsequence/migration': 0.0.0-20231117190010
-      '@0xsequence/replacer': 0.0.0-20231117190010(ethers@5.7.2)
+      '@0xsequence/core': 1.8.3(ethers@5.7.2)
+      '@0xsequence/migration': 1.8.3
+      '@0xsequence/replacer': 1.8.3(ethers@5.7.2)
       ethers: 5.7.2
       idb: 7.1.1
     transitivePeerDependencies:
@@ -308,18 +350,27 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@0xsequence/signhub@0.0.0-20231117190010:
-    resolution: {integrity: sha512-c4QSNw6V3P6+lBDnw1tveD2jFsFu6Ju0AY+WEu6GbYTVER9cWpgGpqHc4usUN0taNDM3SWEY746k1gbn/Z6wbQ==}
+  /@0xsequence/signhub@1.8.3:
+    resolution: {integrity: sha512-cNrhTu3ZioBNDYytBW2qM7ZUZ9QkV6brIKPjcsByrDGrQqkFRSpRXiZMdqM/LOjGakOpR2GhuuKGK2k109aRMg==}
     dependencies:
-      '@0xsequence/core': 0.0.0-20231117190010(ethers@5.7.2)
+      '@0xsequence/core': 1.8.3(ethers@5.7.2)
       ethers: 5.7.2
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
     dev: false
 
-  /@0xsequence/utils@0.0.0-20231117190010(ethers@5.7.2):
-    resolution: {integrity: sha512-x2gEoHBiAL/QWAvL8YMYdSMyDKtaMbsoAFC2B28uzxEtBI37fv7UoFNYRlpkzk/KISRnHtTeVWontvcyZB4k/g==}
+  /@0xsequence/utils@0.0.0-20240131180030(ethers@6.8.1):
+    resolution: {integrity: sha512-U1HU3StlbGoE6RWOQAONuLA68pkxBjx/TqexDUB5Kn4dBO2Dvb0gbYqLOY10eR6Q1M0c5Js7DQWoOyS4OvzcHQ==}
+    peerDependencies:
+      ethers: '>=5.5 < 6'
+    dependencies:
+      ethers: 6.8.1
+      js-base64: 3.7.5
+    dev: true
+
+  /@0xsequence/utils@1.8.3(ethers@5.7.2):
+    resolution: {integrity: sha512-tsMkBAC89idpmOGSxWxYmmXK5m1nzDplmXdxSn4VXHamJbsZIqyPHzuWl04l7GVWjNmFv8Cr2IFBs2e72/3lwQ==}
     peerDependencies:
       ethers: '>=5.5 < 6'
     dependencies:
@@ -327,8 +378,8 @@ packages:
       js-base64: 3.7.5
     dev: false
 
-  /@0xsequence/utils@0.0.0-20231117190010(ethers@6.8.1):
-    resolution: {integrity: sha512-x2gEoHBiAL/QWAvL8YMYdSMyDKtaMbsoAFC2B28uzxEtBI37fv7UoFNYRlpkzk/KISRnHtTeVWontvcyZB4k/g==}
+  /@0xsequence/utils@1.8.3(ethers@6.8.1):
+    resolution: {integrity: sha512-tsMkBAC89idpmOGSxWxYmmXK5m1nzDplmXdxSn4VXHamJbsZIqyPHzuWl04l7GVWjNmFv8Cr2IFBs2e72/3lwQ==}
     peerDependencies:
       ethers: '>=5.5 < 6'
     dependencies:
@@ -336,49 +387,50 @@ packages:
       js-base64: 3.7.5
     dev: false
 
-  /@0xsequence/waas@0.0.0-20231108174744:
-    resolution: {integrity: sha512-MgiWqKK4cQIZF4V5P+zjjkbcpSNykXy/OLLv9qmk45lMajN9MPY9/ZPP2hiJxft+C0nVoemrhccZZSA9onc28Q==}
+  /@0xsequence/waas@0.0.0-20240131180030(ethers@6.8.1):
+    resolution: {integrity: sha512-zrqVa+aozvCHY11/EuaFX0QJkhsqDpW5Z3/K1kYzqNZgVDgzeAYwMZdEa0/vQWnnIc+DAnpd0JoS7rCNC8x6CQ==}
+    peerDependencies:
+      ethers: '>=5.5'
     dependencies:
+      '@0xsequence/network': 0.0.0-20240131180030(ethers@6.8.1)
       '@aws-sdk/client-cognito-identity-provider': 3.445.0
       '@aws-sdk/client-kms': 3.445.0
       '@aws-sdk/credential-providers': 3.445.0
-      ethers: 5.7.2
+      ethers: 6.8.1
       json-canonicalize: 1.0.6
       jwt-decode: 4.0.0
     transitivePeerDependencies:
       - aws-crt
-      - bufferutil
-      - utf-8-validate
     dev: true
 
-  /@0xsequence/wallet@0.0.0-20231117190010(ethers@5.7.2):
-    resolution: {integrity: sha512-IaZEARNs1XJC0sNQ9uCazMqTdCURWbN6857DJsg6gn/YUa0Vri3iLyr3PvA7dTuoe5NTvfJx7IPgZqC7zItdIA==}
+  /@0xsequence/wallet@1.8.3(ethers@5.7.2):
+    resolution: {integrity: sha512-tRaboLUdfIlAm9zd8VCTXU/E/cfxfgjVJmWlDNAEoRa5usWnDhQkTTIK2Q9KPm1RbJlbs0ghvjT4eMe4Sv0Tfw==}
     peerDependencies:
       ethers: '>=5.5 < 6'
     dependencies:
-      '@0xsequence/abi': 0.0.0-20231117190010
-      '@0xsequence/core': 0.0.0-20231117190010(ethers@5.7.2)
-      '@0xsequence/network': 0.0.0-20231117190010(ethers@5.7.2)
-      '@0xsequence/relayer': 0.0.0-20231117190010(ethers@5.7.2)
-      '@0xsequence/signhub': 0.0.0-20231117190010
-      '@0xsequence/utils': 0.0.0-20231117190010(ethers@5.7.2)
+      '@0xsequence/abi': 1.8.3
+      '@0xsequence/core': 1.8.3(ethers@5.7.2)
+      '@0xsequence/network': 1.8.3(ethers@5.7.2)
+      '@0xsequence/relayer': 1.8.3(ethers@5.7.2)
+      '@0xsequence/signhub': 1.8.3
+      '@0xsequence/utils': 1.8.3(ethers@5.7.2)
       ethers: 5.7.2
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
     dev: false
 
-  /@0xsequence/wallet@0.0.0-20231117190010(ethers@6.8.1):
-    resolution: {integrity: sha512-IaZEARNs1XJC0sNQ9uCazMqTdCURWbN6857DJsg6gn/YUa0Vri3iLyr3PvA7dTuoe5NTvfJx7IPgZqC7zItdIA==}
+  /@0xsequence/wallet@1.8.3(ethers@6.8.1):
+    resolution: {integrity: sha512-tRaboLUdfIlAm9zd8VCTXU/E/cfxfgjVJmWlDNAEoRa5usWnDhQkTTIK2Q9KPm1RbJlbs0ghvjT4eMe4Sv0Tfw==}
     peerDependencies:
       ethers: '>=5.5 < 6'
     dependencies:
-      '@0xsequence/abi': 0.0.0-20231117190010
-      '@0xsequence/core': 0.0.0-20231117190010(ethers@6.8.1)
-      '@0xsequence/network': 0.0.0-20231117190010(ethers@6.8.1)
-      '@0xsequence/relayer': 0.0.0-20231117190010(ethers@6.8.1)
-      '@0xsequence/signhub': 0.0.0-20231117190010
-      '@0xsequence/utils': 0.0.0-20231117190010(ethers@6.8.1)
+      '@0xsequence/abi': 1.8.3
+      '@0xsequence/core': 1.8.3(ethers@6.8.1)
+      '@0xsequence/network': 1.8.3(ethers@6.8.1)
+      '@0xsequence/relayer': 1.8.3(ethers@6.8.1)
+      '@0xsequence/signhub': 1.8.3
+      '@0xsequence/utils': 1.8.3(ethers@6.8.1)
       ethers: 6.8.1
     transitivePeerDependencies:
       - bufferutil
@@ -387,7 +439,6 @@ packages:
 
   /@adraffy/ens-normalize@1.10.0:
     resolution: {integrity: sha512-nA9XHtlAkYfJxY7bce8DcN7eKxWWCWkU+1GR9d+U6MbNpfwQp8TI7vqOsBsMcHoT4mBu2kypKoSKnghEzOOq5Q==}
-    dev: false
 
   /@ampproject/remapping@2.2.1:
     resolution: {integrity: sha512-lFMjJTrFL3j7L9yBxwYfCq2k6qqwHyzuUl/XBnif78PWTJYyL/dfowQHWE3sp6U6ZzqWiiIZnpTMO96zhkjwtg==}
@@ -2149,6 +2200,12 @@ packages:
       to-fast-properties: 2.0.0
     dev: true
 
+  /@databeat/tracker@0.8.2:
+    resolution: {integrity: sha512-6pW5NBVVlN5Aj+j/DW3ADTgFwEwsnKXv/ffhdZeykAuBuJMojonEYliWuEEScErqnx5zOlIceK/5WSadF8f+HQ==}
+    dependencies:
+      '@noble/hashes': 1.3.2
+    dev: false
+
   /@discoveryjs/json-ext@0.5.7:
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
     engines: {node: '>=10.0.0'}
@@ -2165,6 +2222,7 @@ packages:
       '@ethersproject/logger': 5.7.0
       '@ethersproject/properties': 5.7.0
       '@ethersproject/strings': 5.7.0
+    dev: false
 
   /@ethersproject/abstract-provider@5.7.0:
     resolution: {integrity: sha512-R41c9UkchKCpAqStMYUpdunjo3pkEvZC3FAwZn5S5MGbXoMQOHIdHItezTETxAO5bevtMApSyEhn9+CHcDsWBw==}
@@ -2176,6 +2234,7 @@ packages:
       '@ethersproject/properties': 5.7.0
       '@ethersproject/transactions': 5.7.0
       '@ethersproject/web': 5.7.1
+    dev: false
 
   /@ethersproject/abstract-signer@5.7.0:
     resolution: {integrity: sha512-a16V8bq1/Cz+TGCkE2OPMTOUDLS3grCpdjoJCYNnVBbdYEMSgKrU0+B90s8b6H+ByYTBZN7a3g76jdIJi7UfKQ==}
@@ -2185,6 +2244,7 @@ packages:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/logger': 5.7.0
       '@ethersproject/properties': 5.7.0
+    dev: false
 
   /@ethersproject/address@5.7.0:
     resolution: {integrity: sha512-9wYhYt7aghVGo758POM5nqcOMaE168Q6aRLJZwUmiqSrAungkG74gSSeKEIR7ukixesdRZGPgVqme6vmxs1fkA==}
@@ -2194,17 +2254,20 @@ packages:
       '@ethersproject/keccak256': 5.7.0
       '@ethersproject/logger': 5.7.0
       '@ethersproject/rlp': 5.7.0
+    dev: false
 
   /@ethersproject/base64@5.7.0:
     resolution: {integrity: sha512-Dr8tcHt2mEbsZr/mwTPIQAf3Ai0Bks/7gTw9dSqk1mQvhW3XvRlmDJr/4n+wg1JmCl16NZue17CDh8xb/vZ0sQ==}
     dependencies:
       '@ethersproject/bytes': 5.7.0
+    dev: false
 
   /@ethersproject/basex@5.7.0:
     resolution: {integrity: sha512-ywlh43GwZLv2Voc2gQVTKBoVQ1mti3d8HK5aMxsfu/nRDnMmNqaSJ3r3n85HBByT8OpoY96SXM1FogC533T4zw==}
     dependencies:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/properties': 5.7.0
+    dev: false
 
   /@ethersproject/bignumber@5.7.0:
     resolution: {integrity: sha512-n1CAdIHRWjSucQO3MC1zPSVgV/6dy/fjL9pMrPP9peL+QxEg9wOsVqwD4+818B6LUEtaXzVHQiuivzRoxPxUGw==}
@@ -2212,16 +2275,19 @@ packages:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/logger': 5.7.0
       bn.js: 5.2.1
+    dev: false
 
   /@ethersproject/bytes@5.7.0:
     resolution: {integrity: sha512-nsbxwgFXWh9NyYWo+U8atvmMsSdKJprTcICAkvbBffT75qDocbuggBU0SJiVK2MuTrp0q+xvLkTnGMPK1+uA9A==}
     dependencies:
       '@ethersproject/logger': 5.7.0
+    dev: false
 
   /@ethersproject/constants@5.7.0:
     resolution: {integrity: sha512-DHI+y5dBNvkpYUMiRQyxRBYBefZkJfo70VUkUAsRjcPs47muV9evftfZ0PJVCXYbAiCgght0DtcF9srFQmIgWA==}
     dependencies:
       '@ethersproject/bignumber': 5.7.0
+    dev: false
 
   /@ethersproject/contracts@5.7.0:
     resolution: {integrity: sha512-5GJbzEU3X+d33CdfPhcyS+z8MzsTrBGk/sc+G+59+tPa9yFkl6HQ9D6L0QMgNTA9q8dT0XKxxkyp883XsQvbbg==}
@@ -2236,6 +2302,7 @@ packages:
       '@ethersproject/logger': 5.7.0
       '@ethersproject/properties': 5.7.0
       '@ethersproject/transactions': 5.7.0
+    dev: false
 
   /@ethersproject/hash@5.7.0:
     resolution: {integrity: sha512-qX5WrQfnah1EFnO5zJv1v46a8HW0+E5xuBBDTwMFZLuVTx0tbU2kkx15NqdjxecrLGatQN9FGQKpb1FKdHCt+g==}
@@ -2249,6 +2316,7 @@ packages:
       '@ethersproject/logger': 5.7.0
       '@ethersproject/properties': 5.7.0
       '@ethersproject/strings': 5.7.0
+    dev: false
 
   /@ethersproject/hdnode@5.7.0:
     resolution: {integrity: sha512-OmyYo9EENBPPf4ERhR7oj6uAtUAhYGqOnIS+jE5pTXvdKBS99ikzq1E7Iv0ZQZ5V36Lqx1qZLeak0Ra16qpeOg==}
@@ -2265,6 +2333,7 @@ packages:
       '@ethersproject/strings': 5.7.0
       '@ethersproject/transactions': 5.7.0
       '@ethersproject/wordlists': 5.7.0
+    dev: false
 
   /@ethersproject/json-wallets@5.7.0:
     resolution: {integrity: sha512-8oee5Xgu6+RKgJTkvEMl2wDgSPSAQ9MB/3JYjFV9jlKvcYHUXZC+cQp0njgmxdHkYWn8s6/IqIZYm0YWCjO/0g==}
@@ -2282,31 +2351,37 @@ packages:
       '@ethersproject/transactions': 5.7.0
       aes-js: 3.0.0
       scrypt-js: 3.0.1
+    dev: false
 
   /@ethersproject/keccak256@5.7.0:
     resolution: {integrity: sha512-2UcPboeL/iW+pSg6vZ6ydF8tCnv3Iu/8tUmLLzWWGzxWKFFqOBQFLo6uLUv6BDrLgCDfN28RJ/wtByx+jZ4KBg==}
     dependencies:
       '@ethersproject/bytes': 5.7.0
       js-sha3: 0.8.0
+    dev: false
 
   /@ethersproject/logger@5.7.0:
     resolution: {integrity: sha512-0odtFdXu/XHtjQXJYA3u9G0G8btm0ND5Cu8M7i5vhEcE8/HmF4Lbdqanwyv4uQTr2tx6b7fQRmgLrsnpQlmnig==}
+    dev: false
 
   /@ethersproject/networks@5.7.1:
     resolution: {integrity: sha512-n/MufjFYv3yFcUyfhnXotyDlNdFb7onmkSy8aQERi2PjNcnWQ66xXxa3XlS8nCcA8aJKJjIIMNJTC7tu80GwpQ==}
     dependencies:
       '@ethersproject/logger': 5.7.0
+    dev: false
 
   /@ethersproject/pbkdf2@5.7.0:
     resolution: {integrity: sha512-oR/dBRZR6GTyaofd86DehG72hY6NpAjhabkhxgr3X2FpJtJuodEl2auADWBZfhDHgVCbu3/H/Ocq2uC6dpNjjw==}
     dependencies:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/sha2': 5.7.0
+    dev: false
 
   /@ethersproject/properties@5.7.0:
     resolution: {integrity: sha512-J87jy8suntrAkIZtecpxEPxY//szqr1mlBaYlQ0r4RCaiD2hjheqF9s1LVE8vVuJCXisjIP+JgtK/Do54ej4Sw==}
     dependencies:
       '@ethersproject/logger': 5.7.0
+    dev: false
 
   /@ethersproject/providers@5.7.2:
     resolution: {integrity: sha512-g34EWZ1WWAVgr4aptGlVBF8mhl3VWjv+8hoAnzStu8Ah22VHBsuGzP17eb6xDVRzw895G4W7vvx60lFFur/1Rg==}
@@ -2334,18 +2409,21 @@ packages:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
+    dev: false
 
   /@ethersproject/random@5.7.0:
     resolution: {integrity: sha512-19WjScqRA8IIeWclFme75VMXSBvi4e6InrUNuaR4s5pTF2qNhcGdCUwdxUVGtDDqC00sDLCO93jPQoDUH4HVmQ==}
     dependencies:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/logger': 5.7.0
+    dev: false
 
   /@ethersproject/rlp@5.7.0:
     resolution: {integrity: sha512-rBxzX2vK8mVF7b0Tol44t5Tb8gomOHkj5guL+HhzQ1yBh/ydjGnpw6at+X6Iw0Kp3OzzzkcKp8N9r0W4kYSs9w==}
     dependencies:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/logger': 5.7.0
+    dev: false
 
   /@ethersproject/sha2@5.7.0:
     resolution: {integrity: sha512-gKlH42riwb3KYp0reLsFTokByAKoJdgFCwI+CCiX/k+Jm2mbNs6oOaCjYQSlI1+XBVejwH2KrmCbMAT/GnRDQw==}
@@ -2353,6 +2431,7 @@ packages:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/logger': 5.7.0
       hash.js: 1.1.7
+    dev: false
 
   /@ethersproject/signing-key@5.7.0:
     resolution: {integrity: sha512-MZdy2nL3wO0u7gkB4nA/pEf8lu1TlFswPNmy8AiYkfKTdO6eXBJyUdmHO/ehm/htHw9K/qF8ujnTyUAD+Ry54Q==}
@@ -2363,6 +2442,7 @@ packages:
       bn.js: 5.2.1
       elliptic: 6.5.4
       hash.js: 1.1.7
+    dev: false
 
   /@ethersproject/solidity@5.7.0:
     resolution: {integrity: sha512-HmabMd2Dt/raavyaGukF4XxizWKhKQ24DoLtdNbBmNKUOPqwjsKQSdV9GQtj9CBEea9DlzETlVER1gYeXXBGaA==}
@@ -2373,6 +2453,7 @@ packages:
       '@ethersproject/logger': 5.7.0
       '@ethersproject/sha2': 5.7.0
       '@ethersproject/strings': 5.7.0
+    dev: false
 
   /@ethersproject/strings@5.7.0:
     resolution: {integrity: sha512-/9nu+lj0YswRNSH0NXYqrh8775XNyEdUQAuf3f+SmOrnVewcJ5SBNAjF7lpgehKi4abvNNXyf+HX86czCdJ8Mg==}
@@ -2380,6 +2461,7 @@ packages:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/constants': 5.7.0
       '@ethersproject/logger': 5.7.0
+    dev: false
 
   /@ethersproject/transactions@5.7.0:
     resolution: {integrity: sha512-kmcNicCp1lp8qanMTC3RIikGgoJ80ztTyvtsFvCYpSCfkjhD0jZ2LOrnbcuxuToLIUYYf+4XwD1rP+B/erDIhQ==}
@@ -2393,6 +2475,7 @@ packages:
       '@ethersproject/properties': 5.7.0
       '@ethersproject/rlp': 5.7.0
       '@ethersproject/signing-key': 5.7.0
+    dev: false
 
   /@ethersproject/units@5.7.0:
     resolution: {integrity: sha512-pD3xLMy3SJu9kG5xDGI7+xhTEmGXlEqXU4OfNapmfnxLVY4EMSSRp7j1k7eezutBPH7RBN/7QPnwR7hzNlEFeg==}
@@ -2400,6 +2483,7 @@ packages:
       '@ethersproject/bignumber': 5.7.0
       '@ethersproject/constants': 5.7.0
       '@ethersproject/logger': 5.7.0
+    dev: false
 
   /@ethersproject/wallet@5.7.0:
     resolution: {integrity: sha512-MhmXlJXEJFBFVKrDLB4ZdDzxcBxQ3rLyCkhNqVu3CDYvR97E+8r01UgrI+TI99Le+aYm/in/0vp86guJuM7FCA==}
@@ -2419,6 +2503,7 @@ packages:
       '@ethersproject/signing-key': 5.7.0
       '@ethersproject/transactions': 5.7.0
       '@ethersproject/wordlists': 5.7.0
+    dev: false
 
   /@ethersproject/web@5.7.1:
     resolution: {integrity: sha512-Gueu8lSvyjBWL4cYsWsjh6MtMwM0+H4HvqFPZfB6dV8ctbP9zFAO73VG1cMWae0FLPCtz0peKPpZY8/ugJJX2w==}
@@ -2428,6 +2513,7 @@ packages:
       '@ethersproject/logger': 5.7.0
       '@ethersproject/properties': 5.7.0
       '@ethersproject/strings': 5.7.0
+    dev: false
 
   /@ethersproject/wordlists@5.7.0:
     resolution: {integrity: sha512-S2TFNJNfHWVHNE6cNDjbVlZ6MgE17MIxMbMg2zv3wn+3XSJGosL1m9ZVv3GXCf/2ymSsQ+hRI5IzoMJTG6aoVA==}
@@ -2437,6 +2523,7 @@ packages:
       '@ethersproject/logger': 5.7.0
       '@ethersproject/properties': 5.7.0
       '@ethersproject/strings': 5.7.0
+    dev: false
 
   /@jridgewell/gen-mapping@0.3.3:
     resolution: {integrity: sha512-HLhSWOLRi875zjjMG/r+Nv0oCW8umGb0BgEhyX3dDX3egwZtB8PqLnjz3yedt8R5StBrzcg4aBpnh8UA9D1BoQ==}
@@ -2476,12 +2563,10 @@ packages:
     resolution: {integrity: sha512-oYclrNgRaM9SsBUBVbb8M6DTV7ZHRTKugureoYEncY5c65HOmRzvSiTE3y5CYaPYJA/GVkrhXEoF0M3Ya9PMnw==}
     dependencies:
       '@noble/hashes': 1.3.2
-    dev: false
 
   /@noble/hashes@1.3.2:
     resolution: {integrity: sha512-MVC8EAQp7MvEcm30KWENFjgR+Mkmf+D189XJTkFIlwohU5hcBbn1ZkKq7KVTi2Hme3PMGF390DaL52beVrIihQ==}
     engines: {node: '>= 16'}
-    dev: false
 
   /@picocss/pico@1.5.10:
     resolution: {integrity: sha512-+LafMsrwPxXQMk6sI///TmSInCwwZmq+K7SikyL3N/4GhhwzyPC+TQLUEqmrLyjluR+uIpFFcqjty30Rtr6GxQ==}
@@ -2923,7 +3008,6 @@ packages:
 
   /@types/node@18.15.13:
     resolution: {integrity: sha512-N+0kuo9KgrUQ1Sn/ifDXsvg0TTleP7rIy4zOBGECxAljqvqfqpTfzx0Q1NUedOixRMBfe2Whhb056a42cWs26Q==}
-    dev: false
 
   /@types/node@20.8.10:
     resolution: {integrity: sha512-TlgT8JntpcbmKUFzjhsyhGfP2fsiz1Mv56im6enJ905xG1DAYesxJaeSbGqQmAw8OWPdhyJGhGSQGKRNJ45u9w==}
@@ -3120,10 +3204,10 @@ packages:
 
   /aes-js@3.0.0:
     resolution: {integrity: sha512-H7wUZRn8WpTq9jocdxQ2c8x2sKo9ZVmzfRE13GiNJXfp7NcKYEdvl3vspKjXox6RIG2VtaRe4JFvxG4rqp2Zuw==}
+    dev: false
 
   /aes-js@4.0.0-beta.5:
     resolution: {integrity: sha512-G965FqalsNyrPqgEGON7nIx1e/OVENSgiEIzyC63haUMuvNnwIgIjMs52hlTCKhkBny7A2ORNlfY9Zu+jmGk1Q==}
-    dev: false
 
   /ajv-formats@2.1.1(ajv@8.12.0):
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
@@ -3253,6 +3337,7 @@ packages:
 
   /bech32@1.1.4:
     resolution: {integrity: sha512-s0IrSOzLlbvX7yp4WBfPITzpAU8sqQcpsmwXDiKwrG4r491vwCO/XpejasRNl0piBMe/DvP4Tz0mIS/X1DPJBQ==}
+    dev: false
 
   /big.js@5.2.2:
     resolution: {integrity: sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==}
@@ -3264,9 +3349,11 @@ packages:
 
   /bn.js@4.12.0:
     resolution: {integrity: sha512-c98Bf3tPniI+scsdk237ku1Dc3ujXQTSgyiPUDEOe7tRkhrqridvh8klBv0HCEso1OLOYcHuCv/cS6DNxKH+ZA==}
+    dev: false
 
   /bn.js@5.2.1:
     resolution: {integrity: sha512-eXRvHzWyYPBuB4NBy0cmYQjGitUrtqwbvlzP3G6VFnNRbsZQIxQ10PbKKHt8gZ/HW/D/747aDl+QkDqg3KQLMQ==}
+    dev: false
 
   /body-parser@1.20.1:
     resolution: {integrity: sha512-jWi7abTbYwajOytWCQc37VulmWiRae5RyTpaCyDcS5/lMdtwSz5lOpDE67srw/HYe35f1z3fDQw+3txg7gNtWw==}
@@ -3317,6 +3404,7 @@ packages:
 
   /brorand@1.1.0:
     resolution: {integrity: sha512-cKV8tMCEpQs4hK/ik71d6LrPOnpkpGBR0wzxqr68g2m/LB2GxVYQroAjMJZRVM1Y4BCjCKc3vAamxSzOY2RP+w==}
+    dev: false
 
   /browserslist@4.22.1:
     resolution: {integrity: sha512-FEVc202+2iuClEhZhrWy6ZiAcRLvNMyYcxZ8raemul1DYVOVdFsbqckWLdsixQZCpJlwe77Z3UTalE7jsjnKfQ==}
@@ -3649,6 +3737,7 @@ packages:
       inherits: 2.0.4
       minimalistic-assert: 1.0.1
       minimalistic-crypto-utils: 1.0.1
+    dev: false
 
   /emojis-list@3.0.0:
     resolution: {integrity: sha512-/kyM18EfinwXZbno9FyUGeFh87KC8HRQBQGildHZbEuRyWFOmv1U10o9BBp8XVZDVNNuQKyIGIu5ZYAAXJ0V2Q==}
@@ -3756,6 +3845,7 @@ packages:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
+    dev: false
 
   /ethers@6.8.1:
     resolution: {integrity: sha512-iEKm6zox5h1lDn6scuRWdIdFJUCGg3+/aQWu0F4K0GVyEZiktFkqrJbRjTn1FlYEPz7RKA707D6g5Kdk6j7Ljg==}
@@ -3771,7 +3861,6 @@ packages:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
-    dev: false
 
   /eventemitter2@6.4.9:
     resolution: {integrity: sha512-JEPTiaOt9f04oa6NOkc4aH+nVp5I3wEjpHbIPqfgCdD5v5bUzy7xQqwcVO2aDQgOWhI28da57HksMrzK9HlRxg==}
@@ -4033,6 +4122,7 @@ packages:
     dependencies:
       inherits: 2.0.4
       minimalistic-assert: 1.0.1
+    dev: false
 
   /hasown@2.0.0:
     resolution: {integrity: sha512-vUptKVTpIJhcczKBbgnS+RtcuYMB8+oNzPK2/Hp3hanz8JmpATdmmgLgSaadVREkDm+e2giHwY3ZRkyjSIDDFA==}
@@ -4051,6 +4141,7 @@ packages:
       hash.js: 1.1.7
       minimalistic-assert: 1.0.1
       minimalistic-crypto-utils: 1.0.1
+    dev: false
 
   /hpack.js@2.1.6:
     resolution: {integrity: sha512-zJxVehUdMGIKsRaNt7apO2Gqp0BdqW5yaiGHXXmbpvxgBYVZnAql+BJb4RO5ad2MgpbZKn5G6nMnegrH1FcNYQ==}
@@ -4278,10 +4369,10 @@ packages:
 
   /js-base64@3.7.5:
     resolution: {integrity: sha512-3MEt5DTINKqfScXKfJFrRbxkrnk2AxPWGBL/ycjz4dK8iqiSJ06UxD8jh8xuh6p10TX4t2+7FsBYVxxQbMg+qA==}
-    dev: false
 
   /js-sha3@0.8.0:
     resolution: {integrity: sha512-gF1cRrHhIzNfToc802P800N8PpXS+evLLXfsVpowqmAFR9uwbi89WvXg2QspOmXL8QL86J4T1EpFu+yUkwJY3Q==}
+    dev: false
 
   /js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -4446,6 +4537,7 @@ packages:
 
   /minimalistic-crypto-utils@1.0.1:
     resolution: {integrity: sha512-JIYlbt6g8i5jKfJ3xz7rF0LXmv2TkDxBLUkiBeZ7bAx4GnnNMr8xFpGnOxn6GhTEHx3SjRrZEoU+j04prX1ktg==}
+    dev: false
 
   /minimatch@3.1.2:
     resolution: {integrity: sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==}
@@ -4917,6 +5009,7 @@ packages:
 
   /scrypt-js@3.0.1:
     resolution: {integrity: sha512-cdwTTnqPu0Hyvf5in5asVdZocVDTNRmR7XEcJuIzMjJeSHybHl7vpB66AzwTaIg6CLSbtjcxc8fqcySfnTkccA==}
+    dev: false
 
   /select-hose@2.0.0:
     resolution: {integrity: sha512-mEugaLK+YfkijB4fx0e6kImuJdCIt2LxCRcbEYPqRGCs4F2ogyfZU5IAZRdjCP8JPq2AtdNoC/Dux63d9Kiryg==}
@@ -5196,7 +5289,6 @@ packages:
 
   /tslib@2.4.0:
     resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
-    dev: false
 
   /tslib@2.6.2:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
@@ -5474,6 +5566,7 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
+    dev: false
 
   /ws@8.14.2:
     resolution: {integrity: sha512-wEBG1ftX4jcglPxgFCMJmZ2PLtSbJ2Peg6TmpJFTbe9GZYOQCDPdMYu/Tm0/bGZkw8paZnJY45J4K2PZrLYq8g==}
@@ -5498,7 +5591,6 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
-    dev: false
 
   /yallist@3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
