@@ -11,6 +11,7 @@ import { WebGLRenderer, PerspectiveCamera, Scene, Fog } from 'three';
 import MainScene from './objects/Scene.js';
 
 import "./game.css";
+import { ENV } from '../env.js';
 
 const { innerHeight, innerWidth } = window;
 var aspectRatio = innerHeight / innerWidth;
@@ -90,6 +91,11 @@ window.triggerLogin = (event) => {
   mainScene.sequenceController.triggerLoginModalForm();
 };
 
+window.triggerGoogleLogin = (event) => {
+  event.preventDefault();
+  mainScene.sequenceController.googleLogin();
+};
+
 window.burnCard = (event) => {
   event.preventDefault();
   mainScene.burnActiveCard();
@@ -100,6 +106,24 @@ window.closeCardModal = (event) => {
   mainScene.closeCardModal();
 };
 
+window.onGoogleSignIn = (evt) => {
+  google.accounts.id.initialize({
+    client_id: ENV.googleClientId,
+    callback: (response) => {
+      const idToken = response.credential;
+      mainScene.sequenceController.authenticateGoogle(idToken);
+    }
+  });
+
+  google.accounts.id.prompt((notification) => {
+    if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+      console.log('The user did not select an account or closed the prompt.');
+    }
+  });
+}
+
 // dom
 document.body.style.margin = 0;
+document.body.style.zoom = 0.77;
+document.getElementById('world').style.zoom = 1.3;
 document.getElementById("world").appendChild( renderer.domElement );

@@ -120,10 +120,12 @@ export default class MainScene extends Group {
     modal.setAttribute("open", false);
 
     if (this.game_mode_previous == null) {
+      console.log('test')
       this.game_mode = GameModes.Intro;
     } else {
       this.game_mode = this.game_mode_previous;
       this.game_mode_previous = null;
+      console.log('else')
     }
   }
 
@@ -158,6 +160,7 @@ export default class MainScene extends Group {
       this.switchGameMode(GameModes.Intro);
       this.resetGame();
       this.clearLocalStores();
+      this.sequenceController.resetForm()
     });
   }
 
@@ -255,6 +258,7 @@ export default class MainScene extends Group {
     });
 
     tl.to(this.card_label, {
+      y: '-20px',
       duration: 0.75,
       opacity: 1.0,
     });
@@ -513,8 +517,9 @@ export default class MainScene extends Group {
             return;
           }
           console.log(tx);
-          this.sequenceController.fetchWalletTokens();
+          setTimeout(()=>this.sequenceController.fetchWalletTokens(), 1000)
         })
+      } else if (this.isLast3RunsOver500Each() && !this.isCardWon(CardTypes.ThreeRuns)) {
       } else if (this.isLast3RunsOver500Each() && !this.isCardWon(CardTypes.ThreeRuns)) {
         this.showCard(CardTypes.ThreeRuns);
         this.sequenceController.callContract(CardTypes.ThreeRuns, (tx, error) => {
@@ -523,7 +528,7 @@ export default class MainScene extends Group {
             return;
           }
           console.log(tx);
-          this.sequenceController.fetchWalletTokens();
+          setTimeout(()=>this.sequenceController.fetchWalletTokens(), 1000)
         })
       } else if (this.game.distance >= 1000 && this.game.distance < 2500 && !this.isCardWon(CardTypes.ThousandMeterRun)) {
         this.showCard(CardTypes.ThousandMeterRun);
@@ -533,7 +538,7 @@ export default class MainScene extends Group {
             return;
           }
           console.log(tx);
-          this.sequenceController.fetchWalletTokens();
+          setTimeout(()=>this.sequenceController.fetchWalletTokens(), 1000)
         })
       } else if (this.isFirstCrash() && !this.isCardWon(CardTypes.FirstCrash)) {
         this.showCard(CardTypes.FirstCrash);
@@ -543,7 +548,7 @@ export default class MainScene extends Group {
             return;
           }
           console.log(tx);
-          this.sequenceController.fetchWalletTokens();
+          setTimeout(()=>this.sequenceController.fetchWalletTokens(), 1000)
         })
       } else if (this.isFirstPylonCrash && !this.isCardWon(CardTypes.FirstPylonCrash)) {
         this.showCard(CardTypes.FirstPylonCrash);
@@ -553,7 +558,7 @@ export default class MainScene extends Group {
             return;
           }
           console.log(tx);
-          this.sequenceController.fetchWalletTokens();
+          setTimeout(()=>this.sequenceController.fetchWalletTokens(), 1000)
         })
       }
     }
@@ -562,6 +567,7 @@ export default class MainScene extends Group {
   handleMouseClick() {
     if (this.game_mode === GameModes.SigningOut || this.game_mode === GameModes.CardDetails) return;
     if (this.sequenceController.mode !== AuthModes.Completed) {
+      console.log
       this.openLoginModal();
       return;
     }

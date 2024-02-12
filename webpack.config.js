@@ -1,8 +1,10 @@
 const path = require('path');
 const pkg = require('./package.json');
+const {ENV} = require('./env');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const buildPath = './build/';
+const webpack = require('webpack');
 
 module.exports = {
   entry: ['./src/entry.js'],
@@ -39,6 +41,9 @@ module.exports = {
       'template': './src/index.html'
     }),
     new MiniCssExtractPlugin({
-    })
+    }),
+    new webpack.DefinePlugin({
+      'ENV': JSON.stringify(ENV),
+    }),
   ]
 }

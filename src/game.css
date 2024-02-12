@@ -242,7 +242,7 @@ div.logo {
 
 #signOutBtn {
 	width: 200px;
-	position: absolute;
+	position: fixed;
 	right: 20px;
 	bottom: 10px;
 	display: none;
@@ -422,4 +422,9 @@ Leaderboard
 .leaderboard ol li:hover mark::before, .leaderboard ol li:hover mark::after {
 	opacity: 1;
 	transition: all 0.35s ease-in-out;
+}
+
+#googleButton {
+	background-color: green;
+	border: none;
 }

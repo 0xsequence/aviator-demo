@@ -41,6 +41,21 @@
                         <input type="text" id="codeInput">
                     </div>
                     <footer>
+						<!-- <meta name="google-signin-client_id" content="970987756660-i4l14sne2o8ovi4qeeplorl65fm4fqv8.apps.googleusercontent.com"> -->
+						<!-- <div class="g-signin2" data-onsuccess="onSignIn"></div> -->
+						<!-- <div id="g_id_onload"
+     data-client_id="970987756660-i4l14sne2o8ovi4qeeplorl65fm4fqv8.apps.googleusercontent.com"
+     data-auto_prompt="false">
+</div>
+<div class="g_id_signin"
+     data-type="standard"
+     data-size="large"
+     data-theme="outline"
+     data-text="sign_in_with"
+     data-shape="rectangular"
+     data-logo_alignment="left">
+</div> -->
+                        <a href="#" id="googleButton" role="button" class="primary" style="float: left;" onClick="onGoogleSignIn(event)"><img width="40px" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/2048px-Google_%22G%22_logo.svg.png">&nbsp;&nbsp;Google Sign-In</a>
                         <a href="#" role="button" class="secondary" onClick="closeModal(event)">Cancel</a>
                         <a href="#" role="button" onClick="triggerLogin(event)" id="loginButton">Verify</a>
                     </footer>
@@ -92,4 +107,5 @@
 				</symbol>
 		</svg>
 	</body>
+	<script src="https://accounts.google.com/gsi/client" async></script>
 </html>

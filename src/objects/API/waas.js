@@ -9,16 +9,28 @@ const AuthModes = {
 
 const ContractAddress = "0xa68eb569682a63e330eda29d703c10c6dde721bb";
 const MinterContractAddress = "0x3d33ad6e2210ae3957b26f8099fe3d517bdfdf1f";
-const WaaSAPIKey = "eyJzZWNyZXQiOiJ0YmQiLCJ0ZW5hbnQiOjksImlkZW50aXR5UG9vbElkIjoidXMtZWFzdC0yOjQyYzlmMzlkLWM5MzUtNGQ1Yy1hODQ1LTVjODgxNWM3OWVlMyIsImVtYWlsQ2xpZW50SWQiOiI1Zmw3ZGc3bXZ1NTM0bzl2ZmpiYzZoajMxcCJ9"
-const BuilderAPIKey = ""
+
+const WaaSAPIKey = ENV.waasConfigKey
+const BuilderAPIKey = ENV.projectAccessKey
+
+function decodeJWT(token) {
+  const base64Url = token.split('.')[1]; // Get the payload part of the token
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); // Replace URL-safe characters
+  const payload = decodeURIComponent(atob(base64).split('').map(function(c) {
+    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+
+  return JSON.parse(payload);
+}
 
 class SequenceController {
     constructor() {
         this.sequence = new Sequence({
+            projectId: ENV.projectId,
             network: 'mumbai',
-            projectAccessKey: `8lupVLeeuZ21enmfdmojLKLAAAAAAAAAA`,
-            waasConfigKey: `eyJwcm9qZWN0SWQiOjExLCJpZGVudGl0eVBvb2xJZCI6InVzLWVhc3QtMjpkZDQzMWVhMy0wNDMzLTQyYjAtODIyNC1kMTZhOGI2ZTVlOGEiLCJlbWFpbENsaWVudElkIjoiNWZwa3F1bm84bjJ1bXAycDIzNnNwczNnNjIiLCJpZHBSZWdpb24iOiJ1cy1lYXN0LTIiLCJycGNTZXJ2ZXIiOiJodHRwczovL2Rldi13YWFzLnNlcXVlbmNlLmFwcCIsImttc1JlZ2lvbiI6InVzLWVhc3QtMiIsImVtYWlsUmVnaW9uIjoidXMtZWFzdC0yIiwia2V5SWQiOiJhcm46YXdzOmttczp1cy1lYXN0LTI6MzgxNDkyMjQ3Njk3OmtleS8xODgxZTY3My1mMThkLTQ1NTgtODI5YS0xM2I4MThjMDMwNjUifQ`,
-        }, defaults.TEMPLATE_NEXT);
+            projectAccessKey: BuilderAPIKey,
+            waasConfigKey: WaaSAPIKey,
+        }, ENV.rpcServer);
 
         this.indexer = new SequenceIndexer('https://mumbai-indexer.sequence.app');
 
@@ -44,6 +56,22 @@ class SequenceController {
                 this.fetchWalletAddress();
             }
         });
+    }
+
+    async authenticateGoogle(idToken) {
+      var googleButton = document.getElementById("googleButton");
+      googleButton.setAttribute("aria-busy", true);
+      try {
+        const walletAddress = await this.sequence.signIn({
+          idToken: idToken
+        }, 'google-sign-in-aviator')
+        this.email = decodeJWT(idToken).email
+        this.walletAddress = walletAddress.wallet
+        googleButton.setAttribute("aria-busy", false);
+        this.switchAuthMode(AuthModes.Completed);
+      }catch(err){
+        console.log(err)
+      }
     }
 
     burnToken(token, callback) {
@@ -109,7 +137,7 @@ class SequenceController {
     }
 
     resetForm() {
-      this.switchAuthMode(AuthModes.Email);
+      // this.switchAuthMode(AuthModes.Email);
       var emailInput = document.getElementById("emailInput");
       var codeInput = document.getElementById("codeInput");
 
@@ -196,14 +224,13 @@ class SequenceController {
       let loginButton = document.getElementById("loginButton");
   
       loginButton.setAttribute("aria-busy", true);
-  
       this.sequence.email.finalizeAuth({ instance: this.authInstance, email: this.email, answer: code }).then((token) => {
         this.token = token;
   
         this.createWalletAddress();
-      }).catch((error) => {
+      }).catch((error) => { // errors here
         alert(error);
-  
+        console.log(error) 
         loginButton.setAttribute("aria-busy", false);
         var codeInput = document.getElementById("codeInput");
         codeInput.setAttribute("aria-invalid", true);
