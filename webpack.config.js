@@ -18,9 +18,9 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.js$|jsx/,
         use: 'babel-loader',
-        exclude: path.resolve(__dirname, './node_modules/')
+        exclude: path.resolve(__dirname, './node_modules/'),
       },{
         test: /\.(jpe?g|png|gif|svg|tga|glb|babylon|mtl|pcb|pcd|prwm|obj|mat|mp3|ogg)$/i,
         type: 'asset/resource',
@@ -29,21 +29,30 @@ module.exports = {
           filename: 'assets/[name].[ext]'
         }
       },{
-        test: /\.css$/i,
-        use: [MiniCssExtractPlugin.loader, "css-loader"],
-        exclude: path.resolve(__dirname, './node_modules/')
+        test: /\.css$/,
+        use: [
+            'style-loader',
+            'css-loader',
+          ],
       }
     ]
   },
   plugins: [
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
+    }),
     new HtmlWebpackPlugin({
       'title': 'Aviator Sequence Demo',
       'template': './src/index.html'
     }),
-    new MiniCssExtractPlugin({
-    }),
     new webpack.DefinePlugin({
       'ENV': JSON.stringify(ENV),
     }),
-  ]
+  ],
+  resolve: {
+    fallback: {
+      // other fallbacks...
+      "buffer": require.resolve("buffer/")
+    }
+  }
 }

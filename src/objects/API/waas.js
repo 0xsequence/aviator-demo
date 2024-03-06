@@ -25,12 +25,12 @@ function decodeJWT(token) {
 
 class SequenceController {
     constructor() {
-        this.sequence = new Sequence({
-            projectId: ENV.projectId,
-            network: 'mumbai',
-            projectAccessKey: BuilderAPIKey,
-            waasConfigKey: WaaSAPIKey,
-        }, ENV.rpcServer);
+        // this.sequence = new Sequence({
+        //     projectId: ENV.projectId,
+        //     network: 'mumbai',
+        //     projectAccessKey: BuilderAPIKey,
+        //     waasConfigKey: WaaSAPIKey,
+        // }, ENV.rpcServer);
 
         this.indexer = new SequenceIndexer('https://mumbai-indexer.sequence.app');
 
@@ -51,11 +51,20 @@ class SequenceController {
         this.emailVerifyForm = document.getElementById("emailVerify");
         this.codeVerifyForm = document.getElementById("codeVerify");
 
-        this.sequence.isSignedIn().then((signedIn) => {
-            if (signedIn) {
-                this.fetchWalletAddress();
-            }
-        });
+        // this.sequence.isSignedIn().then((signedIn) => {
+        //     if (signedIn) {
+        //       console.log('signed in')
+        //         this.fetchWalletAddress();
+        //     }
+        // });
+    }
+
+    async init(walletClient) {
+      console.log(walletClient)
+      this.walletAddress = walletClient.account.address
+      this.switchAuthMode(AuthModes.Completed);
+      this.email = walletClient.account.address;
+      this.mode = AuthModes.Completed;
     }
 
     async authenticateGoogle(idToken) {
@@ -146,6 +155,7 @@ class SequenceController {
 
       emailInput.value = "";
       codeInput.value = "";
+      this.mode = 'email';
     }
 
     switchAuthMode(mode) {
@@ -153,20 +163,21 @@ class SequenceController {
   
       this.mode = mode;
   
-      if (this.mode === AuthModes.Email) {
-        this.emailVerifyForm.style.display = "block";
-        this.codeVerifyForm.style.display = "none";
-      } else if (this.mode === AuthModes.Code) {
-        this.emailVerifyForm.style.display = "none";
-        this.codeVerifyForm.style.display = "block";
-      } else if (this.mode === AuthModes.Completed) {
-        this.emailVerifyForm.style.display = "block";
-        this.codeVerifyForm.style.display = "none";
+      // if (this.mode === AuthModes.Email) {
+      //   this.emailVerifyForm.style.display = "block";
+      //   this.codeVerifyForm.style.display = "none";
+      // } else if (this.mode === AuthModes.Code) {
+      //   this.emailVerifyForm.style.display = "none";
+      //   this.codeVerifyForm.style.display = "block";
+      // } else if (this.mode === AuthModes.Completed) {
+      //   this.emailVerifyForm.style.display = "block";
+      //   this.codeVerifyForm.style.display = "none";
 
-        this.fetchWalletTokens();
-      }
+        // this.fetchWalletTokens();
+      // }
 
-      if (this.authModeChangedCallback !== null) this.authModeChangedCallback();
+      self = this;
+      let interval = setInterval(() => {this.authModeChangedCallback(); if(self.email){clearInterval(interval)}}, 1000)
     }
   
     triggerLoginModalForm() {
@@ -269,26 +280,31 @@ class SequenceController {
       });
     }
 
-    callContract(tokenId, callback) {
+    callContract(tokenId, callback, waas = false) {
       console.log("Minting token:", tokenId);
-      this.sequence.callContract({
-        chainId: this.chainId,
-        to: ContractAddress,
-        abi: 'mint(address to, uint256 tokenId, uint256 amount, bytes data)',
-        func: 'mint',
-        args: {
-          to: this.walletAddress, 
-          tokenId: `${tokenId}`, 
-          amount: "1", 
-          data: "0x00"
-        },
-        value: 0
-      }).then((tx)=> {
-        callback(tx, null);
-      }).catch((error) => {
-        console.log(error);
-        callback(null, error);
-      });
+
+      if(waas){
+        this.sequence.callContract({
+          chainId: this.chainId,
+          to: ContractAddress,
+          abi: 'mint(address to, uint256 tokenId, uint256 amount, bytes data)',
+          func: 'mint',
+          args: {
+            to: this.walletAddress, 
+            tokenId: `${tokenId}`, 
+            amount: "1", 
+            data: "0x00"
+          },
+          value: 0
+        }).then((tx)=> {
+          callback(tx, null);
+        }).catch((error) => {
+          console.log(error);
+          callback(null, error);
+        });
+      } else {
+        // https://fancy-glitter-895a.yellow-shadow-d7ff.workers.dev
+      }
     }
 }
 

@@ -1,0 +1,22 @@
+#email {
+	background-color: 'red' !important;
+}
+
+iframe {
+    height: 60px !important;
+    width: 80px !important;
+    margin-top: -9px !important;
+}
+
+.sign-out {
+    position: fixed;
+    top: 30px !important;
+    right: 30px !important;
+    font-size: 1.25vw;
+	bottom: 50vh;
+	text-indent: 0.5em;
+	letter-spacing: 0.5em;
+	color: #d1b790;
+	font-weight: bold;
+	text-transform: uppercase;
+}

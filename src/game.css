@@ -79,7 +79,7 @@
 }
 
 dialog input {
-	margin-top: 20px;
+	/* margin-top: 20px; */
 }
 
 #codeVerify {
@@ -111,6 +111,7 @@ div.logo {
 	text-indent: 0.5em;
 	letter-spacing: 0.5em;
 	color: #d1b790;
+	
 }
 
 @-webkit-keyframes blinking {
@@ -424,7 +425,7 @@ Leaderboard
 	transition: all 0.35s ease-in-out;
 }
 
-#googleButton {
+/* #googleButton {
 	background-color: green;
 	border: none;
-}
+} */

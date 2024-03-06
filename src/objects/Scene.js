@@ -44,7 +44,7 @@ export default class MainScene extends Group {
 
     this.game_mode = GameModes.Intro;
     this.game_mode_previous = null;
-    this.signout_btn = document.getElementById("signOutBtn");
+    // this.signout_btn = document.getElementById("signOutBtn");
     this.message_box = document.getElementById("replayMessage");
     this.distance_box = document.getElementById("distValue");
     this.score_box = document.getElementById("score");
@@ -53,7 +53,7 @@ export default class MainScene extends Group {
     this.leaderboard_wrapper = document.getElementById("leaderboardContainer");
     this.card_containers = [];
 
-    this.signout_btn.addEventListener('mouseup', this.handleSignOut.bind(this), false);
+    // this.signout_btn.addEventListener('mouseup', this.handleSignOut.bind(this), false);
 
     for (let i = 0; i < 5; i++) {
       const cardContainer = document.getElementById("cardSlot" + (i + 1));
@@ -356,16 +356,24 @@ export default class MainScene extends Group {
 
   authModeChanged() {
     if (this.sequenceController.mode === AuthModes.Completed) {
-      this.closeLoginModal();
+      // this.closeLoginModal();
+      console.log(this.sequenceController.email)
+      if(this.sequenceController.email){
+        console.log('hi')
+        this.message_box.innerHTML = "Welcome " + this.sequenceController.email.slice(0,8) +".."+ this.sequenceController.email.slice(this.sequenceController.email.length-4,this.sequenceController.email.length)+"!<br>Click to Start";
+        // this.message_box.innerHTML = "Welcome " + this.sequenceController.email.slice(0,8) +".."+"!<br>Click to Start";
+        // this.signout_btn.style.display = "block";
+      this.message_box.style.display = "block";
 
-      this.message_box.innerHTML = "Welcome " + this.sequenceController.email + "!<br>Click to Start";
-      this.signout_btn.style.display = "block";
-      this.card_slots.style.display = "block";
-      this.leaderboard_wrapper.style.display = "block";
+        this.card_slots.style.display = "block";
+        this.leaderboard_wrapper.style.display = "block";
+      }
+
     } else {
-      this.signout_btn.style.display = "none";
+      // this.signout_btn.style.display = "none";
       this.card_slots.style.display = "none";
       this.leaderboard_wrapper.style.display = "none";
+      alert('test')
     }
   }
 
@@ -476,13 +484,13 @@ export default class MainScene extends Group {
       this.score_box.style.display = "none";
       this.card_slots.style.display = "none";
       this.leaderboard_wrapper.style.display = "block";
-      this.message_box.innerHTML = "Click to Login";
+      this.message_box.style.display = "none";
     } else if (this.game_mode === GameModes.Playing) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "none";
       this.card_slots.style.display = "none";
       this.leaderboard_wrapper.style.display = "none";
-      this.signout_btn.style.display = "none";
+      // this.signout_btn.style.display = "none";
     } else if (this.game_mode === GameModes.Paused) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
@@ -496,7 +504,7 @@ export default class MainScene extends Group {
       this.card_slots.style.display = "block";
       this.leaderboard_wrapper.style.display = "block";
       this.message_box.innerHTML = "Game Over";
-      this.signout_btn.style.display = "none";
+      // this.signout_btn.style.display = "none";
 
       this.updateLocalScores()
 
@@ -507,7 +515,7 @@ export default class MainScene extends Group {
       this.card_slots.style.display = "block";
       this.leaderboard_wrapper.style.display = "block";
       this.message_box.innerHTML = "Game Over<br>Click to Replay";
-      this.signout_btn.style.display = "block";
+      // this.signout_btn.style.display = "block";
 
       if (this.game.distance >= 2500 && !this.isCardWon(CardTypes.TwentyFiveHundredMeterRun)) {
         this.showCard(CardTypes.TwentyFiveHundredMeterRun);
@@ -565,10 +573,10 @@ export default class MainScene extends Group {
   }
 
   handleMouseClick() {
+    console.log(this.sequenceController.mode)
     if (this.game_mode === GameModes.SigningOut || this.game_mode === GameModes.CardDetails) return;
     if (this.sequenceController.mode !== AuthModes.Completed) {
-      console.log
-      this.openLoginModal();
+      window.setOpenConnectModal()
       return;
     }
 

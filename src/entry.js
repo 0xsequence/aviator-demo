@@ -7,9 +7,11 @@
  * 
  */
 
+import React from 'react'
+import * as ReactDOM from 'react-dom';
 import { WebGLRenderer, PerspectiveCamera, Scene, Fog } from 'three';
 import MainScene from './objects/Scene.js';
-
+import App from './react/App.jsx'
 import "./game.css";
 import { ENV } from '../env.js';
 
@@ -127,3 +129,13 @@ document.body.style.margin = 0;
 document.body.style.zoom = 0.77;
 document.getElementById('world').style.zoom = 1.3;
 document.getElementById("world").appendChild( renderer.domElement );
+
+const root = ReactDOM.createRoot(document.getElementById('login'))
+
+root.render(
+  <div>
+    <App scene={mainScene}/>
+  </div>
+);
+
+
