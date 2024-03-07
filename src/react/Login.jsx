@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useOpenConnectModal } from "@0xsequence/kit";
 import {
   useDisconnect,
@@ -10,6 +10,7 @@ import "./styles.css";
 
 import { ethers } from "ethers";
 import { config } from "./App.jsx";
+
 const AuthModes = {
   Email: "email",
   Code: "code",
@@ -30,9 +31,9 @@ const GameModes = {
 
 const ContractAddress = "0xbb35dcf99a74b4a6c38d69789232fa63e1e69e31";
 
-function MyPage(props) {
+function Login(props) {
   const { setOpenConnectModal } = useOpenConnectModal();
-
+  const [burnCallback, setBurnCallback] = useState(null)
   const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
   const { data: walletClient } = useWalletClient();
@@ -97,8 +98,6 @@ function MyPage(props) {
         value: "0",
         gas: null,
       });
-
-      callback(ResizeObserver);
     } catch (error) {
       callback(error);
     }
@@ -106,7 +105,12 @@ function MyPage(props) {
 
   useEffect(() => {
     if (txnData) {
+    setTimeout(() => {
+
+    }, 1000)
       console.log(txnData);
+      props.scene.closeCardModal()
+      props.scene.sequenceController.fetchWalletTokens();
     }
   }, [isSendTxnLoading, txnData]);
 
@@ -118,7 +122,6 @@ function MyPage(props) {
         <br />
         <br />
         <br />
-
         <br />
         <br />
         <br />
@@ -141,4 +144,4 @@ function MyPage(props) {
   );
 }
 
-export default MyPage;
+export default Login;

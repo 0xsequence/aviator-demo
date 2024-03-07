@@ -1,5 +1,8 @@
 @import "~@picocss/pico";
 
+html {
+	zoom: 0.90;
+}
 .game-holder {
 	position: absolute;
 	width: 100%;
@@ -108,6 +111,23 @@ div.logo {
 .message--replay {
 	font-size: 1.25vw;
 	bottom: 50vh;
+	text-indent: 0.5em;
+	letter-spacing: 0.5em;
+	color: #d1b790;
+	
+}
+
+.achievements {
+	position: fixed;
+	margin-top:10px;
+	font-weight: bold;
+	width: 400px;
+	left: -40px;
+	top: 20px;
+	text-align: center;
+	text-transform: uppercase;
+	pointer-events: none;
+	font-size: 1.25vw;
 	text-indent: 0.5em;
 	letter-spacing: 0.5em;
 	color: #d1b790;
@@ -425,7 +445,6 @@ Leaderboard
 	transition: all 0.35s ease-in-out;
 }
 
-/* #googleButton {
-	background-color: green;
-	border: none;
-} */
+#cardSlot1 {
+	margin-top: 80px;
+}

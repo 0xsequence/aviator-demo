@@ -110,6 +110,7 @@ export default class Airplane extends Group {
     var wheelTireB = wheelTireR.clone();
     wheelTireB.scale.set(.5,.5,.5);
     wheelTireB.position.set(-35,-5,0);
+
     this.add(wheelTireB);
 
     var suspensionGeom = new BoxGeometry(4,20,4);
