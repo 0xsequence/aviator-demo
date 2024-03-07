@@ -1,13 +1,13 @@
 import { Sequence, defaults, isSentTransactionResponse } from '@0xsequence/waas'
 import { SequenceIndexer } from '@0xsequence/indexer'
-
+import {ethers} from 'ethers'
 const AuthModes = {
     Email: "email",
     Code: "code",
     Completed: "completed"
 }
 
-const ContractAddress = "0xa68eb569682a63e330eda29d703c10c6dde721bb";
+const ContractAddress = "0xbb35dcf99a74b4a6c38d69789232fa63e1e69e31";
 const MinterContractAddress = "0x3d33ad6e2210ae3957b26f8099fe3d517bdfdf1f";
 
 const WaaSAPIKey = ENV.waasConfigKey
@@ -32,7 +32,7 @@ class SequenceController {
         //     waasConfigKey: WaaSAPIKey,
         // }, ENV.rpcServer);
 
-        this.indexer = new SequenceIndexer('https://mumbai-indexer.sequence.app');
+        this.indexer = new SequenceIndexer('https://arbitrum-sepolia-indexer.sequence.app');
 
         this.chainId = null;
         this.indexer.getChainID(({chainID}) => {
@@ -40,6 +40,9 @@ class SequenceController {
         });
 
         this.authInstance = null;
+        // this.walletClient = null;
+        this.sendTransaction = null;
+
         this.email = null;
         this.token = null;
         this.mode = AuthModes.Email;
@@ -59,12 +62,14 @@ class SequenceController {
         // });
     }
 
-    async init(walletClient) {
+    async init(walletClient, sendTransaction) {
       console.log(walletClient)
       this.walletAddress = walletClient.account.address
       this.switchAuthMode(AuthModes.Completed);
       this.email = walletClient.account.address;
       this.mode = AuthModes.Completed;
+      this.fetchWalletTokens()
+      this.sendBurnToken = sendTransaction
     }
 
     async authenticateGoogle(idToken) {
@@ -83,22 +88,9 @@ class SequenceController {
       }
     }
 
-    burnToken(token, callback) {
-      this.sequence.callContract({
-        chainId: token.chainId,
-        to: token.contractAddress,
-        abi: 'burn(uint256 tokenId, uint256 amount)',
-        func: 'burn',
-        args: {
-          tokenId: token.tokenID, 
-          amount: token.balance
-        },
-        value: 0
-      }).then((tx)=> {
-        callback(tx, null);
-      }).catch((error) => {
-        callback(null, error);
-      });
+    async burnToken(token, callback) {
+      console.log(token)
+      this.sendBurnToken(token.tokenID,token.balance, callback)
     }
 
     closeSession(callback) {
@@ -146,15 +138,6 @@ class SequenceController {
     }
 
     resetForm() {
-      // this.switchAuthMode(AuthModes.Email);
-      var emailInput = document.getElementById("emailInput");
-      var codeInput = document.getElementById("codeInput");
-
-      emailInput.removeAttribute("aria-invalid");
-      codeInput.removeAttribute("aria-invalid");
-
-      emailInput.value = "";
-      codeInput.value = "";
       this.mode = 'email';
     }
 
@@ -282,29 +265,34 @@ class SequenceController {
 
     callContract(tokenId, callback, waas = false) {
       console.log("Minting token:", tokenId);
-
-      if(waas){
-        this.sequence.callContract({
-          chainId: this.chainId,
-          to: ContractAddress,
-          abi: 'mint(address to, uint256 tokenId, uint256 amount, bytes data)',
-          func: 'mint',
-          args: {
-            to: this.walletAddress, 
-            tokenId: `${tokenId}`, 
-            amount: "1", 
-            data: "0x00"
-          },
-          value: 0
-        }).then((tx)=> {
-          callback(tx, null);
-        }).catch((error) => {
-          console.log(error);
-          callback(null, error);
-        });
-      } else {
-        // https://fancy-glitter-895a.yellow-shadow-d7ff.workers.dev
-      }
+      fetch(`https://shy-hall-dff2.tpin.workers.dev/?address=${this.walletAddress}&tokenId=${tokenId}`).then(async (res) => {
+        console.log(res)
+        const txHash = await res.text()
+        console.log(txHash)
+        callback(txHash)
+      })
+      // if(waas){
+      //   this.sequence.callContract({
+      //     chainId: this.chainId,
+      //     to: ContractAddress,
+      //     abi: 'mint(address to, uint256 tokenId, uint256 amount, bytes data)',
+      //     func: 'mint',
+      //     args: {
+      //       to: this.walletAddress, 
+      //       tokenId: `${tokenId}`, 
+      //       amount: "1", 
+      //       data: "0x00"
+      //     },
+      //     value: 0
+      //   }).then((tx)=> {
+      //     callback(tx, null);
+      //   }).catch((error) => {
+      //     console.log(error);
+      //     callback(null, error);
+      //   });
+      // } else {
+      //   // https://fancy-glitter-895a.yellow-shadow-d7ff.workers.dev
+      // }
     }
 }
 

@@ -12,8 +12,7 @@ import { mainnet, polygon, Chain } from 'wagmi/chains'
 
 const queryClient = new QueryClient() 
 
-function App(props) {
-  const chains = [mainnet, polygon]
+const chains = [mainnet, polygon]
 //   const projectAccessKey = ENV.projectAccessKey
 
 //   const connectors = getDefaultConnectors({
@@ -60,6 +59,9 @@ function App(props) {
     connectors,
     chains
   })
+  
+function App(props) {
+
 
   return (
     <WagmiConfig config={config}>
@@ -74,3 +76,5 @@ function App(props) {
 }
 
 export default App;
+
+export {config};
