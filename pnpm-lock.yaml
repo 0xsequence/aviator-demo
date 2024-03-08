@@ -12,11 +12,11 @@ dependencies:
     specifier: 1.8.3
     version: 1.8.3
   '@0xsequence/kit':
-    specifier: 2.0.5-beta.8
-    version: 2.0.5-beta.8(0xsequence@1.9.2)(@0xsequence/waas@0.0.0-20240131180030)(@react-oauth/google@0.12.1)(ethers@5.7.2)(react-apple-signin-auth@1.1.0)(react-dom@18.2.0)(react@18.2.0)(uuid@8.3.2)(viem@2.7.19)(wagmi@2.5.7)
+    specifier: 2.0.5-beta.9
+    version: 2.0.5-beta.9(0xsequence@1.9.2)(@0xsequence/waas@0.0.0-20240131180030)(@react-oauth/google@0.12.1)(ethers@5.7.2)(react-apple-signin-auth@1.1.0)(react-dom@18.2.0)(react@18.2.0)(uuid@8.3.2)(viem@2.7.19)(wagmi@2.5.7)
   '@0xsequence/kit-connectors':
-    specifier: 2.0.5-beta.8
-    version: 2.0.5-beta.8(0xsequence@1.9.2)(@0xsequence/design-system@1.2.5)(@0xsequence/kit@2.0.5-beta.8)(ethers@5.7.2)(react-dom@18.2.0)(react@18.2.0)(uuid@8.3.2)(viem@2.7.19)(wagmi@2.5.7)
+    specifier: 2.0.5-beta.9
+    version: 2.0.5-beta.9(0xsequence@1.9.2)(@0xsequence/design-system@1.2.5)(@0xsequence/kit@2.0.5-beta.9)(ethers@5.7.2)(react-dom@18.2.0)(react@18.2.0)(uuid@8.3.2)(viem@2.7.19)(wagmi@2.5.7)
   '@0xsequence/waas':
     specifier: 0.0.0-20240131180030
     version: 0.0.0-20240131180030(ethers@5.7.2)
@@ -261,12 +261,12 @@ packages:
     resolution: {integrity: sha512-v50RMg6vom1D54eG3CYeAFYfaBnuSoGkAmHvnrwQSlcH2gWzN97W0Ww/RSXZkEpxFJ1agszeLDyCWqIIiISKug==}
     dev: false
 
-  /@0xsequence/kit-connectors@2.0.5-beta.8(0xsequence@1.9.2)(@0xsequence/design-system@1.2.5)(@0xsequence/kit@2.0.5-beta.8)(ethers@5.7.2)(react-dom@18.2.0)(react@18.2.0)(uuid@8.3.2)(viem@2.7.19)(wagmi@2.5.7):
-    resolution: {integrity: sha512-lrjHHnxIEpS6jEGjLojeP81RqCyMLCAlgaHIQiy3pmcsLZQ7b6PKNVa/yCd07erWZTfMk8OrP7lqm0+7+NlpoA==}
+  /@0xsequence/kit-connectors@2.0.5-beta.9(0xsequence@1.9.2)(@0xsequence/design-system@1.2.5)(@0xsequence/kit@2.0.5-beta.9)(ethers@5.7.2)(react-dom@18.2.0)(react@18.2.0)(uuid@8.3.2)(viem@2.7.19)(wagmi@2.5.7):
+    resolution: {integrity: sha512-2o3qkMeF2mlsbhyWD309JfBHSclkBDyimEVSMqVul5lnmzDWhaMScMhvaVfRfzaaHoo+QJn3/hD10XaBA/wBwQ==}
     peerDependencies:
       0xsequence: '>=1.9.0'
       '@0xsequence/design-system': '>=1.1.0'
-      '@0xsequence/kit': 2.0.5-beta.8
+      '@0xsequence/kit': 2.0.5-beta.9
       ethers: '>=5.7.2'
       react: '>=17'
       react-dom: '>=17'
@@ -276,7 +276,7 @@ packages:
     dependencies:
       0xsequence: 1.9.2(ethers@5.7.2)
       '@0xsequence/design-system': 1.2.5(framer-motion@8.5.5)(react-dom@18.2.0)(react@18.2.0)
-      '@0xsequence/kit': 2.0.5-beta.8(0xsequence@1.9.2)(@0xsequence/waas@0.0.0-20240131180030)(@react-oauth/google@0.12.1)(ethers@5.7.2)(react-apple-signin-auth@1.1.0)(react-dom@18.2.0)(react@18.2.0)(uuid@8.3.2)(viem@2.7.19)(wagmi@2.5.7)
+      '@0xsequence/kit': 2.0.5-beta.9(0xsequence@1.9.2)(@0xsequence/waas@0.0.0-20240131180030)(@react-oauth/google@0.12.1)(ethers@5.7.2)(react-apple-signin-auth@1.1.0)(react-dom@18.2.0)(react@18.2.0)(uuid@8.3.2)(viem@2.7.19)(wagmi@2.5.7)
       '@0xsequence/provider': 1.9.2(ethers@5.7.2)
       '@0xsequence/waas': 1.9.2(ethers@5.7.2)
       '@0xsequence/waas-ethers': 1.9.2(ethers@5.7.2)
@@ -294,8 +294,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@0xsequence/kit@2.0.5-beta.8(0xsequence@1.9.2)(@0xsequence/waas@0.0.0-20240131180030)(@react-oauth/google@0.12.1)(ethers@5.7.2)(react-apple-signin-auth@1.1.0)(react-dom@18.2.0)(react@18.2.0)(uuid@8.3.2)(viem@2.7.19)(wagmi@2.5.7):
-    resolution: {integrity: sha512-IfjE/GszRGbbYwKxv5ZchlMpjPBgqimWrOhIKgLhSE1CNFWDm2b/sCbjLFcP0FIROy5LhkOS+2mVQA7dENUz5A==}
+  /@0xsequence/kit@2.0.5-beta.9(0xsequence@1.9.2)(@0xsequence/waas@0.0.0-20240131180030)(@react-oauth/google@0.12.1)(ethers@5.7.2)(react-apple-signin-auth@1.1.0)(react-dom@18.2.0)(react@18.2.0)(uuid@8.3.2)(viem@2.7.19)(wagmi@2.5.7):
+    resolution: {integrity: sha512-6ysS+Lg4RwGIAnCJxRkZMeI7oVJyDO1RLlw8Nm1by7/rJvEPW/QgOZXa0jJU7EZQ13AMkFm1DKgP4jEgbucMbQ==}
     peerDependencies:
       0xsequence: '>=1.9.0'
       '@0xsequence/waas': '>=1.9.0'
@@ -313,7 +313,7 @@ packages:
       '@0xsequence/design-system': 1.2.5(framer-motion@8.5.5)(react-dom@18.2.0)(react@18.2.0)
       '@0xsequence/ethauth': 0.8.1(ethers@5.7.2)
       '@0xsequence/indexer': 1.9.2
-      '@0xsequence/kit-connectors': 2.0.5-beta.8(0xsequence@1.9.2)(@0xsequence/design-system@1.2.5)(@0xsequence/kit@2.0.5-beta.8)(ethers@5.7.2)(react-dom@18.2.0)(react@18.2.0)(uuid@8.3.2)(viem@2.7.19)(wagmi@2.5.7)
+      '@0xsequence/kit-connectors': 2.0.5-beta.9(0xsequence@1.9.2)(@0xsequence/design-system@1.2.5)(@0xsequence/kit@2.0.5-beta.9)(ethers@5.7.2)(react-dom@18.2.0)(react@18.2.0)(uuid@8.3.2)(viem@2.7.19)(wagmi@2.5.7)
       '@0xsequence/metadata': 1.9.2
       '@0xsequence/network': 1.9.2(ethers@5.7.2)
       '@0xsequence/provider': 1.9.2(ethers@5.7.2)
