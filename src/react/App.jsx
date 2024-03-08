@@ -30,7 +30,7 @@ function App(props) {
       appleRedirectURI,
       appName: 'demo app',
       projectAccessKey,
-      enableConfirmationModal: true,
+      enableConfirmationModal: false,
     }),
     ...getKitConnectWallets(projectAccessKey, []),
   ];

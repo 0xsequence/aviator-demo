@@ -1,7 +1,7 @@
 @import "~@picocss/pico";
 
 html {
-	zoom: 0.90;
+	/* zoom: 0.90; */
 }
 .game-holder {
 	position: absolute;
