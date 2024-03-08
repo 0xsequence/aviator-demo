@@ -34,6 +34,7 @@ const LocalStorageKeys = {
 }
 
 export default class MainScene extends Group {
+  airplane;
   constructor() {
     super();
 
@@ -44,7 +45,7 @@ export default class MainScene extends Group {
 
     this.game_mode = GameModes.Intro;
     this.game_mode_previous = null;
-    // this.signout_btn = document.getElementById("signOutBtn");
+    this.signout_btn = document.getElementById("signOutBtn");
     this.message_box = document.getElementById("replayMessage");
     this.distance_box = document.getElementById("distValue");
     this.score_box = document.getElementById("score");
@@ -105,6 +106,43 @@ export default class MainScene extends Group {
     }
   }
 
+  getPlane() {
+    return this.aiplane
+  }
+
+  arrayDelta(array1, array2) {
+    // Convert arrays to sets for efficient lookup
+    const set1 = new Set(array1);
+    const set2 = new Set(array2);
+
+    // Calculate delta
+    const delta = [];
+    for (const item of set1) {
+        if (!set2.has(item)) {
+            delta.push(item);
+        }
+    }
+    return delta;
+}
+
+  openHangar(tokenIDs) {
+    console.log(tokenIDs)
+    const ids = ['1','2','3','4','5','6',]
+    const blanks = this.arrayDelta(ids,tokenIDs)
+    console.log(blanks)
+    blanks.map((_, i)=> {
+      const el = document.getElementsByClassName(`plane-${_}`)[0]
+      console.log(el)
+      el.style.backgroundImage = 'url()'
+    })
+
+    var modal = document.getElementById("cardModal-hangar");
+    modal.setAttribute("open", true);
+    
+    var modalContent = document.getElementById("cardModalContent");
+    modalContent.innerHTML = `<p>hi</p>`;
+  }
+
   showCardModal(token) {
     this.activeToken = token;
     var modal = document.getElementById("cardModal");
@@ -116,8 +154,10 @@ export default class MainScene extends Group {
 
   closeCardModal() {
     this.activeToken = null;
-    var modal = document.getElementById("cardModal");
+    var modal = document.getElementById("cardModal-hangar");
+    var modal1 = document.getElementById("cardModal");
     modal.setAttribute("open", false);
+    modal1.setAttribute("open", false);
 
     if (this.game_mode_previous == null) {
       console.log('test')
@@ -241,6 +281,7 @@ export default class MainScene extends Group {
 
     card.id = "activeCard";
     card.className = "card card-" + cardID;
+    card.zIndex = 7;
     cardBack.className = "card-backface";
 
     cardContainer.appendChild(card);
@@ -362,7 +403,7 @@ export default class MainScene extends Group {
         console.log('hi')
         this.message_box.innerHTML = "Welcome " + this.sequenceController.email.slice(0,8) +".."+ this.sequenceController.email.slice(this.sequenceController.email.length-4,this.sequenceController.email.length)+"!<br>Click to Start";
         // this.message_box.innerHTML = "Welcome " + this.sequenceController.email.slice(0,8) +".."+"!<br>Click to Start";
-        // this.signout_btn.style.display = "block";
+        this.signout_btn.style.display = "block";
       this.message_box.style.display = "block";
 
         this.card_slots.style.display = "block";
@@ -370,10 +411,12 @@ export default class MainScene extends Group {
       }
 
     } else {
-      // this.signout_btn.style.display = "none";
+      console.log('removing message box')
+      this.message_box.style.display = "none";
+
+      this.signout_btn.style.display = "none";
       this.card_slots.style.display = "none";
       this.leaderboard_wrapper.style.display = "none";
-      alert('test')
     }
   }
 
@@ -485,12 +528,13 @@ export default class MainScene extends Group {
       this.card_slots.style.display = "none";
       this.leaderboard_wrapper.style.display = "block";
       this.message_box.style.display = "none";
+      this.signout_btn.style.display = "none";
     } else if (this.game_mode === GameModes.Playing) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "none";
       this.card_slots.style.display = "none";
       this.leaderboard_wrapper.style.display = "none";
-      // this.signout_btn.style.display = "none";
+      this.signout_btn.style.display = "none";
     } else if (this.game_mode === GameModes.Paused) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
@@ -504,7 +548,7 @@ export default class MainScene extends Group {
       this.card_slots.style.display = "block";
       this.leaderboard_wrapper.style.display = "block";
       this.message_box.innerHTML = "Game Over";
-      // this.signout_btn.style.display = "none";
+      this.signout_btn.style.display = "none";
 
       this.updateLocalScores()
 
@@ -515,7 +559,7 @@ export default class MainScene extends Group {
       this.card_slots.style.display = "block";
       this.leaderboard_wrapper.style.display = "block";
       this.message_box.innerHTML = "Game Over<br>Click to Replay";
-      // this.signout_btn.style.display = "block";
+      this.signout_btn.style.display = "block";
 
       if (this.game.distance >= 2500 && !this.isCardWon(CardTypes.TwentyFiveHundredMeterRun)) {
         this.showCard(CardTypes.TwentyFiveHundredMeterRun);

@@ -85,11 +85,12 @@ class SequenceController {
     this.mode = mode;
     self = this;
     let interval = setInterval(() => {
+      console.log('switching auth mode')
       this.authModeChangedCallback();
-      if (self.email) {
+      if (self.email || this.mode == AuthModes.Email) {
         clearInterval(interval);
       }
-    }, 1000);
+    }, 10);
   }
 
   triggerLoginModalForm() {
@@ -126,14 +127,19 @@ class SequenceController {
 
   callContract(tokenId, callback, waas = false) {
     console.log('Minting token:', tokenId);
-    fetch(
-      `https://shy-hall-dff2.tpin.workers.dev/?address=${this.walletAddress}&tokenId=${tokenId}`
-    ).then(async res => {
-      console.log(res);
-      const txHash = await res.text();
-      console.log(txHash);
-      callback(txHash);
-    });
+    // fetch(
+    //   `https://shy-hall-dff2.tpin.workers.dev/?address=${this.walletAddress}&tokenId=${tokenId}`
+    // ).then(async res => {
+    //   console.log(res);
+    //   const txHash = await res.text();
+    //   console.log(txHash);
+    //   callback(txHash);
+    // });
+  }
+
+  clearAddress() {
+    this.email = null
+    return this
   }
 }
 

@@ -13,6 +13,12 @@ const GameModes = {
   CardDetails: "carddetails",
 }
 
+const AuthModes = {
+    Email: 'email',
+    Code: 'code',
+    Completed: 'completed',
+  };
+
 function SignOut(props) {
 
     const { isConnected } = useAccount()
@@ -23,10 +29,13 @@ function SignOut(props) {
         <div style={{textAlign:'center'}}>
             <br/>
             {isConnected && <div onClick={() => {
+                let sequenceController = props.scene.sequenceController.clearAddress()
+                sequenceController.switchAuthMode(AuthModes.Email);
+                sequenceController.resetForm()
                 props.scene.switchGameMode(GameModes.Intro);
                 props.scene.resetGame();
-                props.scene.clearLocalStores();
-                props.scene.sequenceController.resetForm()
+                // props.scene.clearLocalStores();
+                console.log(sequenceController.email)
                 disconnect()
                 }} className='sign-out' style={{cursor: 'pointer'}}>
                 sign out

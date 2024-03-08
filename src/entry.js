@@ -11,8 +11,15 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { WebGLRenderer, PerspectiveCamera, Scene, Fog } from 'three';
 import MainScene from './objects/Scene.js';
-import App from './react/App.jsx';
-import './game.css';
+import { SequenceIndexer } from '@0xsequence/indexer';
+
+const indexer = new SequenceIndexer(
+  'https://polygon-indexer.sequence.app'
+);
+
+import App from './react/App.jsx'
+import ColorPanels from './react/ColorPanels.jsx'
+import "./game.css";
 import { ENV } from '../env.js';
 
 const { innerHeight, innerWidth } = window;
@@ -84,9 +91,10 @@ function handleMouseMove(event) {
 document.addEventListener('mousemove', handleMouseMove, false);
 
 function handleMouseUp(event) {
+  console.log('howdy')
   mainScene.handleMouseClick();
 }
-document.addEventListener('mouseup', handleMouseUp, false);
+document.getElementById('glass').addEventListener('mouseup', handleMouseUp, false);
 
 window.closeModal = event => {
   event.preventDefault();
@@ -95,6 +103,7 @@ window.closeModal = event => {
 
 window.triggerLogin = event => {
   event.preventDefault();
+  console.log('in here')
   mainScene.sequenceController.triggerLoginModalForm();
 };
 
@@ -112,23 +121,36 @@ window.closeCardModal = event => {
   event.preventDefault();
   mainScene.closeCardModal();
 };
+window.openHangar = (event) => {
+  event.preventDefault();
+  console.log('opening')
 
-window.onGoogleSignIn = evt => {
-  google.accounts.id.initialize({
-    client_id: ENV.googleClientId,
-    callback: response => {
-      const idToken = response.credential;
-      mainScene.sequenceController.authenticateGoogle(idToken);
-    },
-  });
+  indexer
+      .getTokenBalances({
+        accountAddress: mainScene.sequenceController.email,
+        contractAddress: '0x1693ffc74edbb50d6138517fe5cd64fd1c917709',
+        includeMetadata: true,
+        metadataOptions: { includeMetadataContracts: ['0x1693ffc74edbb50d6138517fe5cd64fd1c917709'] },
+      })
+      .then(tokenBalances => {
+        console.log(tokenBalances);
+        let ownedTokenBalances = [];
 
-  google.accounts.id.prompt(notification => {
-    if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-      console.log('The user did not select an account or closed the prompt.');
-    }
-  });
-};
 
+        for (let i = 0; i < tokenBalances.balances.length; i++) {
+          const tokenId = tokenBalances.balances[i].tokenID;
+          ownedTokenBalances.push(tokenId);
+        }
+
+        mainScene.openHangar(ownedTokenBalances);
+        // if (this.balancesChangedCallback !== null)
+        //   this.balancesChangedCallback();
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+}
 // dom
 document.body.style.margin = 0;
 document.body.style.zoom = 0.77;
@@ -142,3 +164,41 @@ root.render(
     <App scene={mainScene} />
   </div>
 );
+
+// hangar planes
+const colors = [
+  'rgba(255, 165, 0, 0.65)', 'rgba(173, 216, 230, 0.65)',
+  'rgba(0, 128, 0, 0.65)', 'rgba(255, 255, 0, 0.65)', 'rgba(0, 0, 255, 0.65)',
+  'rgba(75, 0, 130, 0.65)',
+].reverse();
+
+const imageSrcArray = [
+  "~/images/planes/Falcon_Mark_IV_Redtail.png"
+]; // Replace these with your actual image paths
+
+const gridContainer = document.getElementById('gridContainer');
+
+colors.forEach((color, index) => {
+  const panel = document.createElement('div');
+  panel.className = 'color-panel '+'plane-'+(index+1);
+  panel.onclick = () => handlePanelClick(index + 1);
+  
+  gridContainer.appendChild(panel);
+});
+
+let selectedId = null; // Simulate selectedId
+
+function handlePanelClick(id) {
+  console.log(id);
+  // Update the visual state of panels based on selection
+  document.querySelectorAll('.color-panel').forEach((panel, idx) => {
+    if (idx + 1 === id) {
+      panel.classList.add('selected');
+    } else {
+      panel.classList.remove('selected');
+    }
+  });
+  selectedId = id; // Update selected ID
+  console.log(mainScene)
+  mainScene.airplane.addPlane(id)
+}

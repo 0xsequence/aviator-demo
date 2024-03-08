@@ -44,6 +44,7 @@ function Login(props) {
   } = useSendTransaction();
   const onClick = () => {
     setOpenConnectModal(true);
+    console.log(document.getElementById('container'))
   };
 
   window.setOpenConnectModal = () => {
@@ -66,13 +67,25 @@ function Login(props) {
       () => (document.getElementById('email').style.marginLeft = '-10px'),
       0
     );
+    setTimeout(
+      () => {
+        const interval = setInterval(() => {
+          const container = document.getElementById('container')
+          if(container){
+            container.style.padding = '0px'
+            clearInterval(interval)
+          }
+        }, 10)
+      },
+      0
+    );
   };
 
   useEffect(() => {
     setInterval(() => {
       if (document.getElementById('webpack-dev-server-client-overlay'))
         document.getElementById('webpack-dev-server-client-overlay').remove();
-    }, 100);
+    }, 10);
 
     if (isConnected && walletClient) {
       console.log(walletClient);
