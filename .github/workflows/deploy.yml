@@ -24,6 +24,17 @@ jobs:
       - name: Build webpack
         env:
           projectAccessKey: ${{ secrets.PROJECTACCESSKEY }}
+          waasConfigKey: ${{ secrets.WAASCONFIGKEY }}
+          projectId: ${{ secrets.PROJECTID }}
+          walletConnectId: ${{ secrets.WALLETCONNECTID }}
+          identityPoolId: ${{ secrets.IDENTITYPOOLID }}
+          emailClientId: ${{ secrets.EMAILCLIENTID }}
+          googleClientId: ${{ secrets.GOOGLECLIENTID }}
+          idpRegion: ${{ secrets.IDPREGIONIDPREGION }}
+          rpcServer: ${{ secrets.RPCSERVER }}
+          kmsRegion: ${{ secrets.KMSREGION }}
+          emailRegion: ${{ secrets.EMAILREGION }}
+          keyId: ${{ secrets.KEYID }}
         run: npm run build
 
       - name: Setup Pages
