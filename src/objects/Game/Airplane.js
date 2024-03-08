@@ -34,6 +34,7 @@ export default class Airplane extends Group {
     var cabin = new Mesh(geomCabin, matCabin);
     cabin.castShadow = true;
     cabin.receiveShadow = true;
+    cabin.userData.id = 'cabin'
     this.add(cabin);
     
     // Create the engine
@@ -150,5 +151,12 @@ export default class Airplane extends Group {
   tick(deltaTime) {
     this.propeller.rotation.x += deltaTime / 25;
     this.pilot.updateHairs(deltaTime);
+  }
+
+  addPlane() {
+    var objectToRemove = this.getObjectByName('cabin');
+    if (objectToRemove) {
+        this.remove(objectToRemove);
+    }
   }
 }

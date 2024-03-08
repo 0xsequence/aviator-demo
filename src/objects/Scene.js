@@ -44,7 +44,7 @@ export default class MainScene extends Group {
 
     this.game_mode = GameModes.Intro;
     this.game_mode_previous = null;
-    // this.signout_btn = document.getElementById("signOutBtn");
+    this.signout_btn = document.getElementById("signOutBtn");
     this.message_box = document.getElementById("replayMessage");
     this.distance_box = document.getElementById("distValue");
     this.score_box = document.getElementById("score");
@@ -103,6 +103,14 @@ export default class MainScene extends Group {
       
       if (Number(balance.tokenID) === cardID) this.showCardModal(balance);
     }
+  }
+
+  openHangar() {
+    var modal = document.getElementById("cardModal-hangar");
+    modal.setAttribute("open", true);
+    
+    var modalContent = document.getElementById("cardModalContent");
+    modalContent.innerHTML = `<p>hi</p>`;
   }
 
   showCardModal(token) {
@@ -362,7 +370,7 @@ export default class MainScene extends Group {
         console.log('hi')
         this.message_box.innerHTML = "Welcome " + this.sequenceController.email.slice(0,8) +".."+ this.sequenceController.email.slice(this.sequenceController.email.length-4,this.sequenceController.email.length)+"!<br>Click to Start";
         // this.message_box.innerHTML = "Welcome " + this.sequenceController.email.slice(0,8) +".."+"!<br>Click to Start";
-        // this.signout_btn.style.display = "block";
+        this.signout_btn.style.display = "block";
       this.message_box.style.display = "block";
 
         this.card_slots.style.display = "block";
@@ -370,7 +378,7 @@ export default class MainScene extends Group {
       }
 
     } else {
-      // this.signout_btn.style.display = "none";
+      this.signout_btn.style.display = "none";
       this.card_slots.style.display = "none";
       this.leaderboard_wrapper.style.display = "none";
       alert('test')

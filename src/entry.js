@@ -12,6 +12,7 @@ import * as ReactDOM from 'react-dom';
 import { WebGLRenderer, PerspectiveCamera, Scene, Fog } from 'three';
 import MainScene from './objects/Scene.js';
 import App from './react/App.jsx'
+import ColorPanels from './react/ColorPanels.jsx'
 import "./game.css";
 import { ENV } from '../env.js';
 
@@ -79,9 +80,10 @@ function handleMouseMove(event) {
 document.addEventListener('mousemove', handleMouseMove, false);
 
 function handleMouseUp(event) {
+  console.log('howdy')
   mainScene.handleMouseClick();
 }
-document.addEventListener('mouseup', handleMouseUp, false);
+document.getElementById('glass').addEventListener('mouseup', handleMouseUp, false);
 
 window.closeModal = (event) => {
   event.preventDefault();
@@ -108,20 +110,10 @@ window.closeCardModal = (event) => {
   mainScene.closeCardModal();
 };
 
-window.onGoogleSignIn = (evt) => {
-  google.accounts.id.initialize({
-    client_id: ENV.googleClientId,
-    callback: (response) => {
-      const idToken = response.credential;
-      mainScene.sequenceController.authenticateGoogle(idToken);
-    }
-  });
-
-  google.accounts.id.prompt((notification) => {
-    if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-      console.log('The user did not select an account or closed the prompt.');
-    }
-  });
+window.openHangar = (event) => {
+  event.preventDefault();
+  console.log('opening')
+  mainScene.openHangar();
 }
 
 // dom
@@ -138,4 +130,39 @@ root.render(
   </div>
 );
 
+// hangar planes
+const colors = [
+  'rgba(255, 165, 0, 0.65)', 'rgba(173, 216, 230, 0.65)',
+  'rgba(0, 128, 0, 0.65)', 'rgba(255, 255, 0, 0.65)', 'rgba(0, 0, 255, 0.65)',
+  'rgba(75, 0, 130, 0.65)',
+].reverse();
 
+const imageSrcArray = [
+  "~/images/planes/Falcon_Mark_IV_Redtail.png"
+]; // Replace these with your actual image paths
+
+const gridContainer = document.getElementById('gridContainer');
+
+colors.forEach((color, index) => {
+  const panel = document.createElement('div');
+  panel.className = 'color-panel '+'plane-'+(index+1);
+  panel.onclick = () => handlePanelClick(index + 1);
+  
+  gridContainer.appendChild(panel);
+});
+
+let selectedId = null; // Simulate selectedId
+
+function handlePanelClick(id) {
+  console.log(id);
+  // Update the visual state of panels based on selection
+  document.querySelectorAll('.color-panel').forEach((panel, idx) => {
+    if (idx + 1 === id) {
+      panel.classList.add('selected');
+    } else {
+      panel.classList.remove('selected');
+    }
+  });
+  selectedId = id; // Update selected ID
+  scene.airplane.addPlane()
+}

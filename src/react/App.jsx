@@ -50,6 +50,15 @@ const config = createConfig({
   chains,
 });
 
+const metadata = [
+  ["Falcon Mark IV Redtail", "A sleek, high-speed interceptor with a gleaming scarlet finish."],
+  ["Hawkwind P-22 Emerald", "A nimble, versatile fighter with a striking, metallic emerald green coat."],
+  ["Lightning Spectre G6", "A ghostly, agile aircraft with a unique, shimmering silver hue that seems to fade in and out of visibility."],
+  ["Raptor Fury X2", "A fast and furious dogfighter with a fiery, vibrant orange livery, striking fear into the hearts of its adversaries."],
+  ["Skyraider Z-11 Onyx", "A fearsome, all-black night fighter known for its stealth and power."],
+  ["Thunderbolt XR-5 Cobalt", "A robust, heavy fighter painted in a deep, vivid cobalt blue."],
+   ]
+
 function App(props) {
   return (
     <WagmiProvider config={config}>

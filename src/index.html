@@ -11,6 +11,7 @@
 		<![endif]-->
 	</head>
 	<body>
+		<div id="glass"></div>
 		<div id="root"></div>
 		<div class="game-holder" id="gameHolder">
 			<div class="header">
@@ -86,8 +87,22 @@
 				<div class="card-tooltip" id="cardTooltip"></div>
 			</div>
 			<div class="card-label" id="cardLabel"></div>
-
-			<button id="signOutBtn">Sign Out</button>
+			<button id="signOutBtn" onclick="openHangar(event)">Aviator Hangar</button>
+			<dialog id="cardModal-hangar">
+                <article>
+                    <div id="cardModalContent"></div>
+					<div class="panel-container">
+						<div class="grid-container" id="gridContainer">
+						  <!-- Panels will be added here by JavaScript -->
+						</div>
+					  </div>
+                    <footer>
+                        <a href="#" role="button" class="secondary" onClick="closeCardModal(event)">Cancel</a>
+                        <a href="https://lucky-pond-0796.on.fleek.co/" target="_blank" role="button" onClick="" id="marketPlaceButton">Marketplace</a>
+                    
+					</footer>
+                </article>
+            </dialog>
 		</div>
 		<svg style="display: none;">
 			<symbol id="cup" x="0px" y="0px"

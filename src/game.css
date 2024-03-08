@@ -267,6 +267,7 @@ div.logo {
 	right: 20px;
 	bottom: 10px;
 	display: none;
+	z-index: 2;
 }
 
 /*--------------------
@@ -448,3 +449,67 @@ Leaderboard
 #cardSlot1 {
 	margin-top: 80px;
 }
+
+#marketPlaceButton{
+	background-color: green;
+	border: 1px solid green;
+}
+
+.grid-container {
+	display: grid;
+	grid-template-columns: repeat(3, 120px); /* 3-column grid */
+	grid-template-rows: repeat(2, 120px); /* 2-row grid */
+	gap: 10px;
+	justify-items: center;
+  }
+  
+  .color-panel {
+	width: 120px;
+	height: 120px;
+	box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+	border-radius: 5px;
+	cursor: pointer;
+	transition: box-shadow 0.3s ease;
+	display: flex;
+	background-size: contain;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		color: white;
+		font-size: 50px;
+  }
+  
+  .plane-1 {
+	background-image: url("../images/planes/Falcon_Mark_IV_Redtail.png");
+  }
+  .plane-2 {
+	background-image: url("../images/planes/Hawkwind_P-22_Emerald.png");
+  }
+  .plane-3 {
+	background-image: url("../images/planes/Lightning_Spectre_G6.png");
+  }
+  .plane-4 {
+	background-image: url("../images/planes/Raptor_Fury_X2.png");
+  }
+  .plane-5 {
+	background-image: url("../images/planes/Skyraider_Z-11_Onyx.png");
+  }
+  .plane-6 {
+	background-image: url("../images/planes/Thunderbolt_XR-5_Cobalt.png");
+  }
+
+  .selected {
+	box-shadow: 0 0 0 3px white;
+  }
+  
+  .greyed-out {
+	opacity: 0.5;
+  }
+
+  #glass {
+	background-color: transparent;
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	z-index: 1;
+  }
