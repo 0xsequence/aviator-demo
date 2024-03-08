@@ -1,62 +1,60 @@
-import React from "react";
-import { useOpenConnectModal } from "@0xsequence/kit";
-import { useDisconnect, useAccount } from "wagmi";
-import Login from "./Login.jsx";
-import SignOut from "./SignOut.jsx";
+import React from 'react';
+import Login from './Login.jsx';
+import SignOut from './SignOut.jsx';
 
-import { KitProvider, getKitConnectWallets } from "@0xsequence/kit";
-import {
-  getDefaultConnectors,
-  getDefaultWaasConnectors,
-  mock,
-} from "@0xsequence/kit-connectors";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createConfig, http, WagmiProvider } from "wagmi";
-import { mainnet, polygon, arbitrumSepolia, Chain } from "wagmi/chains";
+import { KitProvider, getKitConnectWallets } from '@0xsequence/kit';
+import { getDefaultWaasConnectors } from '@0xsequence/kit-connectors';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { createConfig, http, WagmiProvider } from 'wagmi';
+import { mainnet, polygon, arbitrumSepolia, Chain } from 'wagmi/chains';
 
 const queryClient = new QueryClient();
 
 const chains = [mainnet, arbitrumSepolia];
-const projectAccessKey = ENV.projectAccessKey
-const waasConfigKey = ENV.waasConfigKey
-const googleClientId = ENV.googleClientId
-const appleClientId = ENV.appleClientId
-const appleRedirectURI = "https://strong-pavlova-dcf6f0.netlify.app";
+const projectAccessKey = ENV.projectAccessKey;
+const waasConfigKey = ENV.waasConfigKey;
+const googleClientId = ENV.googleClientId;
+const appleClientId = ENV.appleClientId;
 
-const connectors = [
-  ...getDefaultWaasConnectors({
-    walletConnectProjectId: ENV.walletConnectId,
-    defaultChainId: 421614,
-    waasConfigKey,
-    googleClientId,
-    appleClientId,
-    appleRedirectURI,
-    appName: "demo app",
-    projectAccessKey,
-    enableConfirmationModal: true,
-  }),
-  ...getKitConnectWallets(projectAccessKey, []),
-];
-
-const transports = {};
-
-chains.forEach((chain) => {
-  transports[chain.id] = http();
-});
-
-const config = createConfig({
-  transports,
-  connectors,
-  chains,
-});
+// TODO: update this
+const appleRedirectURI = '';
 
 function App(props) {
+  const connectors = [
+    ...getDefaultWaasConnectors({
+      walletConnectProjectId: ENV.walletConnectId,
+      defaultChainId: 421614,
+      waasConfigKey,
+      googleClientId,
+      appleClientId,
+      appleRedirectURI,
+      appName: 'demo app',
+      projectAccessKey,
+      enableConfirmationModal: true,
+    }),
+    ...getKitConnectWallets(projectAccessKey, []),
+  ];
+
+  const transports = {};
+
+  chains.forEach(chain => {
+    transports[chain.id] = http();
+  });
+
+  const config = createConfig({
+    transports,
+    connectors,
+    chains,
+  });
+
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <KitProvider config={{ defaultTheme: "light" }}>
-          <Login scene={props.scene} />
-          <SignOut scene={props.scene} />
+        <KitProvider config={{ defaultTheme: 'light' }}>
+          <div id="app">
+            <Login scene={props.scene} />
+            <SignOut scene={props.scene} />
+          </div>
         </KitProvider>
       </QueryClientProvider>
     </WagmiProvider>
@@ -64,5 +62,3 @@ function App(props) {
 }
 
 export default App;
-
-export { config };
