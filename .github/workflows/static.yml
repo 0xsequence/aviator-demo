@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches:
-      - main # Adjust branch name as needed
+      - cloudflare-integration # Adjust branch name as needed
 
 jobs:
   build:
