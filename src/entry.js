@@ -20,7 +20,7 @@ const indexer = new SequenceIndexer(
 import App from './react/App.jsx'
 import ColorPanels from './react/ColorPanels.jsx'
 import "./game.css";
-import { ENV } from '../env.js';
+// import { ENV } from '../env.js';
 
 const { innerHeight, innerWidth } = window;
 var aspectRatio = innerHeight / innerWidth;
@@ -202,3 +202,5 @@ function handlePanelClick(id) {
   console.log(mainScene)
   mainScene.airplane.addPlane(id)
 }
+
+console.log(ENV)

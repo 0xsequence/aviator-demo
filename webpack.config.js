@@ -1,6 +1,6 @@
 const path = require('path');
 const pkg = require('./package.json');
-const {ENV} = require('./env');
+const {ENV} = require('./env.example.js');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const buildPath = './build/';
@@ -46,7 +46,20 @@ module.exports = {
       'template': './src/index.html'
     }),
     new webpack.DefinePlugin({
-      'ENV': JSON.stringify(ENV),
+      'ENV': !Boolean(process.env.DEPLOY) ? JSON.stringify({
+        projectAccessKey: JSON.stringify(process.env.projectAccessKey),
+        waasConfigKey: JSON.stringify(process.env.waasConfigKey),
+        projectId: JSON.stringify(process.env.projectId),
+        walletConnectId: JSON.stringify(process.env.walletConnectId),
+        identityPoolId: JSON.stringify(process.env.identityPoolId),
+        emailClientId: JSON.stringify(process.env.emailClientId),
+        googleClientId: JSON.stringify(process.env.googleClientId),
+        idpRegion: JSON.stringify(process.env.idpRegion),
+        rpcServer: JSON.stringify(process.env.rpcServer),
+        kmsRegion: JSON.stringify(process.env.kmsRegion),
+        emailRegion: JSON.stringify(process.env.emailRegion),
+        keyId: JSON.stringify(process.env.keyId)
+      }) : JSON.stringify(ENV),
     }),
   ],
   resolve: {
