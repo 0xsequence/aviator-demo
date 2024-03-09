@@ -202,5 +202,3 @@ function handlePanelClick(id) {
   console.log(mainScene)
   mainScene.airplane.addPlane(id)
 }
-
-console.log(ENV)
