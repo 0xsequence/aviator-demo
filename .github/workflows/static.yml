@@ -40,13 +40,13 @@ jobs:
         uses: actions/setup-node@v2
         with:
           branch: cloudflare-integration
-          folder: dist
+          folder: build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: './dist'
+          path: './build'
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@releases/v4
         with:
           BRANCH: cloudflare-integration
-          FOLDER: dist
+          FOLDER: build
