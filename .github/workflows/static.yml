@@ -46,7 +46,5 @@ jobs:
         with:
           path: './build'
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@releases/v4
-        with:
-          BRANCH: cloudflare-integration
-          FOLDER: build
+        id: deployment
+        uses: actions/deploy-pages@v2
