@@ -13,7 +13,7 @@
     "start": "projectAccessKey='kdo6wxL4DjHeTUo0OVWTMRCAAAAAAAAAA' webpack serve --port 3000",
     "prebuild": "rimraf ./build && mkdir ./build",
     "build": "webpack --mode production",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d build"
   },
   "dependencies": {
     "0xsequence": "1.9.2",
