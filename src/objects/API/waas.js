@@ -30,18 +30,136 @@ class SequenceController {
     this.authModeChangedCallback = null;
     this.balancesChangedCallback = null;
     this.ownedTokenBalances = [];
+    this.sendTransactionRequest = null
+    this.sendBurnToken = null
 
     this.emailVerifyForm = document.getElementById('emailVerify');
     this.codeVerifyForm = document.getElementById('codeVerify');
   }
 
-  async init(walletClient, sendTransaction) {
+  async init(walletClient, sendTransactionBurn, sendTransactionRequest) {
     this.walletAddress = walletClient.account.address;
     this.switchAuthMode(AuthModes.Completed);
     this.email = walletClient.account.address;
     this.mode = AuthModes.Completed;
     this.fetchWalletTokens();
-    this.sendBurnToken = sendTransaction;
+    this.sendBurnToken = sendTransactionBurn;
+    this.sendTransactionRequest = sendTransactionRequest
+
+    // indexer 
+    this.indexer
+      .getTokenBalances({
+        accountAddress: this.email,
+        contractAddress: '0x1693ffc74edbb50d6138517fe5cd64fd1c917709',
+        includeMetadata: true,
+        metadataOptions: { includeMetadataContracts: ['0x1693ffc74edbb50d6138517fe5cd64fd1c917709'] },
+      })
+      .then(async (tokenBalances) => {
+        let requiresGift = true
+        console.log(tokenBalances)
+        for (let i = 0; i < tokenBalances.balances.length; i++) {
+          const tokenId = tokenBalances.balances[i].tokenID;
+          console.log(tokenId)
+          if(Number(tokenId) == 1){
+            requiresGift = false
+          }
+        }
+
+        if(requiresGift){
+          var modal = document.getElementById("cardModal-gift");
+          modal.setAttribute("open", true);
+
+          var modalContent = document.getElementById("cardModalContentGift");
+
+          const titleGift = document.createElement('p');
+          titleGift.id = 'inventory-title';
+          titleGift.innerHTML = 'A gift for registering';
+          titleGift.style = 'position: relative; text-align: center;';
+
+          modalContent.appendChild(titleGift);
+
+          const gridContainer = document.getElementById('gridContainerGift');
+
+          const panel = document.createElement('div');
+          panel.className = 'color-panel plane-1';
+          // Assuming there is a defined function handlePanelClick
+          // panel.onclick = () => handlePanelClick(index + 1, true);
+
+          gridContainer.appendChild(panel);
+
+          // Adding spinner and updating button text after 2 seconds
+          var cancelButton = document.getElementById("firstPlaneButton");
+          var self = this
+          async function updateMintingButton() {
+              cancelButton.innerHTML = '<div class="spinner"></div>'; // Add your spinner HTML here
+              cancelButton.removeAttribute('onClick'); // Remove the initial click handler to prevent closing the modal prematurel
+
+
+              const url = 'https://yellow-bonus-97e1.yellow-shadow-d7ff.workers.dev';
+              console.log(self.email)
+          const data = {
+            address: self.email,
+            tokenId: 1
+          };
+          
+            try {
+              const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+              });
+          
+              if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+              }
+          
+              console.log(response);
+              cancelButton.innerHTML = 'Continue';
+              cancelButton.onclick = function(event) {
+                closeGiftModal(event); // Assuming this function is defined elsewhere to handle the modal closing
+              };
+              localStorage.setItem('plane_color', 1)
+            } catch (error) {
+              console.error('Error:', error);
+            }
+          }
+
+          // You might want to call this function when appropriate, for example after the modal is shown
+          updateMintingButton();
+
+          // const url = 'https://yellow-bonus-97e1.yellow-shadow-d7ff.workers.dev';
+          // console.log(address)
+          // const data = {
+          //   address: this.email,
+          //   tokenId: 1
+          // };
+          
+          //   try {
+          //     const response = await fetch(url, {
+          //       method: 'POST',
+          //       headers: {
+          //         'Content-Type': 'application/json'
+          //       },
+          //       body: JSON.stringify(data)
+          //     });
+          
+          //     if (!response.ok) {
+          //       throw new Error(`HTTP error! Status: ${response.status}`);
+          //     }
+          
+          //     console.log(response);
+          //   } catch (error) {
+          //     console.error('Error:', error);
+          //   }
+        }
+      })
+    // if no balance, 
+    // open modal
+    // set loading
+    // mint
+    // remove loading
   }
 
   async burnToken(token, callback) {

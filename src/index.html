@@ -44,7 +44,7 @@
                         <input type="text" id="codeInput">
                     </div>
                     <footer>
-						<!-- <meta name="google-signin-client_id" content="970987756660-i4l14sne2o8ovi4qeeplorl65fm4fqv8.apps.googleusercontent.com"> -->
+						<!-- <meta name=F"google-signin-client_id" content="970987756660-i4l14sne2o8ovi4qeeplorl65fm4fqv8.apps.googleusercontent.com"> -->
 						<!-- <div class="g-signin2" data-onsuccess="onSignIn"></div> -->
 						<!-- <div id="g_id_onload"
      data-client_id="970987756660-i4l14sne2o8ovi4qeeplorl65fm4fqv8.apps.googleusercontent.com"
@@ -75,10 +75,12 @@
             </dialog>
 			<div class="" id="login"></div>
 			<div class="message message--replay" id="replayMessage"></div>
-
+			<button id="airplaneHangarBtn" onclick="openHangar(event)">Airplane Hangar</button>
+			<!-- <button id="faucetBtn" onclick="openHangar(event)">Faucet</button> -->
 			<div class="card-container" id="cardContainer"></div>
 			<div class="card-slots" id="cardSlots">
-				<p class="achievements">Achievement Cards</p>
+
+				<!-- <p class="achievements">Achievement Cards</p> -->
 				<div class="card-slot" id="cardSlot1"></div>
 				<div class="card-slot" id="cardSlot2"></div>
 				<div class="card-slot" id="cardSlot3"></div>
@@ -87,22 +89,40 @@
 				<div class="card-tooltip" id="cardTooltip"></div>
 			</div>
 			<div class="card-label" id="cardLabel"></div>
-			<button id="signOutBtn" onclick="openHangar(event)">Aviator Hangar</button>
+			<button id="airplaneHangarBtn" onclick="openHangar(event)">Airplane Hangar</button>
 			<dialog id="cardModal-hangar">
                 <article>
                     <div id="cardModalContent"></div>
 					<div class="panel-container">
+						<br/>
 						<div class="grid-container" id="gridContainer">
-						  <!-- Panels will be added here by JavaScript -->
 						</div>
 					  </div>
-                    <footer>
+                    <footer id="modal-footer">
                         <a href="#" role="button" class="secondary" onClick="closeCardModal(event)">Cancel</a>
-                        <a href="https://lucky-pond-0796.on.fleek.co/" target="_blank" role="button" onClick="" id="marketPlaceButton">Marketplace</a>
-                    
 					</footer>
                 </article>
             </dialog>
+			<dialog id="cardModal-gift">
+				<article>
+					<div id="cardModalContentGift">
+						<!-- Title "A gift for registering" will be added via JavaScript -->
+					</div>
+					<br/>
+					<p style="text-align: center;">Falcon Mark IV Redtail</p> <!-- Added text -->
+					<br/>
+					<div class="card-container" id="gridContainerGift">
+						<!-- Image or element representing the image will be added here -->
+					</div>
+					<br/>
+					<br/>
+					<br/>
+
+					<footer id="modal-footer">
+						<a href="#" role="button" class="secondary" id="firstPlaneButton" onClick="closeGiftModal(event)">Cancel</a>
+					</footer>
+				</article>
+			</dialog>
 		</div>
 		<svg style="display: none;">
 			<symbol id="cup" x="0px" y="0px"

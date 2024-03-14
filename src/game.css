@@ -90,10 +90,10 @@ dialog input {
 }
 
 div.logo {
-	background-image: url("../images/horizon-logo-alt.svg");
+	background-image: url("../images/Sequence-Icon-Square.png");
 	background-size: cover;
 	width: 300px;
-	height: 195px;
+	height: 295px;
 	display: block;
 	margin: 0 auto;
 }
@@ -235,6 +235,8 @@ div.logo {
 }
 
 .card-slots {
+	transform: scale(0.7);
+    margin-top: -100px;
 	position: fixed;
 	top: 2vh;
 	left: 2vh;
@@ -261,6 +263,11 @@ div.logo {
 }
 
 .card-tooltip {
+	position: fixed;
+	bottom: -80px;
+	left: -40px;
+	width: 400px;
+	transform: scale(0.8);
 	font-weight: bold;
 	font-size: 1.5em;
 	color: #d1b790;
@@ -270,7 +277,7 @@ div.logo {
 	display: none;
 }
 
-#signOutBtn {
+#airplaneHangarBtn {
 	width: 200px;
 	position: fixed;
 	right: 20px;
@@ -459,7 +466,12 @@ Leaderboard
 	margin-top: 80px;
 }
 
-#marketPlaceButton{
+#marketPlaceButton {
+	background-color: green;
+	border: 1px solid green;
+}
+
+#marketPlaceButton {
 	background-color: green;
 	border: 1px solid green;
 }
@@ -470,59 +482,153 @@ Leaderboard
 	grid-template-rows: repeat(2, 120px); /* 2-row grid */
 	gap: 10px;
 	justify-items: center;
-  }
-  
-  .color-panel {
-	width: 120px;
-	height: 120px;
-	box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-	border-radius: 5px;
-	cursor: pointer;
-	transition: box-shadow 0.3s ease;
-	display: flex;
-	background-size: contain;
-		align-items: center;
-		justify-content: center;
-		text-align: center;
-		color: white;
-		font-size: 50px;
-  }
-  
-  .plane-1 {
+}
+
+#gridContainerGift {
+	display: grid;
+	grid-template-columns: repeat(1, 120px); /* 3-column grid */
+	grid-template-rows: repeat(1, 120px); /* 2-row grid */
+	gap: 10px;
+	justify-items: center;
+}
+
+.color-panel {
+width: 120px;
+height: 120px;
+box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+border-radius: 5px;
+cursor: pointer;
+transition: box-shadow 0.3s ease;
+padding: 30px;
+background-size: contain;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	color: white;
+	font-size: 50px;
+}
+
+.plane-1 {
 	background-image: url("../images/planes/Falcon_Mark_IV_Redtail.png");
-  }
-  .plane-2 {
+}
+.plane-2 {
 	background-image: url("../images/planes/Hawkwind_P-22_Emerald.png");
-  }
-  .plane-3 {
+}
+.plane-3 {
 	background-image: url("../images/planes/Lightning_Spectre_G6.png");
-  }
-  .plane-4 {
+}
+.plane-4 {
 	background-image: url("../images/planes/Raptor_Fury_X2.png");
-  }
-  .plane-5 {
+}
+.plane-5 {
 	background-image: url("../images/planes/Skyraider_Z-11_Onyx.png");
-  }
-  .plane-6 {
+}
+.plane-6 {
 	background-image: url("../images/planes/Thunderbolt_XR-5_Cobalt.png");
-  }
+}
 
-  .selected {
+.selected {
 	box-shadow: 0 0 0 3px white;
-  }
-  
-  .greyed-out {
-	opacity: 0.5;
-  }
+}
 
-  #glass {
+.greyed-out {
+	opacity: 0.5;
+}
+
+#glass {
 	background-color: transparent;
 	height: 100%;
 	width: 100%;
 	position: absolute;
 	z-index: 1;
-  }
+}
 
-  #container {
+#container {
     padding: 0px !important;
 }
+
+.marketplace-title {
+
+}
+
+#inventoryButton{
+	background-color: hsl(225 83% 25% / 1);
+	border: 1px solid hsl(225 83% 25% / 1);
+}
+
+#purchaseButton-6 {
+	background-color: blue;
+	border: 1px solid blue;
+}
+
+#purchaseButton-3{
+	background-color: white;
+	border: 1px solid white;
+	color: black;
+}
+
+#purchaseButton-2{
+	background-color: green;
+	border: 1px solid green;
+	color: white;
+}
+
+#purchaseButton-5{
+	background-color: black;
+	border: 1px solid black;
+	color: white;
+}
+
+#purchaseButton-4{
+	background-color: orange;
+	border: 1px solid orange;
+	color: white;
+}
+
+#purchaseButton-1{
+	background-color: red;
+	border: 1px solid red;
+	color: white;
+}
+
+#firstPlaneButton {
+	background-color: red;
+	border: 1px solid red;
+	color: white;
+}
+
+.plane-info {
+	font-size: 10px;
+}
+
+.plane-info-price {
+	font-size: 20px;
+	display: block;
+    margin-top: 5px; /* Adjust as needed */
+}
+
+.spinner {
+	border: 4px solid rgba(0,0,0,.1);
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	border-left-color: #09f;
+	animation: spin 1s ease infinite;
+  }
+  
+  @keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+  }
+
+  #airplaneHangarBtn {
+	position: fixed;
+	bottom: 70px;
+	left: 20px;
+  }
+
+  #faucetBtn{
+	position: fixed;
+	bottom: 70px;
+	left: 20px;
+  }

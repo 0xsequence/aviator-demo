@@ -42,3 +42,8 @@ iframe {
 #cardSlot6{
     z-index: 6;
 }
+
+#marketplace-title {
+    position: relative; 
+    text-align: center;
+}

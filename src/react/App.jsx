@@ -26,7 +26,7 @@ const metadata = [
   ["Raptor Fury X2", "A fast and furious dogfighter with a fiery, vibrant orange livery, striking fear into the hearts of its adversaries."],
   ["Skyraider Z-11 Onyx", "A fearsome, all-black night fighter known for its stealth and power."],
   ["Thunderbolt XR-5 Cobalt", "A robust, heavy fighter painted in a deep, vivid cobalt blue."],
-   ]
+]
 
 function App(props) {
   const connectors = [

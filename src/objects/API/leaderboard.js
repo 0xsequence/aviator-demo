@@ -19,8 +19,9 @@ class LeaderboardManager {
             for (let i = 0; i < Math.min(this.leaderboard.length, 5); i++) {
                 const listItem = leaderboardList.appendChild(document.createElement("li"));
                 const entry = this.leaderboard[i];
+                console.log(entry)
 
-                listItem.innerHTML = "<mark>" + entry.email + "</mark><small>" + entry.score + "</small>";
+                listItem.innerHTML = "<mark>" + entry.address.slice(0,7) + '...' +entry.address.slice(entry.address.length - 4, entry.address.length)  + "</mark><small>" + entry.score + "</small>";
             }
             });
         });

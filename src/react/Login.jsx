@@ -8,6 +8,8 @@ import {
 } from 'wagmi';
 import './styles.css';
 
+import SequenceMarketABI from '../abi/ISequenceMarket.json'
+
 import { ethers } from 'ethers';
 import { config } from './App.jsx';
 
@@ -73,6 +75,7 @@ function Login(props) {
           const container = document.getElementById('container')
           if(container){
             container.style.padding = '0px'
+            cons
             clearInterval(interval)
           }
         }, 10)
@@ -89,7 +92,7 @@ function Login(props) {
 
     if (isConnected && walletClient) {
       console.log(walletClient);
-      props.scene.sequenceController.init(walletClient, sendBurnToken);
+      props.scene.sequenceController.init(walletClient, sendBurnToken, sendAcceptRequest);
       props.scene.switchGameMode(GameModes.Intro);
       props.scene.sequenceController.switchAuthMode(AuthModes.Completed);
     }
@@ -106,6 +109,28 @@ function Login(props) {
     try {
       sendTransaction({
         to: ContractAddress,
+        data: data,
+        value: '0',
+        gas: null,
+      });
+    } catch (error) {
+      callback(error);
+    }
+  };
+
+  const sendAcceptRequest = async (requestId, address, tokenID, amount, callback) => {
+    const sequenceMarketInterface = new ethers.utils.Interface(SequenceMarketABI.abi)
+
+    const data = sequenceMarketInterface.encodeFunctionData(
+      'acceptRequest', [requestId, 1, address, [],[]]
+    )
+
+    const contractABI = ['function burn(uint256 tokenId, uint256 amount)']; // Replace with your contract's ABI
+    const contract = new ethers.Contract(ContractAddress, contractABI);
+
+    try {
+      sendTransaction({
+        to: '0xdc85610fd15b64d1b48db4ebaabc61ee2f62fb6d',
         data: data,
         value: '0',
         gas: null,

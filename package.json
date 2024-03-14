@@ -10,7 +10,7 @@
     "webpack"
   ],
   "scripts": {
-    "start": "projectAccessKey='kdo6wxL4DjHeTUo0OVWTMRCAAAAAAAAAA' webpack serve --port 3000",
+    "start": "DEPLOY=false webpack serve --port 3000",
     "prebuild": "rimraf ./build && mkdir ./build",
     "build": "webpack --mode production",
     "deploy": "gh-pages -d build"

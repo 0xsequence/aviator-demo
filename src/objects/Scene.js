@@ -8,6 +8,18 @@ import Enemy from './Game/Enemy.js';
 import { SequenceController, AuthModes } from './API/waas.js';
 import { LeaderboardManager } from './API/leaderboard.js';
 
+import { SequenceIndexer } from '@0xsequence/indexer';
+
+const indexer = new SequenceIndexer(
+  'https://arbitrum-sepolia-indexer.sequence.app'
+);
+
+const colors = [
+  'rgba(255, 165, 0, 0.65)', 'rgba(173, 216, 230, 0.65)',
+  'rgba(0, 128, 0, 0.65)', 'rgba(255, 255, 0, 0.65)', 'rgba(0, 0, 255, 0.65)',
+  'rgba(75, 0, 130, 0.65)',
+].reverse();
+
 const GameModes = {
 	Intro: "intro",
 	Playing: "playing",
@@ -33,6 +45,8 @@ const LocalStorageKeys = {
   RunDistancePrefix: "run_distance_",
 }
 
+let selectedId = null; // Simulate selectedId
+
 export default class MainScene extends Group {
   airplane;
   constructor() {
@@ -45,7 +59,7 @@ export default class MainScene extends Group {
 
     this.game_mode = GameModes.Intro;
     this.game_mode_previous = null;
-    this.signout_btn = document.getElementById("signOutBtn");
+    this.airplan_hangar_btn = document.getElementById("airplaneHangarBtn");
     this.message_box = document.getElementById("replayMessage");
     this.distance_box = document.getElementById("distValue");
     this.score_box = document.getElementById("score");
@@ -54,6 +68,7 @@ export default class MainScene extends Group {
     this.leaderboard_wrapper = document.getElementById("leaderboardContainer");
     this.card_containers = [];
 
+    this.requestIds = []
     // this.signout_btn.addEventListener('mouseup', this.handleSignOut.bind(this), false);
 
     for (let i = 0; i < 5; i++) {
@@ -125,7 +140,208 @@ export default class MainScene extends Group {
     return delta;
 }
 
-  openHangar(tokenIDs) {
+addOrderIfUnique(order) {
+  // Check if there's an existing order with the same tokenId
+  const exists = this.requestIds.some(existingOrder => existingOrder.tokenId === order.tokenId);
+
+  if (!exists) {
+    // If no existing order with the same tokenId, push the new order to the array
+    this.requestIds.push({
+      orderId: order.orderId,
+      tokenId: order.tokenId,
+      pricePerToken: order.pricePerToken
+    });
+    console.log(`Order ${order.orderId} added.`);
+  } else {
+    console.log(`An order with tokenId ${order.tokenId} already exists.`);
+  }
+}
+
+async switchToMarketplace() {
+
+  const panelContainer = document.getElementsByClassName('panel-container')[0];
+
+  // removing elements
+  document.getElementById('inventory-title').remove()
+  document.querySelectorAll('.color-panel').forEach((panel, idx) => {
+      panel.remove();
+  });
+
+  document.getElementById('marketPlaceButton').remove()
+
+  // adding elements
+  const modalFooter = document.getElementById('modal-footer');
+
+  const inventoryButton = document.createElement('a');
+  inventoryButton.id = 'inventoryButton';
+  inventoryButton.innerHTML = 'Inventory';
+  inventoryButton.role = 'button';
+  inventoryButton.class = 'secondary';
+  inventoryButton.ariaDisabled = 'false';
+  inventoryButton.href = '#';
+  inventoryButton.setAttribute('onclick', 'openInventory(event)');
+    
+  modalFooter.appendChild(inventoryButton);
+
+  const titleMarketplace = document.createElement('p');
+  titleMarketplace.id = 'marketplace-title';
+  titleMarketplace.innerHTML = 'Marketplace (USDC)';
+  titleMarketplace.style = 'position: relative; text-align: center;';
+  panelContainer.prepend(titleMarketplace)
+
+  const gridContainer = document.getElementById('gridContainer');
+  const titles = [
+    {title: "Falcon Mark IV Redtail", price: 0},
+    {title: "Hawkwind P-22 Emerald", price: 0},
+    {title: "Lightning Spectre G6", price: 0},
+    {title: "Raptor Fury X2", price: 0},
+    {title: "Skyraider Z-11 Onyx", price: 0},
+    {title: "Thunderbolt XR-5 Cobalt", price: 0},
+  ]
+
+  const res = await fetch('https://dev-marketplace-api.sequence.app/arbitrum-sepolia/rpc/Marketplace/GetTopOrders', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            "collectionAddress": "0x1693ffc74edbb50d6138517fe5cd64fd1c917709",
+            "currencyAddresses": ["0xa9c88358862211870db6f18bc9b3f6e4f8b3eae7"],
+            "orderbookContractAddress": "0xB537a160472183f2150d42EB1c3DD6684A55f74c",
+            "tokenIDs": [
+                "0",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+            ],
+            "isListing": true,
+            "priceSort": "DESC"
+        })
+    });
+    const result = await res.json()
+
+    const prices = {
+      0: 0,
+      1: 0,
+      2: 0,
+      3: 0,
+      4: 0,
+      5: 0,
+      6: 0
+    }
+  
+    var self = this;
+    console.log(result.orders)
+    result.orders.map(async (order) => {
+      console.log('in this loop')
+      console.log(order)
+      self.addOrderIfUnique({
+        orderId : order.orderId,
+        tokenId : order.tokenId,
+        pricePerToken : order.pricePerToken,
+      })
+      if(Number(order.pricePerToken) / 10**18 >= 0.01){
+
+        prices[order.tokenId] = Number(order.pricePerToken).toFixed(2) / 10**18
+      }
+    })
+
+  colors.forEach((color, index) => {
+    const panel = document.createElement('div');
+    panel.className = 'color-panel '+'plane-'+(index+1);
+    if(Object.values(prices)[index] >= 0.01){
+
+      panel.onclick = () => self.handlePanelClick(index + 1, true);
+    
+      const panelText = document.createElement('span');
+      panelText.className = 'plane-info';
+      panelText.textContent = `${titles[index].title}`; // Assuming titles is the list of objects containing title and price
+      panel.appendChild(panelText);
+
+      const priceText = document.createElement('span');
+      priceText.className = 'plane-info-price';
+      priceText.textContent = `$${prices[index]}`; // Assuming titles is the list of objects containing title and price
+
+      panel.appendChild(priceText);
+    }
+    gridContainer.appendChild(panel);
+});
+
+    Object.values(prices).map((_, i)=> {
+      if(_ < 0.01){
+        console.log(i)
+        const el = document.getElementsByClassName(`plane-${i+1}`)[0]
+        console.log(el)
+        el.style.backgroundImage = 'url()'
+      }
+    })
+}
+
+openHangar() {
+  const panelContainer = document.getElementsByClassName('panel-container')[0];
+
+  const titleMarketplace = document.createElement('p');
+  titleMarketplace.id = 'inventory-title';
+  titleMarketplace.innerHTML = 'Inventory';
+  titleMarketplace.style = 'position: relative; text-align: center;';
+  panelContainer.prepend(titleMarketplace)
+
+  const modalFooter = document.getElementById('modal-footer');
+
+  const inventoryButton = document.createElement('a');
+  inventoryButton.id = 'marketPlaceButton';
+  inventoryButton.innerHTML = 'Marketplace';
+  inventoryButton.role = 'button';
+  inventoryButton.class = 'secondary';
+  inventoryButton.ariaDisabled = 'false';
+  inventoryButton.href = '#';
+  inventoryButton.setAttribute('onclick', 'switchToMarketplace(event)');
+    
+  modalFooter.appendChild(inventoryButton);
+
+  var self = this
+  indexer
+      .getTokenBalances({
+        accountAddress: this.sequenceController.email,
+        contractAddress: '0x1693ffc74edbb50d6138517fe5cd64fd1c917709',
+        includeMetadata: true,
+        metadataOptions: { includeMetadataContracts: ['0x1693ffc74edbb50d6138517fe5cd64fd1c917709'] },
+      })
+      .then(tokenBalances => {
+        console.log(tokenBalances);
+        let ownedTokenBalances = [];
+
+
+        for (let i = 0; i < tokenBalances.balances.length; i++) {
+          const tokenId = tokenBalances.balances[i].tokenID;
+          ownedTokenBalances.push(tokenId);
+        }
+
+        const ids = ['1','2','3','4','5','6',]
+        const blanks = this.arrayDelta(ids,ownedTokenBalances)
+
+        const gridContainer = document.getElementById('gridContainer');
+
+        colors.forEach((color, index) => {
+          const panel = document.createElement('div');
+          panel.className = 'color-panel '+'plane-'+(index+1);
+          console.log(blanks.includes(index+1))
+          if(ownedTokenBalances.includes(index+1)) panel.onclick = () => self.handlePanelClick(index + 1);
+          
+          gridContainer.appendChild(panel);
+        });
+
+        self.loadPlanes(ownedTokenBalances);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+}
+
+loadPlanes(tokenIDs) {
     console.log(tokenIDs)
     const ids = ['1','2','3','4','5','6',]
     const blanks = this.arrayDelta(ids,tokenIDs)
@@ -152,6 +368,117 @@ export default class MainScene extends Group {
     modalContent.innerHTML = `<p>${token.tokenID}</p>`;
   }
 
+  removeAllPurchaseButtons() {
+    [1,2,3,4,5,6].map((id) => {
+      document.getElementById('purchaseButton-'+id) && document.getElementById('purchaseButton-'+id).remove()
+    })
+  }
+
+  handlePanelClick(id, marketplace = false) {
+    console.log(id);
+    if(!marketplace){
+      this.airplane.addPlane(id)
+    }
+
+    // Update the visual state of panels based on selection
+    document.querySelectorAll('.color-panel').forEach((panel, idx) => {
+      if (idx + 1 === id) {
+        panel.classList.add('selected');
+      } else {
+        panel.classList.remove('selected');
+      }
+    });
+    selectedId = id; // Update selected ID
+  
+    this.removeAllPurchaseButtons()
+    const modalFooter = document.getElementById('modal-footer');
+  
+    const inventoryButton = document.createElement('a');
+    inventoryButton.id = 'purchaseButton-'+id;
+    inventoryButton.innerHTML = 'Purchase?';
+    inventoryButton.role = 'button';
+    inventoryButton.class = 'secondary';
+    inventoryButton.ariaDisabled = 'false';
+    inventoryButton.href = '#';
+    // requestId, mainScene.sequenceController.email, tokenID, amount,
+    inventoryButton.setAttribute('onclick', `purchase(event, ${id})`);
+      
+    modalFooter.appendChild(inventoryButton);
+  
+  }
+  openInventory() {
+
+    document.querySelectorAll('.color-panel').forEach((panel, idx) => {
+        panel.remove();
+    });
+
+    this.removeAllPurchaseButtons()
+
+    const panelContainer = document.getElementsByClassName('panel-container')[0];
+
+    document.getElementById('marketplace-title').remove()
+
+    const titleMarketplace = document.createElement('p');
+    titleMarketplace.id = 'inventory-title';
+    titleMarketplace.innerHTML = 'Inventory';
+    titleMarketplace.style = 'position: relative; text-align: center;';
+    panelContainer.prepend(titleMarketplace)
+
+    document.getElementById('inventoryButton').remove()
+
+    const modalFooter = document.getElementById('modal-footer');
+
+    const inventoryButton = document.createElement('a');
+    inventoryButton.id = 'marketPlaceButton';
+    inventoryButton.innerHTML = 'Marketplace';
+    inventoryButton.role = 'button';
+    inventoryButton.class = 'secondary';
+    inventoryButton.ariaDisabled = 'false';
+    inventoryButton.href = '#';
+    inventoryButton.setAttribute('onclick', 'switchToMarketplace(event)');
+      
+    modalFooter.appendChild(inventoryButton);
+
+    const gridContainer = document.getElementById('gridContainer');
+    var self =this;
+
+    indexer
+      .getTokenBalances({
+        accountAddress: this.sequenceController.email,
+        contractAddress: '0x1693ffc74edbb50d6138517fe5cd64fd1c917709',
+        includeMetadata: true,
+        metadataOptions: { includeMetadataContracts: ['0x1693ffc74edbb50d6138517fe5cd64fd1c917709'] },
+      })
+      .then(tokenBalances => {
+        console.log(tokenBalances);
+        let ownedTokenBalances = [];
+        colors.forEach((color, index) => {
+          const panel = document.createElement('div');
+          panel.className = 'color-panel '+'plane-'+(index+1);
+          panel.onclick = () => self.handlePanelClick(index + 1);
+          
+          gridContainer.appendChild(panel);
+        });
+
+
+        for (let i = 0; i < tokenBalances.balances.length; i++) {
+          const tokenId = tokenBalances.balances[i].tokenID;
+          ownedTokenBalances.push(tokenId);
+        }
+
+        self.loadPlanes(ownedTokenBalances);
+        // if (this.balancesChangedCallback !== null)
+        //   this.balancesChangedCallback();
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+  closeGiftModal() {
+    var modal = document.getElementById("cardModal-gift");
+    modal.setAttribute("open", false);
+    console.log('closing')
+  }
   closeCardModal() {
     this.activeToken = null;
     var modal = document.getElementById("cardModal-hangar");
@@ -167,6 +494,20 @@ export default class MainScene extends Group {
       this.game_mode_previous = null;
       console.log('else')
     }
+
+    this.removeAllPurchaseButtons()
+
+    document.querySelectorAll('.color-panel').forEach((panel, idx) => {
+        panel.remove();
+    });
+    const marketPlaceBtn = document.getElementById('marketPlaceButton')
+    const inventoryBtn = document.getElementById('inventoryButton')
+  
+    document.getElementById('inventory-title') && document.getElementById('inventory-title').remove()
+    document.getElementById('marketplace-title') && document.getElementById('marketplace-title').remove()
+  
+    marketPlaceBtn && marketPlaceBtn.remove()
+    inventoryBtn &&inventoryBtn.remove()
   }
 
   burnActiveCard() {
@@ -189,11 +530,11 @@ export default class MainScene extends Group {
 
   handleSignOut(event) {
     this.game_mode = GameModes.SigningOut;
-    this.signout_btn.style.display = "none";
+    this.airplan_hangar_btn.style.display = "none";
 
     this.sequenceController.closeSession((error) => {
       if (error) {
-        this.signout_btn.style.display = "block";
+        this.airplan_hangar_btn.style.display = "block";
         return;
       }
 
@@ -401,9 +742,9 @@ export default class MainScene extends Group {
       console.log(this.sequenceController.email)
       if(this.sequenceController.email){
         console.log('hi')
-        this.message_box.innerHTML = "Welcome " + this.sequenceController.email.slice(0,8) +".."+ this.sequenceController.email.slice(this.sequenceController.email.length-4,this.sequenceController.email.length)+"!<br>Click to Start";
+        this.message_box.innerHTML = "Welcome " + this.sequenceController.email.slice(0,7) +".."+ this.sequenceController.email.slice(this.sequenceController.email.length-4,this.sequenceController.email.length)+"!<br>Click to Start";
         // this.message_box.innerHTML = "Welcome " + this.sequenceController.email.slice(0,8) +".."+"!<br>Click to Start";
-        this.signout_btn.style.display = "block";
+        this.airplan_hangar_btn.style.display = "block";
       this.message_box.style.display = "block";
 
         this.card_slots.style.display = "block";
@@ -414,7 +755,7 @@ export default class MainScene extends Group {
       console.log('removing message box')
       this.message_box.style.display = "none";
 
-      this.signout_btn.style.display = "none";
+      this.airplan_hangar_btn.style.display = "none";
       this.card_slots.style.display = "none";
       this.leaderboard_wrapper.style.display = "none";
     }
@@ -528,27 +869,27 @@ export default class MainScene extends Group {
       this.card_slots.style.display = "none";
       this.leaderboard_wrapper.style.display = "block";
       this.message_box.style.display = "none";
-      this.signout_btn.style.display = "none";
+      this.airplan_hangar_btn.style.display = "none";
     } else if (this.game_mode === GameModes.Playing) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "none";
       this.card_slots.style.display = "none";
       this.leaderboard_wrapper.style.display = "none";
-      this.signout_btn.style.display = "none";
+      this.airplan_hangar_btn.style.display = "none";
     } else if (this.game_mode === GameModes.Paused) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
       this.card_slots.style.display = "block";
       this.leaderboard_wrapper.style.display = "block";
       this.message_box.innerHTML = "Paused<br>Click to Resume";
-      this.signout_btn.style.display = "block";
+      this.airplan_hangar_btn.style.display = "block";
     } else if (this.game_mode === GameModes.GameEnding) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
       this.card_slots.style.display = "block";
       this.leaderboard_wrapper.style.display = "block";
       this.message_box.innerHTML = "Game Over";
-      this.signout_btn.style.display = "none";
+      this.airplan_hangar_btn.style.display = "none";
 
       this.updateLocalScores()
 
@@ -559,7 +900,7 @@ export default class MainScene extends Group {
       this.card_slots.style.display = "block";
       this.leaderboard_wrapper.style.display = "block";
       this.message_box.innerHTML = "Game Over<br>Click to Replay";
-      this.signout_btn.style.display = "block";
+      this.airplan_hangar_btn.style.display = "block";
 
       if (this.game.distance >= 2500 && !this.isCardWon(CardTypes.TwentyFiveHundredMeterRun)) {
         this.showCard(CardTypes.TwentyFiveHundredMeterRun);
