@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { useDisconnect, useAccount } from 'wagmi'
 
 const GameModes = {
@@ -24,21 +24,27 @@ function SignOut(props) {
     const { isConnected } = useAccount()
     const {disconnect} = useDisconnect()
 
+    useEffect(() => {
+        if(!isConnected){
+
+        let sequenceController = props.scene.sequenceController.clearAddress()
+        sequenceController.switchAuthMode(AuthModes.Email);
+        sequenceController.resetForm()
+        props.scene.switchGameMode(GameModes.Intro);
+        props.scene.resetGame();
+    }
+
+    }, [isConnected])
     return (
         <>
         <div style={{textAlign:'center'}}>
             <br/>
-            {isConnected && 
+            {isConnected && <div id="signOutContainer" style={{display: 'flex', justifyContent: 'center', alignItems: 'flex-end'}}>
 			<button id="signOutBtn" onClick={() => {
-                let sequenceController = props.scene.sequenceController.clearAddress()
-                sequenceController.switchAuthMode(AuthModes.Email);
-                sequenceController.resetForm()
-                props.scene.switchGameMode(GameModes.Intro);
-                props.scene.resetGame();
                 // props.scene.clearLocalStores();
-                console.log(sequenceController.email)
                 disconnect()
                 }}>Sign Out</button>
+                </div>
             }
         </div>
         </>

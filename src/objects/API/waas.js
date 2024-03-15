@@ -60,7 +60,7 @@ class SequenceController {
         for (let i = 0; i < tokenBalances.balances.length; i++) {
           const tokenId = tokenBalances.balances[i].tokenID;
           console.log(tokenId)
-          if(Number(tokenId) == 1){
+          if(Number(tokenId) == 0){
             requiresGift = false
           }
         }
@@ -72,8 +72,8 @@ class SequenceController {
           var modalContent = document.getElementById("cardModalContentGift");
 
           const titleGift = document.createElement('p');
-          titleGift.id = 'inventory-title';
-          titleGift.innerHTML = 'A gift for registering';
+          titleGift.id = 'first-mint-msg';
+          titleGift.innerHTML = 'Minting your first airplane...';
           titleGift.style = 'position: relative; text-align: center;';
 
           modalContent.appendChild(titleGift);
@@ -81,7 +81,7 @@ class SequenceController {
           const gridContainer = document.getElementById('gridContainerGift');
 
           const panel = document.createElement('div');
-          panel.className = 'color-panel plane-1';
+          panel.className = 'color-panel plane-0';
           // Assuming there is a defined function handlePanelClick
           // panel.onclick = () => handlePanelClick(index + 1, true);
 
@@ -99,7 +99,7 @@ class SequenceController {
               console.log(self.email)
           const data = {
             address: self.email,
-            tokenId: 1
+            tokenId: 0
           };
           
             try {
@@ -116,6 +116,7 @@ class SequenceController {
               }
           
               console.log(response);
+              document.getElementById('first-mint-msg').innerHTML = ""
               cancelButton.innerHTML = 'Continue';
               cancelButton.onclick = function(event) {
                 closeGiftModal(event); // Assuming this function is defined elsewhere to handle the modal closing
@@ -166,7 +167,7 @@ class SequenceController {
     this.sendBurnToken(token.tokenID, token.balance, callback);
   }
 
-  fetchWalletTokens() {
+  fetchWalletTokens(onAddedCard = false) {
     if (this.mode !== AuthModes.Completed) return;
     console.log(this.walletAddress);
     console.log('Fetching token balances...');
@@ -186,7 +187,7 @@ class SequenceController {
           this.ownedTokenBalances.push(balance);
         }
 
-        if (this.balancesChangedCallback !== null)
+        if (this.balancesChangedCallback !== null && !onAddedCard)
           this.balancesChangedCallback();
       })
       .catch(error => {

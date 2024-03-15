@@ -144,8 +144,13 @@ window.purchase = (event, id) => {
   console.log(order)
 
   mainScene.sequenceController.sendTransactionRequest(order[0].orderId, mainScene.sequenceController.email, id, order[0].pricePerToken, () => {
-    mainScene.switchToMarketplace()
+    document.getElementById('marketplace-title') && document.getElementById('marketplace-title').remove()
+    mainScene.switchToMarketplace(true)
   })
+}
+
+window.openFaucet = (event) => {
+  window.open('https://lucky-pond-0796.on.fleek.co/')
 }
 
 // dom
@@ -157,7 +162,7 @@ document.getElementById('world').appendChild(renderer.domElement);
 const root = createRoot(document.getElementById('login'));
 
 console.log(Number(localStorage.getItem('plane_color')))
-mainScene.airplane.addPlane(localStorage.getItem('plane_color') ? Number(localStorage.getItem('plane_color')) : 1)
+mainScene.airplane.addPlane(Number(localStorage.getItem('plane_color')))
 
 root.render(
   <div>

@@ -166,31 +166,32 @@ export default class Airplane extends Group {
         this.remove(this.getObjectByName('suspension'));
         this.remove(this.getObjectByName('sidewing'));
         let color;
+        localStorage.setItem('plane_color', id)
         switch(id){
-          case 1:
+          case 0:
             color = 'red'
             break;
-          case 2:
+          case 1:
             color = 'green'
 
             break;
 
-          case 3:
+          case 2:
             color = 'white'
 
             break;
 
-          case 4:
+          case 3:
             color = 'orange'
 
             break;
 
-          case 5:
+          case 4:
             color = 'black'
 
             break;
 
-          case 6:
+          case 5:
             color = 'blue'
 
             break;

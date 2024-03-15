@@ -51,37 +51,6 @@ function Login(props) {
 
   window.setOpenConnectModal = () => {
     setOpenConnectModal(true);
-    setTimeout(
-      () =>
-        (document.getElementById('email').style.backgroundColor =
-          'transparent'),
-      0
-    );
-    setTimeout(
-      () => (document.getElementById('email').style.border = '0px'),
-      0
-    );
-    setTimeout(
-      () => (document.getElementById('email').style.margin = '10px'),
-      0
-    );
-    setTimeout(
-      () => (document.getElementById('email').style.marginLeft = '-10px'),
-      0
-    );
-    setTimeout(
-      () => {
-        const interval = setInterval(() => {
-          const container = document.getElementById('container')
-          if(container){
-            container.style.padding = '0px'
-            cons
-            clearInterval(interval)
-          }
-        }, 10)
-      },
-      0
-    );
   };
 
   useEffect(() => {
@@ -125,16 +94,33 @@ function Login(props) {
       'acceptRequest', [requestId, 1, address, [],[]]
     )
 
-    const contractABI = ['function burn(uint256 tokenId, uint256 amount)']; // Replace with your contract's ABI
-    const contract = new ethers.Contract(ContractAddress, contractABI);
+    const erc20Interface = new ethers.utils.Interface(["function approve(address spender, uint256 amount) public returns (bool)"])
+    // const amountBigNumber = ethers.utils.parseUnits(String(price), 18); // Convert 1 token to its smallest unit based on 18 decimals
+  
+    const dataApprove = erc20Interface.encodeFunctionData(
+      'approve', ["0xB537a160472183f2150d42EB1c3DD6684A55f74c",String(amount)]
+    )
 
     try {
-      sendTransaction({
-        to: '0xdc85610fd15b64d1b48db4ebaabc61ee2f62fb6d',
+      const res = await sendTransaction({
+        to: '0xa9c88358862211870db6f18bc9b3f6e4f8b3eae7',
+        data: dataApprove,
+        value: '0',
+        gas: null,
+      });
+
+      console.log(res)
+
+      const res1 = await sendTransaction({
+        to: '0xB537a160472183f2150d42EB1c3DD6684A55f74c',
         data: data,
         value: '0',
         gas: null,
       });
+
+      callback(null)
+
+      console.log(res1)
     } catch (error) {
       callback(error);
     }

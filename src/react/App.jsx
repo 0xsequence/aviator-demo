@@ -17,7 +17,7 @@ const googleClientId = ENV.googleClientId;
 const appleClientId = ENV.appleClientId;
 
 // TODO: update this
-const appleRedirectURI = '';
+const appleRedirectURI = 'http://' + window.location.host
 
 const metadata = [
   ["Falcon Mark IV Redtail", "A sleek, high-speed interceptor with a gleaming scarlet finish."],
@@ -35,8 +35,8 @@ function App(props) {
       defaultChainId: 421614,
       waasConfigKey,
       googleClientId,
-      appleClientId,
-      appleRedirectURI,
+      // appleClientId,
+      // appleRedirectURI,
       appName: 'demo app',
       projectAccessKey,
       enableConfirmationModal: false,
@@ -59,7 +59,7 @@ function App(props) {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <KitProvider config={{ defaultTheme: 'light' }}>
+        <KitProvider config={{ defaultTheme: 'light' , signIn: {showEmailInput: false, socialAuthOptions: ['google'] }}}>
           <div id="app">
             <Login scene={props.scene} />
             <SignOut scene={props.scene} />

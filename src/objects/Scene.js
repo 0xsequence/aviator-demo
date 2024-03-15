@@ -59,13 +59,14 @@ export default class MainScene extends Group {
 
     this.game_mode = GameModes.Intro;
     this.game_mode_previous = null;
-    this.airplan_hangar_btn = document.getElementById("airplaneHangarBtn");
-    this.faucet = document.getElementById("faucet")
+    this.airplane_hangar_btn = document.getElementById("airplaneHangarBtn");
+    this.faucet_btn = document.getElementById("faucetBtn")
 
     var self = this
     let intervalSignOutBtn = setInterval(() => {
       if(document.getElementById("signOutBtn")) {
         self.sign_out_btn = document.getElementById("signOutBtn")
+        self.sign_out_container = document.getElementById("signOutContainer")
         clearInterval(intervalSignOutBtn)
       }
     }, 1000)
@@ -116,6 +117,7 @@ export default class MainScene extends Group {
   }
 
   handleCardSlotClick(event) {
+    console.log(event)
     let cardID = this.card_containers.indexOf(event.target);
 
     if (cardID === -1) return;
@@ -167,35 +169,36 @@ addOrderIfUnique(order) {
   }
 }
 
-async switchToMarketplace() {
+async switchToMarketplace(fromPurchase = false) {
 
   const panelContainer = document.getElementsByClassName('panel-container')[0];
-
+  document.getElementById('marketPlaceButton') && document.getElementById('marketPlaceButton').remove() 
   // removing elements
-  document.getElementById('inventory-title').remove()
+  document.getElementById('inventory-title') && document.getElementById('inventory-title').remove()
   document.querySelectorAll('.color-panel').forEach((panel, idx) => {
       panel.remove();
   });
 
-  document.getElementById('marketPlaceButton').remove()
-
   // adding elements
   const modalFooter = document.getElementById('modal-footer');
 
-  const inventoryButton = document.createElement('a');
-  inventoryButton.id = 'inventoryButton';
-  inventoryButton.innerHTML = 'Inventory';
-  inventoryButton.role = 'button';
-  inventoryButton.class = 'secondary';
-  inventoryButton.ariaDisabled = 'false';
-  inventoryButton.href = '#';
-  inventoryButton.setAttribute('onclick', 'openInventory(event)');
-    
-  modalFooter.appendChild(inventoryButton);
+  if(!fromPurchase){
+    const inventoryButton = document.createElement('a');
+    inventoryButton.id = 'inventoryButton';
+    inventoryButton.innerHTML = 'Inventory';
+    inventoryButton.role = 'button';
+    inventoryButton.class = 'secondary';
+    inventoryButton.ariaDisabled = 'false';
+    inventoryButton.href = '#';
+    inventoryButton.setAttribute('onclick', 'openInventory(event)');
+      
+    modalFooter.appendChild(inventoryButton);
+  }
+
 
   const titleMarketplace = document.createElement('p');
   titleMarketplace.id = 'marketplace-title';
-  titleMarketplace.innerHTML = 'Marketplace (USDC)';
+  titleMarketplace.innerHTML = 'Marketplace (꩜)';
   titleMarketplace.style = 'position: relative; text-align: center;';
   panelContainer.prepend(titleMarketplace)
 
@@ -225,7 +228,6 @@ async switchToMarketplace() {
                 "3",
                 "4",
                 "5",
-                "6",
             ],
             "isListing": true,
             "priceSort": "DESC"
@@ -240,7 +242,6 @@ async switchToMarketplace() {
       3: 0,
       4: 0,
       5: 0,
-      6: 0
     }
   
     var self = this;
@@ -261,10 +262,10 @@ async switchToMarketplace() {
 
   colors.forEach((color, index) => {
     const panel = document.createElement('div');
-    panel.className = 'color-panel '+'plane-'+(index+1);
+    panel.className = 'color-panel '+'plane-'+(index);
     if(Object.values(prices)[index] >= 0.01){
 
-      panel.onclick = () => self.handlePanelClick(index + 1, true);
+      panel.onclick = () => self.handlePanelClick(index, true);
     
       const panelText = document.createElement('span');
       panelText.className = 'plane-info';
@@ -283,7 +284,7 @@ async switchToMarketplace() {
     Object.values(prices).map((_, i)=> {
       if(_ < 0.01){
         console.log(i)
-        const el = document.getElementsByClassName(`plane-${i+1}`)[0]
+        const el = document.getElementsByClassName(`plane-${i}`)[0]
         console.log(el)
         el.style.backgroundImage = 'url()'
       }
@@ -330,16 +331,15 @@ openHangar() {
           ownedTokenBalances.push(tokenId);
         }
 
-        const ids = ['1','2','3','4','5','6',]
+        const ids = ['0','1','2','3','4','5']
         const blanks = this.arrayDelta(ids,ownedTokenBalances)
 
         const gridContainer = document.getElementById('gridContainer');
 
         colors.forEach((color, index) => {
           const panel = document.createElement('div');
-          panel.className = 'color-panel '+'plane-'+(index+1);
-          console.log(blanks.includes(index+1))
-          if(ownedTokenBalances.includes(index+1)) panel.onclick = () => self.handlePanelClick(index + 1);
+          panel.className = 'color-panel '+'plane-'+(index);
+          if(!blanks.includes(index)) panel.onclick = () => self.handlePanelClick(index, false);
           
           gridContainer.appendChild(panel);
         });
@@ -353,7 +353,7 @@ openHangar() {
 
 loadPlanes(tokenIDs) {
     console.log(tokenIDs)
-    const ids = ['1','2','3','4','5','6',]
+    const ids = ['0','1','2','3','4','5']
     const blanks = this.arrayDelta(ids,tokenIDs)
     console.log(blanks)
     blanks.map((_, i)=> {
@@ -384,36 +384,50 @@ loadPlanes(tokenIDs) {
     })
   }
 
+  cardSlotClickHandlers() {
+    for (let i = 0; i < 5; i++) {
+      const cardContainer = document.getElementById("cardSlot" + (i + 1));
+
+      cardContainer.addEventListener('mouseover', this.handleCardSlotHover.bind(this), false);
+      cardContainer.addEventListener('mouseout', this.handleCardSlotHoverOut.bind(this), false);
+      cardContainer.addEventListener('mouseup', this.handleCardSlotClick.bind(this), false);
+
+      this.card_containers.push(cardContainer);
+    }
+  }
+
   handlePanelClick(id, marketplace = false) {
     console.log(id);
+
+        // Update the visual state of panels based on selection
+        document.querySelectorAll('.color-panel').forEach((panel, idx) => {
+          if (idx === id) {
+            panel.classList.add('selected');
+          } else {
+            panel.classList.remove('selected');
+          }
+        });
+        selectedId = id; // Update selected ID
     if(!marketplace){
       this.airplane.addPlane(id)
-    }
 
-    // Update the visual state of panels based on selection
-    document.querySelectorAll('.color-panel').forEach((panel, idx) => {
-      if (idx + 1 === id) {
-        panel.classList.add('selected');
-      } else {
-        panel.classList.remove('selected');
-      }
-    });
-    selectedId = id; // Update selected ID
-  
-    this.removeAllPurchaseButtons()
-    const modalFooter = document.getElementById('modal-footer');
-  
-    const inventoryButton = document.createElement('a');
-    inventoryButton.id = 'purchaseButton-'+id;
-    inventoryButton.innerHTML = 'Purchase?';
-    inventoryButton.role = 'button';
-    inventoryButton.class = 'secondary';
-    inventoryButton.ariaDisabled = 'false';
-    inventoryButton.href = '#';
-    // requestId, mainScene.sequenceController.email, tokenID, amount,
-    inventoryButton.setAttribute('onclick', `purchase(event, ${id})`);
-      
-    modalFooter.appendChild(inventoryButton);
+
+    } else {
+      this.removeAllPurchaseButtons()
+      const modalFooter = document.getElementById('modal-footer');
+    
+      const inventoryButton = document.createElement('a');
+      inventoryButton.id = 'purchaseButton-'+id;
+      inventoryButton.innerHTML = 'Purchase?';
+      inventoryButton.role = 'button';
+      inventoryButton.class = 'secondary';
+      inventoryButton.ariaDisabled = 'false';
+      inventoryButton.href = '#';
+      // requestId, mainScene.sequenceController.email, tokenID, amount,
+      inventoryButton.setAttribute('onclick', `purchase(event, ${id})`);
+        
+      modalFooter.appendChild(inventoryButton);
+    }
   
   }
   openInventory() {
@@ -464,8 +478,8 @@ loadPlanes(tokenIDs) {
         let ownedTokenBalances = [];
         colors.forEach((color, index) => {
           const panel = document.createElement('div');
-          panel.className = 'color-panel '+'plane-'+(index+1);
-          panel.onclick = () => self.handlePanelClick(index + 1);
+          panel.className = 'color-panel '+'plane-'+(index);
+          panel.onclick = () => self.handlePanelClick(index);
           
           gridContainer.appendChild(panel);
         });
@@ -533,26 +547,18 @@ loadPlanes(tokenIDs) {
 
       if (error === null) {
         this.closeCardModal();
-        this.sequenceController.fetchWalletTokens();
+        setTimeout(() => {
+          this.sequenceController.fetchWalletTokens();
+        }, 3000)
       }
     }));
   }
 
   handleSignOut(event) {
     this.game_mode = GameModes.SigningOut;
-    this.airplan_hangar_btn.style.display = "none";
-
-    this.sequenceController.closeSession((error) => {
-      if (error) {
-        this.airplan_hangar_btn.style.display = "block";
-        return;
-      }
-
-      this.switchGameMode(GameModes.Intro);
-      this.resetGame();
-      this.clearLocalStores();
-      this.sequenceController.resetForm()
-    });
+    this.airplane_hangar_btn.style.display = "none";
+    this.faucet_btn.style.display = "none";
+    console.log('signing outtt')
   }
 
   handleCardSlotHoverOut(event) {
@@ -660,6 +666,7 @@ loadPlanes(tokenIDs) {
 
   showCardCleanUp() {
     this.game_mode = GameModes.CardReady;
+    cardSlotClickHandlers()
   }
 
   removeCard() {
@@ -679,10 +686,10 @@ loadPlanes(tokenIDs) {
 
     tl.to(card, {
         duration: 1.25,
-        x: x - card.getBoundingClientRect().left + window.scrollX - width + 7,
-        y: y - card.getBoundingClientRect().top + window.scrollY - height + 7,
+        x: x - card.getBoundingClientRect().left + window.scrollX - width - 40,
+        y: y - card.getBoundingClientRect().top + window.scrollY - height - 55,
         rotationY: 360,
-        scale: 0.33,
+        scale: 0.24,
         ease: "power1.out"
     });
 
@@ -704,7 +711,12 @@ loadPlanes(tokenIDs) {
     this.card_label.innerHTML = "";
     
     this.game_mode = GameModes.GameOver;
-
+      document.getElementById('cardSlots').style.zIndex = 6
+      this.airplane_hangar_btn.style.display = "block";
+      this.sign_out_btn.style.display = 'block'
+      this.sign_out_container.style.display = 'flex'
+      this.faucet_btn.style.display = 'block'
+    this.cardSlotClickHandlers()
     // this.sequenceController.fetchWalletTokens();
   }
 
@@ -754,7 +766,8 @@ loadPlanes(tokenIDs) {
         console.log('hi')
         this.message_box.innerHTML = "Welcome " + this.sequenceController.email.slice(0,7) +".."+ this.sequenceController.email.slice(this.sequenceController.email.length-4,this.sequenceController.email.length)+"!<br>Click to Start";
         // this.message_box.innerHTML = "Welcome " + this.sequenceController.email.slice(0,8) +".."+"!<br>Click to Start";
-        this.airplan_hangar_btn.style.display = "block";
+        this.airplane_hangar_btn.style.display = "block";
+        this.faucet_btn.style.display = "block";
       this.message_box.style.display = "block";
 
         this.card_slots.style.display = "block";
@@ -764,8 +777,8 @@ loadPlanes(tokenIDs) {
     } else {
       console.log('removing message box')
       this.message_box.style.display = "none";
-
-      this.airplan_hangar_btn.style.display = "none";
+      this.faucet_btn.style.display = "none";
+      this.airplane_hangar_btn.style.display = "none";
       this.card_slots.style.display = "none";
       this.leaderboard_wrapper.style.display = "none";
     }
@@ -872,41 +885,42 @@ loadPlanes(tokenIDs) {
     if (this.game_mode === new_game_mode) return;
 
     this.game_mode = new_game_mode;
-
     if (this.game_mode === GameModes.Intro) {
       this.message_box.style.display = "block";
       this.score_box.style.display = "none";
       this.card_slots.style.display = "none";
       this.leaderboard_wrapper.style.display = "block";
       this.message_box.style.display = "none";
-      this.airplan_hangar_btn.style.display = "none";
+      this.airplane_hangar_btn.style.display = "none";
       this.sign_out_btn.style.display = 'none'
-      this.faucet.style.display = 'none'
+      this.sign_out_container.style.display = 'none'
+      this.faucet_btn.style.display = 'none'
+      console.log('intro')
     } else if (this.game_mode === GameModes.Playing) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "none";
       this.card_slots.style.display = "none";
       this.leaderboard_wrapper.style.display = "none";
-      this.airplan_hangar_btn.style.display = "none";
+      this.airplane_hangar_btn.style.display = "none";
       this.sign_out_btn.style.display = 'none'
-      this.faucet.style.display = 'none'
+      this.sign_out_container.style.display = 'none'
+      this.faucet_btn.style.display = 'none'
     } else if (this.game_mode === GameModes.Paused) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
       this.card_slots.style.display = "block";
       this.leaderboard_wrapper.style.display = "block";
       this.message_box.innerHTML = "Paused<br>Click to Resume";
-      this.airplan_hangar_btn.style.display = "block";
-      this.sign_out_btn.style.display = 'none'
-      this.faucet.style.display = 'none'
+      this.airplane_hangar_btn.style.display = "block";
+      this.sign_out_btn.style.display = 'block'
+      this.sign_out_container.style.display = 'block'
+      this.faucet_btn.style.display = 'block'
     } else if (this.game_mode === GameModes.GameEnding) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
       this.card_slots.style.display = "block";
       this.leaderboard_wrapper.style.display = "block";
       this.message_box.innerHTML = "Game Over";
-      this.airplan_hangar_btn.style.display = "none";
-      
 
       this.updateLocalScores()
 
@@ -917,9 +931,8 @@ loadPlanes(tokenIDs) {
       this.card_slots.style.display = "block";
       this.leaderboard_wrapper.style.display = "block";
       this.message_box.innerHTML = "Game Over<br>Click to Replay";
-      this.airplan_hangar_btn.style.display = "block";
-      this.sign_out_btn.style.display = 'block'
-      this.faucet.style.display = 'block'
+
+      document.getElementById('cardSlots').style.zIndex = 0
 
       if (this.game.distance >= 2500 && !this.isCardWon(CardTypes.TwentyFiveHundredMeterRun)) {
         this.showCard(CardTypes.TwentyFiveHundredMeterRun);
@@ -929,7 +942,7 @@ loadPlanes(tokenIDs) {
             return;
           }
           console.log(tx);
-          setTimeout(()=>this.sequenceController.fetchWalletTokens(), 1000)
+          setTimeout(()=>this.sequenceController.fetchWalletTokens(true), 1000)
         })
       } else if (this.isLast3RunsOver500Each() && !this.isCardWon(CardTypes.ThreeRuns)) {
       } else if (this.isLast3RunsOver500Each() && !this.isCardWon(CardTypes.ThreeRuns)) {
@@ -940,7 +953,7 @@ loadPlanes(tokenIDs) {
             return;
           }
           console.log(tx);
-          setTimeout(()=>this.sequenceController.fetchWalletTokens(), 1000)
+          setTimeout(()=>this.sequenceController.fetchWalletTokens(true), 1000)
         })
       } else if (this.game.distance >= 1000 && this.game.distance < 2500 && !this.isCardWon(CardTypes.ThousandMeterRun)) {
         this.showCard(CardTypes.ThousandMeterRun);
@@ -950,7 +963,7 @@ loadPlanes(tokenIDs) {
             return;
           }
           console.log(tx);
-          setTimeout(()=>this.sequenceController.fetchWalletTokens(), 1000)
+          setTimeout(()=>this.sequenceController.fetchWalletTokens(true), 1000)
         })
       } else if (this.isFirstCrash() && !this.isCardWon(CardTypes.FirstCrash)) {
         this.showCard(CardTypes.FirstCrash);
@@ -960,7 +973,7 @@ loadPlanes(tokenIDs) {
             return;
           }
           console.log(tx);
-          setTimeout(()=>this.sequenceController.fetchWalletTokens(), 1000)
+          setTimeout(()=>this.sequenceController.fetchWalletTokens(true), 1000)
         })
       } else if (this.isFirstPylonCrash && !this.isCardWon(CardTypes.FirstPylonCrash)) {
         this.showCard(CardTypes.FirstPylonCrash);
@@ -970,7 +983,7 @@ loadPlanes(tokenIDs) {
             return;
           }
           console.log(tx);
-          setTimeout(()=>this.sequenceController.fetchWalletTokens(), 1000)
+          setTimeout(()=>this.sequenceController.fetchWalletTokens(true), 1000)
         })
       }
     }
