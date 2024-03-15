@@ -60,6 +60,16 @@ export default class MainScene extends Group {
     this.game_mode = GameModes.Intro;
     this.game_mode_previous = null;
     this.airplan_hangar_btn = document.getElementById("airplaneHangarBtn");
+    this.faucet = document.getElementById("faucet")
+
+    var self = this
+    let intervalSignOutBtn = setInterval(() => {
+      if(document.getElementById("signOutBtn")) {
+        self.sign_out_btn = document.getElementById("signOutBtn")
+        clearInterval(intervalSignOutBtn)
+      }
+    }, 1000)
+
     this.message_box = document.getElementById("replayMessage");
     this.distance_box = document.getElementById("distValue");
     this.score_box = document.getElementById("score");
@@ -870,12 +880,16 @@ loadPlanes(tokenIDs) {
       this.leaderboard_wrapper.style.display = "block";
       this.message_box.style.display = "none";
       this.airplan_hangar_btn.style.display = "none";
+      this.sign_out_btn.style.display = 'none'
+      this.faucet.style.display = 'none'
     } else if (this.game_mode === GameModes.Playing) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "none";
       this.card_slots.style.display = "none";
       this.leaderboard_wrapper.style.display = "none";
       this.airplan_hangar_btn.style.display = "none";
+      this.sign_out_btn.style.display = 'none'
+      this.faucet.style.display = 'none'
     } else if (this.game_mode === GameModes.Paused) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
@@ -883,6 +897,8 @@ loadPlanes(tokenIDs) {
       this.leaderboard_wrapper.style.display = "block";
       this.message_box.innerHTML = "Paused<br>Click to Resume";
       this.airplan_hangar_btn.style.display = "block";
+      this.sign_out_btn.style.display = 'none'
+      this.faucet.style.display = 'none'
     } else if (this.game_mode === GameModes.GameEnding) {
       this.score_box.style.display = "block";
       this.message_box.style.display = "block";
@@ -890,6 +906,7 @@ loadPlanes(tokenIDs) {
       this.leaderboard_wrapper.style.display = "block";
       this.message_box.innerHTML = "Game Over";
       this.airplan_hangar_btn.style.display = "none";
+      
 
       this.updateLocalScores()
 
@@ -901,6 +918,8 @@ loadPlanes(tokenIDs) {
       this.leaderboard_wrapper.style.display = "block";
       this.message_box.innerHTML = "Game Over<br>Click to Replay";
       this.airplan_hangar_btn.style.display = "block";
+      this.sign_out_btn.style.display = 'block'
+      this.faucet.style.display = 'block'
 
       if (this.game.distance >= 2500 && !this.isCardWon(CardTypes.TwentyFiveHundredMeterRun)) {
         this.showCard(CardTypes.TwentyFiveHundredMeterRun);

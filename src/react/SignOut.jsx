@@ -28,7 +28,8 @@ function SignOut(props) {
         <>
         <div style={{textAlign:'center'}}>
             <br/>
-            {isConnected && <div onClick={() => {
+            {isConnected && 
+			<button id="signOutBtn" onClick={() => {
                 let sequenceController = props.scene.sequenceController.clearAddress()
                 sequenceController.switchAuthMode(AuthModes.Email);
                 sequenceController.resetForm()
@@ -37,9 +38,7 @@ function SignOut(props) {
                 // props.scene.clearLocalStores();
                 console.log(sequenceController.email)
                 disconnect()
-                }} className='sign-out' style={{cursor: 'pointer'}}>
-                sign out
-            </div> 
+                }}>Sign Out</button>
             }
         </div>
         </>

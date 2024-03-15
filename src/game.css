@@ -121,13 +121,13 @@ div.logo {
 	position: fixed;
 	margin-top:10px;
 	font-weight: bold;
-	width: 400px;
-	left: -20px;
-	top: 20px;
+	width: 500px;
+	left: -40px;
+	top: -15px;
 	text-align: center;
 	text-transform: uppercase;
 	pointer-events: none;
-	font-size: 1.25vw;
+	font-size: 1.75vw;
 	text-indent: 0.5em;
 	letter-spacing: 0.5em;
 	color: #d1b790;
@@ -275,15 +275,6 @@ div.logo {
 	padding: 4px;
 	border-radius: 5px;
 	display: none;
-}
-
-#airplaneHangarBtn {
-	width: 200px;
-	position: fixed;
-	right: 20px;
-	bottom: 10px;
-	display: none;
-	z-index: 2;
 }
 
 /*--------------------
@@ -622,9 +613,12 @@ background-size: contain;
   }
 
   #airplaneHangarBtn {
+	width: 200px;
 	position: fixed;
-	bottom: 70px;
-	left: 20px;
+	left: 64vw;
+	bottom: 20px;
+	display: none;
+	z-index: 2;
   }
 
   #faucetBtn{
@@ -632,3 +626,24 @@ background-size: contain;
 	bottom: 70px;
 	left: 20px;
   }
+
+  #signOutBtn{
+	width: 200px;
+	position: fixed;
+	left: 47.5vw;
+	bottom: 20px;
+	z-index: 2;
+  }
+
+  .faucet {
+    position: fixed;
+    top: 30px !important;
+    right: 30px !important;
+    font-size: 1.25vw;
+	bottom: 50vh;
+	text-indent: 0.5em;
+	letter-spacing: 0.5em;
+	color: #d1b790;
+	font-weight: bold;
+	text-transform: uppercase;
+}
