@@ -157,7 +157,7 @@ document.getElementById('world').appendChild(renderer.domElement);
 const root = createRoot(document.getElementById('login'));
 
 console.log(Number(localStorage.getItem('plane_color')))
-mainScene.airplane.addPlane(Number(localStorage.getItem('plane_color')))
+mainScene.airplane.addPlane(localStorage.getItem('plane_color') ? Number(localStorage.getItem('plane_color')) : 1)
 
 root.render(
   <div>
