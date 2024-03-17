@@ -1,6 +1,6 @@
 const path = require('path');
 const pkg = require('./package.json');
-const {ENV} = require('./env.js');
+const {ENV} = require('./env.example.js');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const buildPath = './build/';
