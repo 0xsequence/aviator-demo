@@ -1,6 +1,6 @@
 const path = require('path');
 const pkg = require('./package.json');
-const {ENV} = require('./env.example.js');
+const {ENV} = require('./env.js');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const buildPath = './build/';
@@ -47,6 +47,7 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       'ENV': !Boolean(process.env.DEPLOY) ? JSON.stringify({
+        appleClientId: process.env.appleClientId,
         projectAccessKey: process.env.projectAccessKey,
         waasConfigKey: process.env.waasConfigKey,
         projectId: process.env.projectId,
