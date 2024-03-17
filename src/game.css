@@ -620,29 +620,28 @@ background-size: contain;
 	position: fixed;
 	left: 0;
 	right: 0;
-	bottom: 125px; /* Adjusted to place the buttons 20px from the bottom, or keep 125px as in your original code */
+	bottom: 65px;
 	display: flex;
 	justify-content: center;
 	z-index: 2;
   }
   
-  /* Remove position: fixed from individual buttons */
   #airplaneHangarBtn{
-	margin: 0 5px; /* Keep the margin for spacing */
-	width: 200px; /* Maintain the width */
+	margin: 0 5px; 
+	width: 200px; 
 	display: none;
   }
   
   #faucetBtn {
-	margin: 0 5px; /* Keep the margin for spacing */
-	width: 200px; /* Maintain the width */
+	margin: 0 5px;
+	width: 200px; 
 	display: none;
   }
 
   #signOutBtn{
 	width: 200px;
 	position: fixed;
-	bottom: 20px;
+	bottom: 125px;
 	z-index: 2;
   }
 

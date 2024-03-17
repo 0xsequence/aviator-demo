@@ -198,7 +198,7 @@ async switchToMarketplace(fromPurchase = false) {
 
   const titleMarketplace = document.createElement('p');
   titleMarketplace.id = 'marketplace-title';
-  titleMarketplace.innerHTML = 'Marketplace (꩜)';
+  titleMarketplace.innerHTML = 'Marketplace (⌨)';
   titleMarketplace.style = 'position: relative; text-align: center;';
   panelContainer.prepend(titleMarketplace)
 

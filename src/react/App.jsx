@@ -17,7 +17,8 @@ const googleClientId = ENV.googleClientId;
 const appleClientId = ENV.appleClientId;
 
 // TODO: update this
-const appleRedirectURI = 'https://' + window.location.host
+const appleRedirectURI = 'http://' + window.location.host
+// const appleRedirectURI = 'https://strong-pavlova-dcf6f0.netlify.app'
 
 const metadata = [
   ["Falcon Mark IV Redtail", "A sleek, high-speed interceptor with a gleaming scarlet finish."],
