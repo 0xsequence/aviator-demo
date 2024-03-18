@@ -595,7 +595,7 @@ export default class MainScene extends Group {
         this.closeCardModal();
         setTimeout(() => {
           this.sequenceController.fetchWalletTokens();
-        }, 3000);
+        }, 3500);
       }
     });
   }

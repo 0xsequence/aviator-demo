@@ -99,8 +99,8 @@ class SequenceController {
             cancelButton.innerHTML = '<div class="spinner"></div>'; // Add your spinner HTML here
             cancelButton.removeAttribute('onClick'); // Remove the initial click handler to prevent closing the modal prematurel
 
-            const url =
-              'https://yellow-bonus-97e1.yellow-shadow-d7ff.workers.dev';
+            const url = ' https://sparkling-lake-c48f.tpin.workers.dev';
+            // const url = 'http://localhost:8787';
             console.log(self.email);
             const data = {
               address: self.email,
@@ -251,14 +251,24 @@ class SequenceController {
 
   callContract(tokenId, callback, waas = false) {
     console.log('Minting token:', tokenId);
-    fetch(
-      `https://shy-hall-dff2.tpin.workers.dev/?address=${this.walletAddress}&tokenId=${tokenId}`
-    ).then(async res => {
-      console.log(res);
-      const txHash = await res.text();
-      console.log(txHash);
-      callback(txHash);
-    });
+    const url = 'https://icy-pond-97da.tpin.workers.dev';
+    // const url = 'http://localhost:8787';
+    const data = {
+      address: this.walletAddress,
+      tokenId: tokenId,
+    };
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      }).then(async (res) => {
+        const txHash = await res.text();
+        console.log(txHash);
+        callback(txHash);
+      })
   }
 
   clearAddress() {
