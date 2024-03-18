@@ -166,8 +166,8 @@ window.openFaucet = event => {
 
 // dom
 document.body.style.margin = 0;
-// document.body.style.zoom = 0.77;
-// document.getElementById('world').style.zoom = 1.3;
+document.body.style.zoom = 0.77;
+document.getElementById('world').style.zoom = 1.3;
 document.getElementById('world').appendChild(renderer.domElement);
 
 const root = createRoot(document.getElementById('login'));
