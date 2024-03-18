@@ -49,11 +49,11 @@ module.exports = {
     new webpack.DefinePlugin({
       ENV: Boolean(process.env.DEPLOY)
         ? JSON.stringify({
-            appleClientId: process.env.APPLECLIENTID,
-            projectAccessKey: process.env.PROJECTACCESSKEY,
-            waasConfigKey: process.env.WAASCONFIGKEY,
-            walletConnectId: process.env.WALLETCONNECTID,
-            googleClientId: process.env.GOOGLECLIENTID,
+            appleClientId: process.env.appleClientId,
+            projectAccessKey: process.env.projectAccessKey,
+            waasConfigKey: process.env.waasConfigKey,
+            walletConnectId: process.env.walletConnectId,
+            googleClientId: process.env.googleClientId,
           })
         : JSON.stringify(ENV),
     }),
