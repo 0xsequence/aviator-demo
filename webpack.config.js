@@ -49,7 +49,7 @@ module.exports = {
     new webpack.DefinePlugin({
       ENV: true
         ? JSON.stringify({
-            appleClientId: process.env.appleClientId,
+            appleClientId: 'app.sequence.aviator',
             projectAccessKey: process.env.projectAccessKey,
             waasConfigKey: process.env.waasConfigKey,
             walletConnectId: process.env.walletConnectId,
