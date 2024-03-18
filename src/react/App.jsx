@@ -9,7 +9,7 @@ import { createConfig, http, WagmiProvider } from 'wagmi';
 import { mainnet, polygon, arbitrumSepolia, Chain } from 'wagmi/chains';
 
 const queryClient = new QueryClient();
-console.log(process.env.PROJECTACCESSKEY)
+console.log(ENV.projectAccessKey)
 const chains = [mainnet, arbitrumSepolia];
 const projectAccessKey = ENV.projectAccessKey;
 const waasConfigKey = ENV.waasConfigKey;

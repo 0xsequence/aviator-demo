@@ -6,6 +6,8 @@ var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const buildPath = './build/';
 const webpack = require('webpack');
 
+console.log(process.env)
+
 module.exports = {
   entry: ['./src/entry.js'],
   output: {
@@ -45,7 +47,7 @@ module.exports = {
       template: './src/index.html',
     }),
     new webpack.DefinePlugin({
-      ENV: !Boolean(process.env.DEPLOY)
+      ENV: Boolean(process.env.DEPLOY)
         ? JSON.stringify({
             appleClientId: process.env.APPLECLIENTID,
             projectAccessKey: process.env.PROJECTACCESSKEY,
