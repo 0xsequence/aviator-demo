@@ -12,9 +12,9 @@ import { createRoot } from 'react-dom/client';
 import { WebGLRenderer, PerspectiveCamera, Scene, Fog } from 'three';
 import MainScene from './objects/Scene.js';
 
-import App from './react/App.jsx'
-import ColorPanels from './react/ColorPanels.jsx'
-import "./game.css";
+import App from './react/App.jsx';
+import ColorPanels from './react/ColorPanels.jsx';
+import './game.css';
 
 const { innerHeight, innerWidth } = window;
 var aspectRatio = innerHeight / innerWidth;
@@ -85,10 +85,12 @@ function handleMouseMove(event) {
 document.addEventListener('mousemove', handleMouseMove, false);
 
 function handleMouseUp(event) {
-  console.log('howdy')
+  console.log('howdy');
   mainScene.handleMouseClick();
 }
-document.getElementById('glass').addEventListener('mouseup', handleMouseUp, false);
+document
+  .getElementById('glass')
+  .addEventListener('mouseup', handleMouseUp, false);
 
 window.closeModal = event => {
   event.preventDefault();
@@ -118,40 +120,49 @@ window.closeCardModal = event => {
 window.closeGiftModal = event => {
   event.preventDefault();
   mainScene.closeGiftModal();
-}
-
-window.switchToMarketplace = async (event) => {
-  event.preventDefault();
-  mainScene.switchToMarketplace()
 };
 
-window.openInventory = (event) => {
+window.switchToMarketplace = async event => {
+  event.preventDefault();
+  mainScene.switchToMarketplace();
+};
+
+window.openInventory = event => {
   event.preventDefault();
 
-  mainScene.openInventory()
-}
+  mainScene.openInventory();
+};
 
-window.openHangar = (event) => {
+window.openHangar = event => {
   event.preventDefault();
-  mainScene.openHangar()
-}
+  mainScene.openHangar();
+};
 
 window.purchase = (event, id) => {
-  event.preventDefault()
+  event.preventDefault();
 
-  console.log(id)
-  const order = mainScene.requestIds.filter(order => Number(order.tokenId) === id);
-  console.log(order)
+  console.log(id);
+  const order = mainScene.requestIds.filter(
+    order => Number(order.tokenId) === id
+  );
+  console.log(order);
 
-  mainScene.sequenceController.sendTransactionRequest(order[0].orderId, mainScene.sequenceController.email, id, order[0].pricePerToken, () => {
-    document.getElementById('marketplace-title') && document.getElementById('marketplace-title').remove()
-    mainScene.switchToMarketplace(true)
-  })
-}
+  mainScene.sequenceController.sendTransactionRequest(
+    order[0].orderId,
+    mainScene.sequenceController.email,
+    id,
+    order[0].pricePerToken,
+    () => {
+      document.getElementById('marketplace-title') &&
+        document.getElementById('marketplace-title').remove();
+      mainScene.switchToMarketplace(true);
+    }
+  );
+};
 
-window.openFaucet = (event) => {
-  window.open('https://lucky-pond-0796.on.fleek.co/')
-}
+window.openFaucet = event => {
+  window.open('https://lucky-pond-0796.on.fleek.co/');
+};
 
 // dom
 document.body.style.margin = 0;
@@ -161,8 +172,8 @@ document.getElementById('world').appendChild(renderer.domElement);
 
 const root = createRoot(document.getElementById('login'));
 
-console.log(Number(localStorage.getItem('plane_color')))
-mainScene.airplane.addPlane(Number(localStorage.getItem('plane_color')))
+console.log(Number(localStorage.getItem('plane_color')));
+mainScene.airplane.addPlane(Number(localStorage.getItem('plane_color')));
 
 root.render(
   <div>

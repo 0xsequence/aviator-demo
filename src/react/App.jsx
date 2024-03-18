@@ -9,20 +9,20 @@ import { createConfig, http, WagmiProvider } from 'wagmi';
 import { mainnet, polygon, arbitrumSepolia, Chain } from 'wagmi/chains';
 
 const queryClient = new QueryClient();
-
+console.log(ENV.APPLECLIENTID)
 const chains = [mainnet, arbitrumSepolia];
-const projectAccessKey = ENV.projectAccessKey;
-const waasConfigKey = ENV.waasConfigKey;
-const googleClientId = ENV.googleClientId;
-const appleClientId = ENV.appleClientId;
+const projectAccessKey = ENV.PROJECTACCESSKEY;
+const waasConfigKey = ENV.WAASCONFIGKEY;
+const googleClientId = ENV.GOOGLECLIENTID;
+const appleClientId = ENV.APPLECLIENTID;
 
 // TODO: update this
-const appleRedirectURI = 'https://' + window.location.host
+const appleRedirectURI = 'https://' + window.location.host;
 
 function App(props) {
   const connectors = [
     ...getDefaultWaasConnectors({
-      walletConnectProjectId: ENV.walletConnectId,
+      walletConnectProjectId: ENV.WALLETCONNECTID,
       defaultChainId: 421614,
       waasConfigKey,
       googleClientId,
@@ -50,7 +50,9 @@ function App(props) {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <KitProvider config={{ defaultTheme: 'light' , signIn: {showEmailInput: false }}}>
+        <KitProvider
+          config={{ defaultTheme: 'light', signIn: { showEmailInput: false } }}
+        >
           <div id="app">
             <Login scene={props.scene} />
             <SignOut scene={props.scene} />

@@ -30,8 +30,8 @@ class SequenceController {
     this.authModeChangedCallback = null;
     this.balancesChangedCallback = null;
     this.ownedTokenBalances = [];
-    this.sendTransactionRequest = null
-    this.sendBurnToken = null
+    this.sendTransactionRequest = null;
+    this.sendBurnToken = null;
 
     this.emailVerifyForm = document.getElementById('emailVerify');
     this.codeVerifyForm = document.getElementById('codeVerify');
@@ -44,32 +44,36 @@ class SequenceController {
     this.mode = AuthModes.Completed;
     this.fetchWalletTokens();
     this.sendBurnToken = sendTransactionBurn;
-    this.sendTransactionRequest = sendTransactionRequest
+    this.sendTransactionRequest = sendTransactionRequest;
 
-    // indexer 
+    // indexer
     this.indexer
       .getTokenBalances({
         accountAddress: this.email,
         contractAddress: '0x1693ffc74edbb50d6138517fe5cd64fd1c917709',
         includeMetadata: true,
-        metadataOptions: { includeMetadataContracts: ['0x1693ffc74edbb50d6138517fe5cd64fd1c917709'] },
+        metadataOptions: {
+          includeMetadataContracts: [
+            '0x1693ffc74edbb50d6138517fe5cd64fd1c917709',
+          ],
+        },
       })
-      .then(async (tokenBalances) => {
-        let requiresGift = true
-        console.log(tokenBalances)
+      .then(async tokenBalances => {
+        let requiresGift = true;
+        console.log(tokenBalances);
         for (let i = 0; i < tokenBalances.balances.length; i++) {
           const tokenId = tokenBalances.balances[i].tokenID;
-          console.log(tokenId)
-          if(Number(tokenId) == 0){
-            requiresGift = false
+          console.log(tokenId);
+          if (Number(tokenId) == 0) {
+            requiresGift = false;
           }
         }
 
-        if(requiresGift){
-          var modal = document.getElementById("cardModal-gift");
-          modal.setAttribute("open", true);
+        if (requiresGift) {
+          var modal = document.getElementById('cardModal-gift');
+          modal.setAttribute('open', true);
 
-          var modalContent = document.getElementById("cardModalContentGift");
+          var modalContent = document.getElementById('cardModalContentGift');
 
           const titleGift = document.createElement('p');
           titleGift.id = 'first-mint-msg';
@@ -88,40 +92,40 @@ class SequenceController {
           gridContainer.appendChild(panel);
 
           // Adding spinner and updating button text after 2 seconds
-          var cancelButton = document.getElementById("firstPlaneButton");
-          var self = this
+          var cancelButton = document.getElementById('firstPlaneButton');
+          var self = this;
           async function updateMintingButton() {
-              cancelButton.innerHTML = '<div class="spinner"></div>'; // Add your spinner HTML here
-              cancelButton.removeAttribute('onClick'); // Remove the initial click handler to prevent closing the modal prematurel
+            cancelButton.innerHTML = '<div class="spinner"></div>'; // Add your spinner HTML here
+            cancelButton.removeAttribute('onClick'); // Remove the initial click handler to prevent closing the modal prematurel
 
+            const url =
+              'https://yellow-bonus-97e1.yellow-shadow-d7ff.workers.dev';
+            console.log(self.email);
+            const data = {
+              address: self.email,
+              tokenId: 0,
+            };
 
-              const url = 'https://yellow-bonus-97e1.yellow-shadow-d7ff.workers.dev';
-              console.log(self.email)
-          const data = {
-            address: self.email,
-            tokenId: 0
-          };
-          
             try {
               const response = await fetch(url, {
                 method: 'POST',
                 headers: {
-                  'Content-Type': 'application/json'
+                  'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(data),
               });
-          
+
               if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
               }
-          
+
               console.log(response);
-              document.getElementById('first-mint-msg').innerHTML = ""
+              document.getElementById('first-mint-msg').innerHTML = '';
               cancelButton.innerHTML = 'Continue';
-              cancelButton.onclick = function(event) {
+              cancelButton.onclick = function (event) {
                 closeGiftModal(event); // Assuming this function is defined elsewhere to handle the modal closing
               };
-              localStorage.setItem('plane_color', 1)
+              localStorage.setItem('plane_color', 1);
             } catch (error) {
               console.error('Error:', error);
             }
@@ -136,7 +140,7 @@ class SequenceController {
           //   address: this.email,
           //   tokenId: 1
           // };
-          
+
           //   try {
           //     const response = await fetch(url, {
           //       method: 'POST',
@@ -145,18 +149,18 @@ class SequenceController {
           //       },
           //       body: JSON.stringify(data)
           //     });
-          
+
           //     if (!response.ok) {
           //       throw new Error(`HTTP error! Status: ${response.status}`);
           //     }
-          
+
           //     console.log(response);
           //   } catch (error) {
           //     console.error('Error:', error);
           //   }
         }
-      })
-    // if no balance, 
+      });
+    // if no balance,
     // open modal
     // set loading
     // mint
@@ -204,7 +208,7 @@ class SequenceController {
     this.mode = mode;
     self = this;
     let interval = setInterval(() => {
-      console.log('switching auth mode')
+      console.log('switching auth mode');
       this.authModeChangedCallback();
       if (self.email || this.mode == AuthModes.Email) {
         clearInterval(interval);
@@ -257,8 +261,8 @@ class SequenceController {
   }
 
   clearAddress() {
-    this.email = null
-    return this
+    this.email = null;
+    return this;
   }
 }
 

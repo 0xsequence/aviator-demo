@@ -8,7 +8,7 @@ import {
 } from 'wagmi';
 import './styles.css';
 
-import SequenceMarketABI from '../abi/ISequenceMarket.json'
+import SequenceMarketABI from '../abi/ISequenceMarket.json';
 
 import { ethers } from 'ethers';
 import { config } from './App.jsx';
@@ -46,7 +46,7 @@ function Login(props) {
   } = useSendTransaction();
   const onClick = () => {
     setOpenConnectModal(true);
-    console.log(document.getElementById('container'))
+    console.log(document.getElementById('container'));
   };
 
   window.setOpenConnectModal = () => {
@@ -61,7 +61,11 @@ function Login(props) {
 
     if (isConnected && walletClient) {
       console.log(walletClient);
-      props.scene.sequenceController.init(walletClient, sendBurnToken, sendAcceptRequest);
+      props.scene.sequenceController.init(
+        walletClient,
+        sendBurnToken,
+        sendAcceptRequest
+      );
       props.scene.switchGameMode(GameModes.Intro);
       props.scene.sequenceController.switchAuthMode(AuthModes.Completed);
     }
@@ -87,19 +91,34 @@ function Login(props) {
     }
   };
 
-  const sendAcceptRequest = async (requestId, address, tokenID, amount, callback) => {
-    const sequenceMarketInterface = new ethers.utils.Interface(SequenceMarketABI.abi)
+  const sendAcceptRequest = async (
+    requestId,
+    address,
+    tokenID,
+    amount,
+    callback
+  ) => {
+    const sequenceMarketInterface = new ethers.utils.Interface(
+      SequenceMarketABI.abi
+    );
 
-    const data = sequenceMarketInterface.encodeFunctionData(
-      'acceptRequest', [requestId, 1, address, [],[]]
-    )
+    const data = sequenceMarketInterface.encodeFunctionData('acceptRequest', [
+      requestId,
+      1,
+      address,
+      [],
+      [],
+    ]);
 
-    const erc20Interface = new ethers.utils.Interface(["function approve(address spender, uint256 amount) public returns (bool)"])
+    const erc20Interface = new ethers.utils.Interface([
+      'function approve(address spender, uint256 amount) public returns (bool)',
+    ]);
     // const amountBigNumber = ethers.utils.parseUnits(String(price), 18); // Convert 1 token to its smallest unit based on 18 decimals
-  
-    const dataApprove = erc20Interface.encodeFunctionData(
-      'approve', ["0xB537a160472183f2150d42EB1c3DD6684A55f74c",String(amount)]
-    )
+
+    const dataApprove = erc20Interface.encodeFunctionData('approve', [
+      '0xB537a160472183f2150d42EB1c3DD6684A55f74c',
+      String(amount),
+    ]);
 
     try {
       const res = await sendTransaction({
@@ -109,7 +128,7 @@ function Login(props) {
         gas: null,
       });
 
-      console.log(res)
+      console.log(res);
 
       const res1 = await sendTransaction({
         to: '0xB537a160472183f2150d42EB1c3DD6684A55f74c',
@@ -118,9 +137,9 @@ function Login(props) {
         gas: null,
       });
 
-      callback(null)
+      callback(null);
 
-      console.log(res1)
+      console.log(res1);
     } catch (error) {
       callback(error);
     }
