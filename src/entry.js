@@ -161,7 +161,7 @@ window.purchase = (event, id) => {
 };
 
 window.openFaucet = event => {
-  window.open('https://lucky-pond-0796.on.fleek.co/');
+  window.open('https://sequence.energy/');
 };
 
 // dom
