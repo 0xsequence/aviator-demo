@@ -38,6 +38,7 @@ class SequenceController {
   }
 
   async init(walletClient, sendTransactionBurn, sendTransactionRequest) {
+    console.log(walletClient)
     this.walletAddress = walletClient.account.address;
     this.switchAuthMode(AuthModes.Completed);
     this.email = walletClient.account.address;

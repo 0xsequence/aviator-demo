@@ -47,7 +47,7 @@ module.exports = {
       template: './src/index.html',
     }),
     new webpack.DefinePlugin({
-      ENV: true
+      ENV: false
         ? JSON.stringify({
             appleClientId: process.env.appleClientId,
             projectAccessKey: process.env.projectAccessKey,
