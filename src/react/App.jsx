@@ -17,7 +17,7 @@ const googleClientId = ENV.googleClientId;
 const appleClientId = ENV.appleClientId;
 
 // TODO: update this
-const appleRedirectURI = 'https://' + window.location.host;
+const appleRedirectURI = 'https://' + window.location.host + '/waas-airplane-demo';
 
 function App(props) {
   const connectors = [
