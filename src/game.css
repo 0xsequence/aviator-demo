@@ -119,6 +119,7 @@ div.logo {
 }
 
 .achievements {
+	display: none;
   float: left;
   position: fixed;
   margin-top: 10px;
@@ -171,8 +172,8 @@ div.logo {
 }
 
 .card-label {
-  position: absolute;
-  bottom: 10vh;
+  position: fixed;
+  bottom: 0vh;
   width: 100%;
   text-align: center;
   font-size: 4.5em;
@@ -245,7 +246,7 @@ div.logo {
 }
 
 .card-slots {
-  transform: scale(0.7);
+  transform: scale(0.5);
   margin-top: -100px;
   position: fixed;
   top: 2vh;
@@ -499,6 +500,11 @@ Leaderboard
   justify-items: center;
 }
 
+#gridContainer {
+	justify-content: center; /* Center horizontally */
+	align-items: center;
+}
+
 .color-panel {
   width: 120px;
   height: 120px;
@@ -620,6 +626,7 @@ Leaderboard
   border-radius: 50%;
   border-left-color: #09f;
   animation: spin 1s ease infinite;
+  margin: auto;
 }
 
 @keyframes spin {
@@ -653,11 +660,23 @@ Leaderboard
   display: none;
 }
 
+#walletButton {
+	width: 200px;
+	position: fixed;
+	bottom: 125px;
+	z-index: 2;
+	left: 50%;
+	transform: translateX(-50%) translateX(105px); 
+	display: none;
+}
+
 #signOutBtn {
   width: 200px;
   position: fixed;
   bottom: 125px;
   z-index: 2;
+  left: 50%;
+  transform: translateX(-50%) translateX(-105px); 
 }
 
 .faucet {
@@ -676,4 +695,8 @@ Leaderboard
 .achievement-prompt {
   height: 250px;
   position: relative;
+}
+
+#achievement-cards {
+	display: none;
 }

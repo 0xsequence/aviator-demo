@@ -39,6 +39,7 @@ function Login(props) {
   const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
   const { data: walletClient } = useWalletClient();
+  const [fromMarketplace, setFromMarketplace] = useState(false)
   const {
     data: txnData,
     sendTransaction,
@@ -80,12 +81,15 @@ function Login(props) {
     ]);
 
     try {
-      sendTransaction({
+      await sendTransaction({
         to: ContractAddress,
         data: data,
         value: '0',
         gas: null,
       });
+      setFromMarketplace(false)
+      // setBurnCallback(callback)
+      callback(null, null)
     } catch (error) {
       callback(error);
     }
@@ -136,7 +140,7 @@ function Login(props) {
         value: '0',
         gas: null,
       });
-
+      setFromMarketplace(true)
       callback(null);
 
       console.log(res1);
@@ -146,13 +150,21 @@ function Login(props) {
   };
 
   useEffect(() => {
-    if (txnData) {
+    if (txnData && fromMarketplace) {
       console.log(txnData);
-      props.scene.closeCardModal();
-      props.scene.sequenceController.fetchWalletTokens();
+      const withLoading = false
+      props.scene.openInventory(withLoading);
+      setFromMarketPlace(false)
+      // props.scene.sequenceController.fetchWalletTokens();
     }
-  }, [isSendTxnLoading, txnData]);
+  }, [isSendTxnLoading, txnData, fromMarketplace]);
+  useEffect(() => {
+      // if(fromMarketplace == false && burnCallback) {
+      //   burnCallback(null, null)
+      // }
+      props.scene.sequenceController.fetchWalletTokens();
 
+  },[txnData])
   return (
     <>
       <div style={{ textAlign: 'center', zIndex: 100 }}>

@@ -11,7 +11,7 @@ const ContractAddress = '0xbb35dcf99a74b4a6c38d69789232fa63e1e69e31';
 class SequenceController {
   constructor() {
     this.indexer = new SequenceIndexer(
-      'https://arbitrum-sepolia-indexer.sequence.app'
+      'https://arbitrum-sepolia-indexer.sequence.app',ENV.projectAccessKeyProd
     );
 
     this.chainId = null;
@@ -214,7 +214,7 @@ class SequenceController {
       if (self.email || this.mode == AuthModes.Email) {
         clearInterval(interval);
       }
-    }, 10);
+    }, 500);
   }
 
   triggerLoginModalForm() {

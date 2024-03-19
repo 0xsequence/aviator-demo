@@ -153,9 +153,11 @@ window.purchase = (event, id) => {
     id,
     order[0].pricePerToken,
     () => {
+      console.log('IN CALLBACK')
       document.getElementById('marketplace-title') &&
         document.getElementById('marketplace-title').remove();
-      mainScene.switchToMarketplace(true);
+      mainScene.openInventory(true);
+      mainScene.removeAllPurchaseButtons()
     }
   );
 };
@@ -164,10 +166,17 @@ window.openFaucet = event => {
   window.open('https://sequence.energy/');
 };
 
+window.openWallet = event => {
+  mainScene.openWalletModal();
+}
+
+window.closeWalletModal = event => {
+  mainScene.closeWalletModal();
+}
 // dom
 document.body.style.margin = 0;
-document.body.style.zoom = 0.77;
-document.getElementById('world').style.zoom = 1.3;
+// document.body.style.zoom = 0.77;
+// document.getElementById('world').style.zoom = 1.3;
 document.getElementById('world').appendChild(renderer.domElement);
 
 const root = createRoot(document.getElementById('login'));

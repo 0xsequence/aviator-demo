@@ -30,6 +30,7 @@ function SignOut(props) {
       sequenceController.resetForm();
       props.scene.switchGameMode(GameModes.Intro);
       props.scene.resetGame();
+      props.scene.achievement_cards.style.display = 'none'
     }
   }, [isConnected]);
   return (
@@ -49,6 +50,7 @@ function SignOut(props) {
               id="signOutBtn"
               onClick={() => {
                 // props.scene.clearLocalStores();
+                localStorage.setItem('plane_color', 0)
                 disconnect();
               }}
             >

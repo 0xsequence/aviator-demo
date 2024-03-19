@@ -50,6 +50,7 @@ module.exports = {
       ENV: true
         ? JSON.stringify({
             appleClientId: 'app.sequence.aviator',
+            projectAccessKeyProd: 'QymuJkTf4nZUoMTWRo3qyUPAAAAAAAAAA',
             projectAccessKey: process.env.projectAccessKey,
             waasConfigKey: process.env.waasConfigKey,
             walletConnectId: process.env.walletConnectId,

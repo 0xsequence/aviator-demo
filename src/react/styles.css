@@ -2,11 +2,11 @@
   background-color: 'red' !important;
 }
 
-iframe {
+/* iframe {
   height: 60px !important;
   width: 80px !important;
   margin-top: -9px !important;
-}
+} */
 
 .sign-out {
   position: fixed;
@@ -26,22 +26,22 @@ iframe {
 }
 
 #cardSlot1 {
-  z-index: 6;
+  z-index: 1;
 }
 #cardSlot2 {
-  z-index: 6;
+  z-index: 1;
 }
 #cardSlot3 {
-  z-index: 6;
+  z-index: 1;
 }
 #cardSlot4 {
-  z-index: 6;
+  z-index: 1;
 }
 #cardSlot5 {
-  z-index: 6;
+  z-index: 1;
 }
 #cardSlot6 {
-  z-index: 6;
+  z-index: 1;
 }
 
 #marketplace-title {

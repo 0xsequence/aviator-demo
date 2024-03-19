@@ -17,7 +17,7 @@ import { LeaderboardManager } from './API/leaderboard.js';
 import { SequenceIndexer } from '@0xsequence/indexer';
 
 const indexer = new SequenceIndexer(
-  'https://arbitrum-sepolia-indexer.sequence.app'
+  'https://arbitrum-sepolia-indexer.sequence.app', ENV.projectAccessKeyProd
 );
 
 const colors = [
@@ -72,6 +72,8 @@ export default class MainScene extends Group {
     this.game_mode_previous = null;
     this.airplane_hangar_btn = document.getElementById('airplaneHangarBtn');
     this.faucet_btn = document.getElementById('faucetBtn');
+    this.wallet_btn = document.getElementById('walletButton');
+    this.achievement_cards = document.getElementById('achievment-cards')
 
     var self = this;
     let intervalSignOutBtn = setInterval(() => {
@@ -141,23 +143,27 @@ export default class MainScene extends Group {
 
   handleCardSlotClick(event) {
     console.log(event);
-    let cardID = this.card_containers.indexOf(event.target);
+    this.sequenceController.fetchWalletTokens();
 
-    if (cardID === -1) return;
-    cardID += 1;
-    if (!this.isCardWon(cardID)) return;
+    setTimeout(() => {
+      let cardID = this.card_containers.indexOf(event.target);
 
-    this.game_mode = GameModes.CardDetails;
-
-    for (
-      let i = 0;
-      i < this.sequenceController.ownedTokenBalances.length;
-      i++
-    ) {
-      const balance = this.sequenceController.ownedTokenBalances[i];
-
-      if (Number(balance.tokenID) === cardID) this.showCardModal(balance);
-    }
+      if (cardID === -1) return;
+      cardID += 1;
+      if (!this.isCardWon(cardID)) return;
+  
+      this.game_mode = GameModes.CardDetails;
+  
+      for (
+        let i = 0;
+        i < this.sequenceController.ownedTokenBalances.length;
+        i++
+      ) {
+        const balance = this.sequenceController.ownedTokenBalances[i];
+  
+        if (Number(balance.tokenID) === cardID) this.showCardModal(balance);
+      }
+    }, 1000)
   }
 
   getPlane() {
@@ -226,11 +232,30 @@ export default class MainScene extends Group {
       modalFooter.appendChild(inventoryButton);
     }
 
-    const titleMarketplace = document.createElement('p');
-    titleMarketplace.id = 'marketplace-title';
-    titleMarketplace.innerHTML = 'Marketplace (⌨)';
-    titleMarketplace.style = 'position: relative; text-align: center;';
-    panelContainer.prepend(titleMarketplace);
+    indexer
+      .getTokenBalances({
+        accountAddress: this.sequenceController.email,
+        contractAddress: '0xa9c88358862211870db6f18bc9b3f6e4f8b3eae7',
+      })
+      .then(tokenBalances => {
+
+        console.log(tokenBalances);
+
+        for (let i = 0; i < tokenBalances.balances.length; i++) {
+          if(tokenBalances.balances[i].contractAddress == '0xa9c88358862211870db6f18bc9b3f6e4f8b3eae7'){
+            const balance = tokenBalances.balances[i].balance;
+            const titleMarketplace = document.createElement('p');
+            titleMarketplace.id = 'marketplace-title';
+            titleMarketplace.innerHTML = 'Marketplace &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + 'Balance (⌨) ' + Number(balance / 10**18).toFixed(0);
+            titleMarketplace.style = 'position: relative; text-align: center;';
+            panelContainer.prepend(titleMarketplace);
+          }
+        }
+
+      })
+      .catch(error => {
+        console.log(error);
+      });
 
     const gridContainer = document.getElementById('gridContainer');
     const titles = [
@@ -329,16 +354,16 @@ export default class MainScene extends Group {
 
     const modalFooter = document.getElementById('modal-footer');
 
-    const inventoryButton = document.createElement('a');
-    inventoryButton.id = 'marketPlaceButton';
-    inventoryButton.innerHTML = 'Marketplace';
-    inventoryButton.role = 'button';
-    inventoryButton.class = 'secondary';
-    inventoryButton.ariaDisabled = 'false';
-    inventoryButton.href = '#';
-    inventoryButton.setAttribute('onclick', 'switchToMarketplace(event)');
-
-    modalFooter.appendChild(inventoryButton);
+    const marketplaceButton = document.createElement('a');
+    marketplaceButton.id = 'marketPlaceButton';
+    marketplaceButton.innerHTML = 'Marketplace';
+    marketplaceButton.role = 'button';
+    marketplaceButton.class = 'secondary';
+    marketplaceButton.ariaDisabled = 'false';
+    marketplaceButton.href = '#';
+    marketplaceButton.setAttribute('onclick', 'switchToMarketplace(event)');
+    console.log(marketplaceButton)
+    modalFooter.appendChild(marketplaceButton);
 
     var self = this;
     indexer
@@ -369,11 +394,13 @@ export default class MainScene extends Group {
         colors.forEach((color, index) => {
           const panel = document.createElement('div');
           panel.className = 'color-panel ' + 'plane-' + index;
-          if (!blanks.includes(index))
-            panel.onclick = () => self.handlePanelClick(index, false);
-
+          if (!blanks.includes(index)){
+            panel.onclick = () => self.handlePanelClick(index, false, true);
+          }
           gridContainer.appendChild(panel);
         });
+
+        self.handlePanelClick(Number(localStorage.getItem('plane_color')), false, false)
 
         self.loadPlanes(ownedTokenBalances);
       })
@@ -396,8 +423,6 @@ export default class MainScene extends Group {
     var modal = document.getElementById('cardModal-hangar');
     modal.setAttribute('open', true);
 
-    var modalContent = document.getElementById('cardModalContent');
-    modalContent.innerHTML = `<p>hi</p>`;
   }
 
   showCardModal(token) {
@@ -440,11 +465,13 @@ export default class MainScene extends Group {
     }
   }
 
-  handlePanelClick(id, marketplace = false) {
+  handlePanelClick(id, marketplace = false, openingHangar = false) {
     console.log(id);
+    console.log('handle panel click')
 
     // Update the visual state of panels based on selection
     document.querySelectorAll('.color-panel').forEach((panel, idx) => {
+      console.log('in for each')
       if (idx === id) {
         panel.classList.add('selected');
       } else {
@@ -470,8 +497,10 @@ export default class MainScene extends Group {
 
       modalFooter.appendChild(inventoryButton);
     }
+
+    if(openingHangar) this.closeCardModal()
   }
-  openInventory() {
+  openInventory(withLoading = false) {
     document.querySelectorAll('.color-panel').forEach((panel, idx) => {
       panel.remove();
     });
@@ -481,32 +510,43 @@ export default class MainScene extends Group {
     const panelContainer =
       document.getElementsByClassName('panel-container')[0];
 
-    document.getElementById('marketplace-title').remove();
+    document.getElementById('marketplace-title') && document.getElementById('marketplace-title').remove();
+
+    if(!document.getElementById('inventory-title')){
 
     const titleMarketplace = document.createElement('p');
     titleMarketplace.id = 'inventory-title';
     titleMarketplace.innerHTML = 'Inventory';
     titleMarketplace.style = 'position: relative; text-align: center;';
     panelContainer.prepend(titleMarketplace);
+  }
 
-    document.getElementById('inventoryButton').remove();
+    document.getElementById('inventoryButton') && document.getElementById('inventoryButton').remove();
+    
+    if(withLoading == false){
 
     const modalFooter = document.getElementById('modal-footer');
 
-    const inventoryButton = document.createElement('a');
-    inventoryButton.id = 'marketPlaceButton';
-    inventoryButton.innerHTML = 'Marketplace';
-    inventoryButton.role = 'button';
-    inventoryButton.class = 'secondary';
-    inventoryButton.ariaDisabled = 'false';
-    inventoryButton.href = '#';
-    inventoryButton.setAttribute('onclick', 'switchToMarketplace(event)');
-
-    modalFooter.appendChild(inventoryButton);
+      const marketPlaceButton = document.createElement('a');
+      marketPlaceButton.id = 'marketPlaceButton';
+      marketPlaceButton.innerHTML = 'Marketplace';
+      marketPlaceButton.role = 'button';
+      marketPlaceButton.class = 'secondary';
+      marketPlaceButton.ariaDisabled = 'false';
+      marketPlaceButton.href = '#';
+      marketPlaceButton.setAttribute('onclick', 'switchToMarketplace(event)');
+      console.log(marketPlaceButton)
+      modalFooter.appendChild(marketPlaceButton);
+    }
 
     const gridContainer = document.getElementById('gridContainer');
     var self = this;
 
+    if(!withLoading){
+      gridContainer.innerHTML = ''; // Add your spinner HTML here
+      gridContainer.style.display = 'grid'    
+      // gridContainer.style.marginLeft = '0px'    
+      // gridContainer.style.marginTop = '0px' 
     indexer
       .getTokenBalances({
         accountAddress: this.sequenceController.email,
@@ -521,26 +561,34 @@ export default class MainScene extends Group {
       .then(tokenBalances => {
         console.log(tokenBalances);
         let ownedTokenBalances = [];
-        colors.forEach((color, index) => {
-          const panel = document.createElement('div');
-          panel.className = 'color-panel ' + 'plane-' + index;
-          panel.onclick = () => self.handlePanelClick(index);
+          colors.forEach((color, index) => {
+            const panel = document.createElement('div');
+            panel.className = 'color-panel ' + 'plane-' + index;
+            panel.onclick = () => self.handlePanelClick(index);
 
-          gridContainer.appendChild(panel);
-        });
+            gridContainer.appendChild(panel);
+          });
 
-        for (let i = 0; i < tokenBalances.balances.length; i++) {
-          const tokenId = tokenBalances.balances[i].tokenID;
-          ownedTokenBalances.push(tokenId);
-        }
+          for (let i = 0; i < tokenBalances.balances.length; i++) {
+            const tokenId = tokenBalances.balances[i].tokenID;
+            ownedTokenBalances.push(tokenId);
+          }
 
-        self.loadPlanes(ownedTokenBalances);
-        // if (this.balancesChangedCallback !== null)
-        //   this.balancesChangedCallback();
+          self.loadPlanes(ownedTokenBalances);
       })
       .catch(error => {
         console.log(error);
       });
+    } else {
+      // loading
+      console.log('loading')
+      // const 
+      gridContainer.innerHTML = '<div class="spinner"></div>'; // Add your spinner HTML here
+      gridContainer.style.display = 'flex'    
+      gridContainer.style.width = '400px'    
+      // gridContainer.style.marginTop = '100px'    
+      // gridContainer.appendChild()
+    }
   }
   closeGiftModal() {
     var modal = document.getElementById('cardModal-gift');
@@ -553,7 +601,7 @@ export default class MainScene extends Group {
     var modal1 = document.getElementById('cardModal');
     modal.setAttribute('open', false);
     modal1.setAttribute('open', false);
-
+    console.log('closing modal')
     if (this.game_mode_previous == null) {
       console.log('test');
       this.game_mode = GameModes.Intro;
@@ -589,13 +637,13 @@ export default class MainScene extends Group {
 
     this.sequenceController.burnToken(this.activeToken, (response, error) => {
       console.log(response, error);
-      burnButton.setAttribute('aria-busy', false);
 
       if (error === null) {
-        this.closeCardModal();
         setTimeout(() => {
+          burnButton.setAttribute('aria-busy', false);
           this.sequenceController.fetchWalletTokens();
-        }, 3500);
+          this.closeCardModal();
+        }, 7000);
       }
     });
   }
@@ -604,6 +652,7 @@ export default class MainScene extends Group {
     this.game_mode = GameModes.SigningOut;
     this.airplane_hangar_btn.style.display = 'none';
     this.faucet_btn.style.display = 'none';
+    this.wallet_btn.style.display = 'none'
     console.log('signing outtt');
   }
 
@@ -694,7 +743,8 @@ export default class MainScene extends Group {
 
     card.id = 'activeCard';
     card.className = 'card card-' + cardID;
-    card.zIndex = 7;
+    card.zIndex = 9;
+
     cardBack.className = 'card-backface';
 
     cardContainer.appendChild(card);
@@ -722,11 +772,13 @@ export default class MainScene extends Group {
 
   showCardCleanUp() {
     this.game_mode = GameModes.CardReady;
-    cardSlotClickHandlers();
+    // cardSlotClickHandlers();
+    document.getElementById('cardSlots').style.zIndex = 8;
   }
 
   removeCard() {
     if (this.activeCardID === null) return;
+    document.getElementById('cardSlots').style.zIndex = 0;
 
     const cardID = this.activeCardID;
     this.activeCardID = null;
@@ -739,13 +791,13 @@ export default class MainScene extends Group {
     const cardSlot = this.card_containers[parseInt(cardID) - 1];
     const { x, y, width, height } = cardSlot.getBoundingClientRect();
     const card = document.getElementById('activeCard');
-
+    console.log(window.innerHeight*.1)
     tl.to(card, {
       duration: 1.25,
-      x: x - card.getBoundingClientRect().left + window.scrollX - width - 40,
-      y: y - card.getBoundingClientRect().top + window.scrollY - height - 55,
+      x: x - card.getBoundingClientRect().left + window.scrollX - width - window.innerWidth*.3*0.188333333,
+      y: y - card.getBoundingClientRect().top + window.scrollY - height - window.innerHeight*.16,
       rotationY: 360,
-      scale: 0.24,
+      scale: 0.175,
       ease: 'power1.out',
     });
 
@@ -762,18 +814,35 @@ export default class MainScene extends Group {
 
     this.addCard(cardID);
 
+    document.getElementById('cardSlots').style.zIndex = 8;
+
     const cardContainer = document.getElementById('cardContainer');
     cardContainer.innerHTML = '';
     this.card_label.innerHTML = '';
 
     this.game_mode = GameModes.GameOver;
-    document.getElementById('cardSlots').style.zIndex = 6;
+    // document.getElementById('cardSlots').style.zIndex = 9;
     this.airplane_hangar_btn.style.display = 'block';
+    this.wallet_btn.style.display = 'block';
     this.sign_out_btn.style.display = 'block';
     this.sign_out_container.style.display = 'flex';
     this.faucet_btn.style.display = 'block';
     this.cardSlotClickHandlers();
     // this.sequenceController.fetchWalletTokens();
+  }
+
+  openWalletModal() {
+    var modal = document.getElementById('walletModal');
+    modal.setAttribute('open', true);
+
+    var modalContent = document.getElementById('walletModalContent');
+    console.log(this.sequenceController.email)
+    modalContent.innerHTML = `<p>${this.sequenceController.email}</p>`;
+  }
+
+  closeWalletModal() {
+    var modal = document.getElementById('walletModal');
+    modal.setAttribute('open', false);
   }
 
   openLoginModal() {
@@ -823,7 +892,7 @@ export default class MainScene extends Group {
       // this.closeLoginModal();
       console.log(this.sequenceController.email);
       if (this.sequenceController.email) {
-        console.log('hi');
+        this.achievement_cards.style.display = 'block'
         this.message_box.innerHTML =
           'Welcome ' +
           this.sequenceController.email.slice(0, 7) +
@@ -837,6 +906,7 @@ export default class MainScene extends Group {
         this.airplane_hangar_btn.style.display = 'block';
         this.faucet_btn.style.display = 'block';
         this.message_box.style.display = 'block';
+        this.wallet_btn.style.display = 'block'
 
         this.card_slots.style.display = 'block';
         this.leaderboard_wrapper.style.display = 'block';
@@ -848,6 +918,7 @@ export default class MainScene extends Group {
       this.airplane_hangar_btn.style.display = 'none';
       this.card_slots.style.display = 'none';
       this.leaderboard_wrapper.style.display = 'none';
+      this.wallet_btn.style.display = 'none'
     }
   }
 
@@ -978,7 +1049,11 @@ export default class MainScene extends Group {
       this.sign_out_btn.style.display = 'none';
       this.sign_out_container.style.display = 'none';
       this.faucet_btn.style.display = 'none';
+      this.achievement_cards.style.display = 'none'
       console.log('intro');
+      this.achievement_cards.style.display = 'none'
+      this.wallet_btn.style.display = 'none'
+
     } else if (this.game_mode === GameModes.Playing) {
       this.score_box.style.display = 'block';
       this.message_box.style.display = 'none';
@@ -988,6 +1063,9 @@ export default class MainScene extends Group {
       this.sign_out_btn.style.display = 'none';
       this.sign_out_container.style.display = 'none';
       this.faucet_btn.style.display = 'none';
+      this.achievement_cards.style.display = 'none'
+      this.wallet_btn.style.display = 'none'
+
     } else if (this.game_mode === GameModes.Paused) {
       this.score_box.style.display = 'block';
       this.message_box.style.display = 'block';
@@ -998,12 +1076,16 @@ export default class MainScene extends Group {
       this.sign_out_btn.style.display = 'block';
       this.sign_out_container.style.display = 'block';
       this.faucet_btn.style.display = 'block';
+      this.achievement_cards.style.display = 'none'
+      this.wallet_btn.style.display = 'block'
+
     } else if (this.game_mode === GameModes.GameEnding) {
       this.score_box.style.display = 'block';
       this.message_box.style.display = 'block';
       this.card_slots.style.display = 'block';
       this.leaderboard_wrapper.style.display = 'block';
       this.message_box.innerHTML = 'Game Over';
+      this.achievement_cards.style.display = 'block'
 
       this.updateLocalScores();
 
@@ -1036,7 +1118,7 @@ export default class MainScene extends Group {
             console.log(tx);
             setTimeout(
               () => this.sequenceController.fetchWalletTokens(true),
-              1000
+              2000
             );
           }
         );
@@ -1059,7 +1141,7 @@ export default class MainScene extends Group {
             console.log(tx);
             setTimeout(
               () => this.sequenceController.fetchWalletTokens(true),
-              1000
+              2000
             );
           }
         );
@@ -1079,7 +1161,7 @@ export default class MainScene extends Group {
             console.log(tx);
             setTimeout(
               () => this.sequenceController.fetchWalletTokens(true),
-              1000
+              2000
             );
           }
         );
@@ -1095,7 +1177,7 @@ export default class MainScene extends Group {
             console.log(tx);
             setTimeout(
               () => this.sequenceController.fetchWalletTokens(true),
-              1000
+              2000
             );
           }
         );
@@ -1114,10 +1196,23 @@ export default class MainScene extends Group {
             console.log(tx);
             setTimeout(
               () => this.sequenceController.fetchWalletTokens(true),
-              1000
+              2000
             );
           }
         );
+      } else {
+        // let interval = setInterval(() => {
+          console.log(this.wallet_btn)
+          // if(this.wallet_btn) {
+            // console.log('setting block')
+            this.wallet_btn.style.display = 'block'
+            // clearInterval(interval)
+          // }
+        // }, 100)
+        this.sign_out_btn.style.display = 'block';
+        this.sign_out_container.style.display = 'block';
+        this.faucet_btn.style.display = 'block';
+        this.airplane_hangar_btn.style.display = 'block';
       }
     }
   }
