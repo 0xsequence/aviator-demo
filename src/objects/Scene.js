@@ -17,7 +17,8 @@ import { LeaderboardManager } from './API/leaderboard.js';
 import { SequenceIndexer } from '@0xsequence/indexer';
 
 const indexer = new SequenceIndexer(
-  'https://arbitrum-sepolia-indexer.sequence.app', ENV.projectAccessKeyProd
+  'https://arbitrum-sepolia-indexer.sequence.app',
+  ENV.projectAccessKeyProd
 );
 
 const colors = [
@@ -73,7 +74,7 @@ export default class MainScene extends Group {
     this.airplane_hangar_btn = document.getElementById('airplaneHangarBtn');
     this.faucet_btn = document.getElementById('faucetBtn');
     this.wallet_btn = document.getElementById('walletButton');
-    this.achievement_cards = document.getElementById('achievment-cards')
+    this.achievement_cards = document.getElementById('achievment-cards');
 
     var self = this;
     let intervalSignOutBtn = setInterval(() => {
@@ -142,7 +143,6 @@ export default class MainScene extends Group {
   }
 
   handleCardSlotClick(event) {
-    console.log(event);
     this.sequenceController.fetchWalletTokens();
 
     setTimeout(() => {
@@ -151,19 +151,19 @@ export default class MainScene extends Group {
       if (cardID === -1) return;
       cardID += 1;
       if (!this.isCardWon(cardID)) return;
-  
+
       this.game_mode = GameModes.CardDetails;
-  
+
       for (
         let i = 0;
         i < this.sequenceController.ownedTokenBalances.length;
         i++
       ) {
         const balance = this.sequenceController.ownedTokenBalances[i];
-  
+
         if (Number(balance.tokenID) === cardID) this.showCardModal(balance);
       }
-    }, 1000)
+    }, 1000);
   }
 
   getPlane() {
@@ -220,7 +220,6 @@ export default class MainScene extends Group {
     const modalFooter = document.getElementById('modal-footer');
 
     if (!fromPurchase) {
-      console.log('adding inventory button')
       const inventoryButton = document.createElement('a');
       inventoryButton.id = 'inventoryButton';
       inventoryButton.innerHTML = 'Inventory';
@@ -239,20 +238,22 @@ export default class MainScene extends Group {
         contractAddress: '0xa9c88358862211870db6f18bc9b3f6e4f8b3eae7',
       })
       .then(tokenBalances => {
-
-        console.log(tokenBalances);
-
         for (let i = 0; i < tokenBalances.balances.length; i++) {
-          if(tokenBalances.balances[i].contractAddress == '0xa9c88358862211870db6f18bc9b3f6e4f8b3eae7'){
+          if (
+            tokenBalances.balances[i].contractAddress ==
+            '0xa9c88358862211870db6f18bc9b3f6e4f8b3eae7'
+          ) {
             const balance = tokenBalances.balances[i].balance;
             const titleMarketplace = document.createElement('p');
             titleMarketplace.id = 'marketplace-title';
-            titleMarketplace.innerHTML = 'Marketplace &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + 'Balance (⌨) ' + Number(balance / 10**18).toFixed(0);
+            titleMarketplace.innerHTML =
+              'Marketplace &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' +
+              'Balance (⌨) ' +
+              Number(balance / 10 ** 18).toFixed(0);
             titleMarketplace.style = 'position: relative; text-align: center;';
             panelContainer.prepend(titleMarketplace);
           }
         }
-
       })
       .catch(error => {
         console.log(error);
@@ -300,8 +301,6 @@ export default class MainScene extends Group {
     var self = this;
     console.log(result.orders);
     result.orders.map(async order => {
-      console.log('in this loop');
-      console.log(order);
       self.addOrderIfUnique({
         orderId: order.orderId,
         tokenId: order.tokenId,
@@ -335,9 +334,7 @@ export default class MainScene extends Group {
 
     Object.values(prices).map((_, i) => {
       if (_ < 0.01) {
-        console.log(i);
         const el = document.getElementsByClassName(`plane-${i}`)[0];
-        console.log(el);
         el.style.backgroundImage = 'url()';
       }
     });
@@ -363,7 +360,7 @@ export default class MainScene extends Group {
     marketplaceButton.ariaDisabled = 'false';
     marketplaceButton.href = '#';
     marketplaceButton.setAttribute('onclick', 'switchToMarketplace(event)');
-    console.log(marketplaceButton)
+    console.log(marketplaceButton);
     modalFooter.appendChild(marketplaceButton);
 
     var self = this;
@@ -395,13 +392,17 @@ export default class MainScene extends Group {
         colors.forEach((color, index) => {
           const panel = document.createElement('div');
           panel.className = 'color-panel ' + 'plane-' + index;
-          if (!blanks.includes(index)){
+          if (!blanks.includes(index)) {
             panel.onclick = () => self.handlePanelClick(index, false, true);
           }
           gridContainer.appendChild(panel);
         });
 
-        self.handlePanelClick(Number(localStorage.getItem('plane_color')), false, false)
+        self.handlePanelClick(
+          Number(localStorage.getItem('plane_color')),
+          false,
+          false
+        );
 
         self.loadPlanes(ownedTokenBalances);
       })
@@ -423,7 +424,6 @@ export default class MainScene extends Group {
 
     var modal = document.getElementById('cardModal-hangar');
     modal.setAttribute('open', true);
-
   }
 
   showCardModal(token) {
@@ -468,11 +468,10 @@ export default class MainScene extends Group {
 
   handlePanelClick(id, marketplace = false, openingHangar = false) {
     console.log(id);
-    console.log('handle panel click')
 
     // Update the visual state of panels based on selection
     document.querySelectorAll('.color-panel').forEach((panel, idx) => {
-      console.log('in for each')
+      console.log('in for each');
       if (idx === id) {
         panel.classList.add('selected');
       } else {
@@ -498,49 +497,50 @@ export default class MainScene extends Group {
       modalFooter.appendChild(inventoryButton);
     }
 
-    if(openingHangar) this.closeCardModal()
+    if (openingHangar) this.closeCardModal();
   }
   async openInventory(withLoading = false, id = null) {
     document.querySelectorAll('.color-panel').forEach((panel, idx) => {
       panel.remove();
     });
 
-    // this.removeAllPurchaseButtons();
+    this.removeAllPurchaseButtons();
 
     const panelContainer =
       document.getElementsByClassName('panel-container')[0];
 
-    document.getElementById('marketplace-title') && document.getElementById('marketplace-title').remove();
+    document.getElementById('marketplace-title') &&
+      document.getElementById('marketplace-title').remove();
 
-    if(!document.getElementById('inventory-title')){
+    if (!document.getElementById('inventory-title')) {
+      const titleMarketplace = document.createElement('p');
+      titleMarketplace.id = 'inventory-title';
+      titleMarketplace.innerHTML = 'Inventory';
+      titleMarketplace.style = 'position: relative; text-align: center;';
+      panelContainer.prepend(titleMarketplace);
+    }
 
-    const titleMarketplace = document.createElement('p');
-    titleMarketplace.id = 'inventory-title';
-    titleMarketplace.innerHTML = 'Inventory';
-    titleMarketplace.style = 'position: relative; text-align: center;';
-    panelContainer.prepend(titleMarketplace);
-  }
-
-    document.getElementById('inventoryButton') && document.getElementById('inventoryButton').remove();
+    document.getElementById('inventoryButton') &&
+      document.getElementById('inventoryButton').remove();
 
     const modalFooter = document.getElementById('modal-footer');
 
-      const marketPlaceButton = document.createElement('a');
-      marketPlaceButton.id = 'marketPlaceButton';
-      marketPlaceButton.innerHTML = 'Marketplace';
-      marketPlaceButton.role = 'button';
-      marketPlaceButton.class = 'secondary';
-      marketPlaceButton.ariaDisabled = 'false';
-      marketPlaceButton.href = '#';
-      marketPlaceButton.setAttribute('onclick', 'switchToMarketplace(event)');
-      console.log(marketPlaceButton)
-      modalFooter.appendChild(marketPlaceButton);
+    const marketPlaceButton = document.createElement('a');
+    marketPlaceButton.id = 'marketPlaceButton';
+    marketPlaceButton.innerHTML = 'Marketplace';
+    marketPlaceButton.role = 'button';
+    marketPlaceButton.class = 'secondary';
+    marketPlaceButton.ariaDisabled = 'false';
+    marketPlaceButton.href = '#';
+    marketPlaceButton.setAttribute('onclick', 'switchToMarketplace(event)');
+    console.log(marketPlaceButton);
+    modalFooter.appendChild(marketPlaceButton);
 
     const gridContainer = document.getElementById('gridContainer');
     var self = this;
-    const wait = (ms) => new Promise((res) => setTimeout(res,ms)) 
+    const wait = ms => new Promise(res => setTimeout(res, ms));
 
-    if(!withLoading){
+    if (!withLoading) {
       const tokenBalances = await indexer.getTokenBalances({
         accountAddress: this.sequenceController.email,
         contractAddress: '0x1693ffc74edbb50d6138517fe5cd64fd1c917709',
@@ -550,74 +550,65 @@ export default class MainScene extends Group {
             '0x1693ffc74edbb50d6138517fe5cd64fd1c917709',
           ],
         },
-      })
-      await wait(200)
+      });
+      await wait(200);
       // .then(tokenBalances => {
-        // console.log(tokenBalances);
-        let ownedTokenBalances = [];
-        console.log(tokenBalances)
-        for (let i = 0; i < tokenBalances.balances.length; i++) {
-          ownedTokenBalances.push(tokenBalances.balances[i].tokenID);
+      // console.log(tokenBalances);
+      let ownedTokenBalances = [];
+      console.log(tokenBalances);
+      for (let i = 0; i < tokenBalances.balances.length; i++) {
+        ownedTokenBalances.push(tokenBalances.balances[i].tokenID);
+      }
 
-        }
+      colors.forEach((color, index) => {
+        const panel = document.createElement('div');
+        panel.className = 'color-panel ' + 'plane-' + index;
+        panel.onclick = () => self.handlePanelClick(index, false, true);
 
-          colors.forEach((color, index) => {
-            const panel = document.createElement('div');
-            panel.className = 'color-panel ' + 'plane-' + index;
-            panel.onclick = () => self.handlePanelClick(index);
-
-            gridContainer.appendChild(panel);
-          });
-
-          self.loadPlanes(ownedTokenBalances);
+        gridContainer.appendChild(panel);
+      });
+      self.loadPlanes(ownedTokenBalances);
     } else {
-      this.removeAllPurchaseButtons();
       gridContainer.innerHTML = '<div class="spinner"></div>'; // Add your spinner HTML here
-      gridContainer.style.display = 'flex'    
-      gridContainer.style.width = '400px'    
-      gridContainer.innerHTML = ''; // Add your spinner HTML here
-      gridContainer.style.display = 'grid'    
+      gridContainer.style.display = 'flex';
+      gridContainer.style.width = '400px';
       let balanceChange = false;
-      while(!balanceChange){
-
-      const tokenBalances = await indexer.getTokenBalances({
-        accountAddress: this.sequenceController.email,
-        contractAddress: '0x1693ffc74edbb50d6138517fe5cd64fd1c917709',
-        includeMetadata: true,
-        metadataOptions: {
-          includeMetadataContracts: [
-            '0x1693ffc74edbb50d6138517fe5cd64fd1c917709',
-          ],
-        },
-      })
-      await wait(500)
+      while (!balanceChange) {
+        const tokenBalances = await indexer.getTokenBalances({
+          accountAddress: this.sequenceController.email,
+          contractAddress: '0x1693ffc74edbb50d6138517fe5cd64fd1c917709',
+          includeMetadata: true,
+          metadataOptions: {
+            includeMetadataContracts: [
+              '0x1693ffc74edbb50d6138517fe5cd64fd1c917709',
+            ],
+          },
+        });
+        await wait(500);
         let ownedTokenBalances = [];
-        console.log(tokenBalances)
+        console.log(tokenBalances);
         for (let i = 0; i < tokenBalances.balances.length; i++) {
           ownedTokenBalances.push(tokenBalances.balances[i].tokenID);
-
-          if(Number(tokenBalances.balances[i].tokenID) == Number(id)){
-            balanceChange = true
-            console.log('found_token_id')
-            console.log(tokenBalances.balances[i].tokenID)
+          if (Number(tokenBalances.balances[i].tokenID) == Number(id)) {
+            balanceChange = true;
+            console.log(tokenBalances.balances[i].tokenID);
           }
         }
-
-        if(balanceChange) {
+        if (balanceChange) {
+          gridContainer.innerHTML = ''; // Add your spinner HTML here
+          gridContainer.style.display = 'grid';
           colors.forEach((color, index) => {
             const panel = document.createElement('div');
             panel.className = 'color-panel ' + 'plane-' + index;
-            panel.onclick = () => self.handlePanelClick(index);
-
+            panel.onclick = () => self.handlePanelClick(index, false, true);
             gridContainer.appendChild(panel);
           });
-
           self.loadPlanes(ownedTokenBalances);
         }
-    }
+      }
     }
   }
-  
+
   closeGiftModal() {
     var modal = document.getElementById('cardModal-gift');
     modal.setAttribute('open', false);
@@ -629,7 +620,7 @@ export default class MainScene extends Group {
     var modal1 = document.getElementById('cardModal');
     modal.setAttribute('open', false);
     modal1.setAttribute('open', false);
-    console.log('closing modal')
+    console.log('closing modal');
     if (this.game_mode_previous == null) {
       console.log('test');
       this.game_mode = GameModes.Intro;
@@ -680,8 +671,7 @@ export default class MainScene extends Group {
     this.game_mode = GameModes.SigningOut;
     this.airplane_hangar_btn.style.display = 'none';
     this.faucet_btn.style.display = 'none';
-    this.wallet_btn.style.display = 'none'
-    console.log('signing outtt');
+    this.wallet_btn.style.display = 'none';
   }
 
   handleCardSlotHoverOut(event) {
@@ -819,11 +809,20 @@ export default class MainScene extends Group {
     const cardSlot = this.card_containers[parseInt(cardID) - 1];
     const { x, y, width, height } = cardSlot.getBoundingClientRect();
     const card = document.getElementById('activeCard');
-    console.log(window.innerHeight*.1)
     tl.to(card, {
       duration: 1.25,
-      x: x - card.getBoundingClientRect().left + window.scrollX - width - window.innerWidth*.3*0.188333333,
-      y: y - card.getBoundingClientRect().top + window.scrollY - height - window.innerHeight*.16,
+      x:
+        x -
+        card.getBoundingClientRect().left +
+        window.scrollX -
+        width -
+        window.innerWidth * 0.3 * 0.188333333,
+      y:
+        y -
+        card.getBoundingClientRect().top +
+        window.scrollY -
+        height -
+        window.innerHeight * 0.16,
       rotationY: 360,
       scale: 0.175,
       ease: 'power1.out',
@@ -864,7 +863,6 @@ export default class MainScene extends Group {
     modal.setAttribute('open', true);
 
     var modalContent = document.getElementById('walletModalContent');
-    console.log(this.sequenceController.email)
     modalContent.innerHTML = `<p>${this.sequenceController.email}</p>`;
   }
 
@@ -918,9 +916,8 @@ export default class MainScene extends Group {
   authModeChanged() {
     if (this.sequenceController.mode === AuthModes.Completed) {
       // this.closeLoginModal();
-      console.log(this.sequenceController.email);
       if (this.sequenceController.email) {
-        this.achievement_cards.style.display = 'block'
+        this.achievement_cards.style.display = 'block';
         this.message_box.innerHTML =
           'Welcome ' +
           this.sequenceController.email.slice(0, 7) +
@@ -934,19 +931,18 @@ export default class MainScene extends Group {
         this.airplane_hangar_btn.style.display = 'block';
         this.faucet_btn.style.display = 'block';
         this.message_box.style.display = 'block';
-        this.wallet_btn.style.display = 'block'
+        this.wallet_btn.style.display = 'block';
 
         this.card_slots.style.display = 'block';
         this.leaderboard_wrapper.style.display = 'block';
       }
     } else {
-      console.log('removing message box');
       this.message_box.style.display = 'none';
       this.faucet_btn.style.display = 'none';
       this.airplane_hangar_btn.style.display = 'none';
       this.card_slots.style.display = 'none';
       this.leaderboard_wrapper.style.display = 'none';
-      this.wallet_btn.style.display = 'none'
+      this.wallet_btn.style.display = 'none';
     }
   }
 
@@ -1077,11 +1073,9 @@ export default class MainScene extends Group {
       this.sign_out_btn.style.display = 'none';
       this.sign_out_container.style.display = 'none';
       this.faucet_btn.style.display = 'none';
-      this.achievement_cards.style.display = 'none'
-      console.log('intro');
-      this.achievement_cards.style.display = 'none'
-      this.wallet_btn.style.display = 'none'
-
+      this.achievement_cards.style.display = 'none';
+      this.achievement_cards.style.display = 'none';
+      this.wallet_btn.style.display = 'none';
     } else if (this.game_mode === GameModes.Playing) {
       this.score_box.style.display = 'block';
       this.message_box.style.display = 'none';
@@ -1091,9 +1085,8 @@ export default class MainScene extends Group {
       this.sign_out_btn.style.display = 'none';
       this.sign_out_container.style.display = 'none';
       this.faucet_btn.style.display = 'none';
-      this.achievement_cards.style.display = 'none'
-      this.wallet_btn.style.display = 'none'
-
+      this.achievement_cards.style.display = 'none';
+      this.wallet_btn.style.display = 'none';
     } else if (this.game_mode === GameModes.Paused) {
       this.score_box.style.display = 'block';
       this.message_box.style.display = 'block';
@@ -1104,16 +1097,15 @@ export default class MainScene extends Group {
       this.sign_out_btn.style.display = 'block';
       this.sign_out_container.style.display = 'block';
       this.faucet_btn.style.display = 'block';
-      this.achievement_cards.style.display = 'none'
-      this.wallet_btn.style.display = 'block'
-
+      this.achievement_cards.style.display = 'none';
+      this.wallet_btn.style.display = 'block';
     } else if (this.game_mode === GameModes.GameEnding) {
       this.score_box.style.display = 'block';
       this.message_box.style.display = 'block';
       this.card_slots.style.display = 'block';
       this.leaderboard_wrapper.style.display = 'block';
       this.message_box.innerHTML = 'Game Over';
-      this.achievement_cards.style.display = 'block'
+      this.achievement_cards.style.display = 'block';
 
       this.updateLocalScores();
 
@@ -1229,14 +1221,7 @@ export default class MainScene extends Group {
           }
         );
       } else {
-        // let interval = setInterval(() => {
-          console.log(this.wallet_btn)
-          // if(this.wallet_btn) {
-            // console.log('setting block')
-            this.wallet_btn.style.display = 'block'
-            // clearInterval(interval)
-          // }
-        // }, 100)
+        this.wallet_btn.style.display = 'block';
         this.sign_out_btn.style.display = 'block';
         this.sign_out_container.style.display = 'block';
         this.faucet_btn.style.display = 'block';
@@ -1246,7 +1231,6 @@ export default class MainScene extends Group {
   }
 
   handleMouseClick() {
-    console.log(this.sequenceController.mode);
     if (
       this.game_mode === GameModes.SigningOut ||
       this.game_mode === GameModes.CardDetails

@@ -11,7 +11,8 @@ const ContractAddress = '0xbb35dcf99a74b4a6c38d69789232fa63e1e69e31';
 class SequenceController {
   constructor() {
     this.indexer = new SequenceIndexer(
-      'https://arbitrum-sepolia-indexer.sequence.app',ENV.projectAccessKeyProd
+      'https://arbitrum-sepolia-indexer.sequence.app',
+      ENV.projectAccessKeyProd
     );
 
     this.chainId = null;
@@ -38,7 +39,7 @@ class SequenceController {
   }
 
   async init(walletClient, sendTransactionBurn, sendTransactionRequest) {
-    console.log(walletClient)
+    console.log(walletClient);
     this.walletAddress = walletClient.account.address;
     this.switchAuthMode(AuthModes.Completed);
     this.email = walletClient.account.address;
@@ -258,17 +259,17 @@ class SequenceController {
       tokenId: tokenId,
     };
 
-      fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      }).then(async (res) => {
-        const txHash = await res.text();
-        console.log(txHash);
-        callback(txHash);
-      })
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }).then(async res => {
+      const txHash = await res.text();
+      console.log(txHash);
+      callback(txHash);
+    });
   }
 
   clearAddress() {

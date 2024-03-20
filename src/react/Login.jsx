@@ -32,7 +32,7 @@ const GameModes = {
 };
 
 const ContractAddress = '0xbb35dcf99a74b4a6c38d69789232fa63e1e69e31';
-let setFromMarketPlace = false
+let setFromMarketPlace = false;
 function Login(props) {
   const { setOpenConnectModal } = useOpenConnectModal();
   const [burnCallback, setBurnCallback] = useState(null);
@@ -88,9 +88,9 @@ function Login(props) {
         gas: null,
       });
       // setFromMarketplace(false)
-      setFromMarketPlace = false
+      setFromMarketPlace = false;
       // setBurnCallback(callback)
-      callback(null, null)
+      callback(null, null);
     } catch (error) {
       callback(error);
     }
@@ -142,7 +142,7 @@ function Login(props) {
         gas: null,
       });
       // setFromMarketplace(true)
-      setFromMarketPlace = true
+      setFromMarketPlace = true;
       callback(null);
 
       console.log(res1);
@@ -156,17 +156,16 @@ function Login(props) {
       console.log(txnData);
       // const withLoading = false
       // props.scene.openInventory(withLoading);
-      setFromMarketPlace = false
+      setFromMarketPlace = false;
       // props.scene.sequenceController.fetchWalletTokens();
     }
   }, [isSendTxnLoading, txnData]);
   useEffect(() => {
-      // if(fromMarketplace == false && burnCallback) {
-      //   burnCallback(null, null)
-      // }
-      props.scene.sequenceController.fetchWalletTokens();
-
-  },[txnData])
+    // if(fromMarketplace == false && burnCallback) {
+    //   burnCallback(null, null)
+    // }
+    props.scene.sequenceController.fetchWalletTokens();
+  }, [txnData]);
   return (
     <>
       <div style={{ textAlign: 'center', zIndex: 100 }}>

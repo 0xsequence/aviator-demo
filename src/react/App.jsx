@@ -9,7 +9,7 @@ import { createConfig, http, WagmiProvider } from 'wagmi';
 import { mainnet, polygon, arbitrumSepolia, Chain } from 'wagmi/chains';
 
 const queryClient = new QueryClient();
-console.log(ENV.projectAccessKey)
+console.log(ENV.projectAccessKey);
 const chains = [mainnet, arbitrumSepolia];
 const projectAccessKey = ENV.projectAccessKey;
 const waasConfigKey = ENV.waasConfigKey;
@@ -17,7 +17,8 @@ const googleClientId = ENV.googleClientId;
 const appleClientId = ENV.appleClientId;
 
 // TODO: update this
-const appleRedirectURI = 'https://' + window.location.host + '/waas-airplane-demo';
+const appleRedirectURI =
+  'https://' + window.location.host + '/waas-airplane-demo';
 
 function App(props) {
   const connectors = [

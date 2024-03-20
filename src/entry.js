@@ -153,11 +153,11 @@ window.purchase = (event, id) => {
     id,
     order[0].pricePerToken,
     () => {
-      console.log('IN CALLBACK')
+      console.log('IN CALLBACK');
       document.getElementById('marketplace-title') &&
         document.getElementById('marketplace-title').remove();
       mainScene.openInventory(true, id);
-      mainScene.removeAllPurchaseButtons()
+      mainScene.removeAllPurchaseButtons();
     }
   );
 };
@@ -167,12 +167,11 @@ window.openFaucet = event => {
 };
 
 window.openWallet = event => {
-  mainScene.openWalletModal();
-}
+  window.open(
+    `https://sepolia.arbiscan.io/address/${mainScene.sequenceController.email}`
+  );
+};
 
-window.closeWalletModal = event => {
-  mainScene.closeWalletModal();
-}
 // dom
 document.body.style.margin = 0;
 // document.body.style.zoom = 0.77;

@@ -139,32 +139,14 @@
         <div class="card-slot" id="cardSlot5"></div>
         <div class="card-tooltip" id="cardTooltip"></div>
       </div>
-	  <button id="walletButton" onclick="openWallet(event)">
-		Wallet
-	  </button>
+      <button id="walletButton" onclick="openWallet(event)">Wallet</button>
       <div class="buttons" id="buttons">
         <button id="airplaneHangarBtn" onclick="openHangar(event)">
           Airplane Hangar
         </button>
         <button id="faucetBtn" onclick="openFaucet(event)">Faucet</button>
       </div>
-
-      <dialog id="walletModal">
-        <article>
-          <div id="walletModalContent"></div>
-          <footer id="modal-footer-wallet">
-            <a
-              href="#"
-              role="button"
-              class="secondary"
-              onClick="closeWalletModal(event)"
-              >Cancel</a
-            >
-          </footer>
-        </article>
-      </dialog>
-
-	  <dialog id="cardModal-hangar">
+      <dialog id="cardModal-hangar">
         <article>
           <div id="cardModalContent"></div>
           <div class="panel-container">
