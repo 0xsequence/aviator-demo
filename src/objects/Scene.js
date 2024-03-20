@@ -386,13 +386,14 @@ export default class MainScene extends Group {
 
         const ids = ['0', '1', '2', '3', '4', '5'];
         const blanks = this.arrayDelta(ids, ownedTokenBalances);
-
+        console.log(blanks)
         const gridContainer = document.getElementById('gridContainer');
 
         colors.forEach((color, index) => {
           const panel = document.createElement('div');
           panel.className = 'color-panel ' + 'plane-' + index;
-          if (!blanks.includes(index)) {
+          if (!blanks.includes(String(index))) {
+            console.log('adding' + index)
             panel.onclick = () => self.handlePanelClick(index, false, true);
           }
           gridContainer.appendChild(panel);
@@ -600,10 +601,18 @@ export default class MainScene extends Group {
         if (balanceChange) {
           gridContainer.innerHTML = ''; // Add your spinner HTML here
           gridContainer.style.display = 'grid';
+
+          const ids = ['0', '1', '2', '3', '4', '5'];
+        const blanks = this.arrayDelta(ids, ownedTokenBalances);
+        console.log(blanks)
+
           colors.forEach((color, index) => {
             const panel = document.createElement('div');
             panel.className = 'color-panel ' + 'plane-' + index;
-            panel.onclick = () => self.handlePanelClick(index, false, true);
+            if (!blanks.includes(String(index))) {
+              console.log('adding' + index)
+              panel.onclick = () => self.handlePanelClick(index, false, true);
+            }
             gridContainer.appendChild(panel);
           });
           if(!document.getElementById('marketPlaceButton')){
@@ -620,6 +629,11 @@ export default class MainScene extends Group {
         }
 
           self.loadPlanes(ownedTokenBalances);
+          self.handlePanelClick(
+            Number(localStorage.getItem('plane_color')),
+            false,
+            false
+          );
         }
       }
     }

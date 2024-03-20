@@ -133,8 +133,6 @@ function Login(props) {
         gas: null,
       });
 
-      console.log(res);
-
       setTimeout(async () => {
         const res1 = await sendTransaction({
           to: '0xB537a160472183f2150d42EB1c3DD6684A55f74c',
@@ -143,22 +141,19 @@ function Login(props) {
           gas: null,
         });
         setFromMarketPlace = true;
-      }, 1500)
+      }, 3000)
       callback(null);
 
-      console.log(res1);
     } catch (error) {
-      callback(error);
+      console.log(error)
     }
   };
 
   useEffect(() => {
     if (txnData && setFromMarketPlace) {
       console.log(txnData);
-      // const withLoading = false
       // props.scene.openInventory(withLoading);
       setFromMarketPlace = false;
-      // props.scene.sequenceController.fetchWalletTokens();
     }
   }, [isSendTxnLoading, txnData]);
   useEffect(() => {
