@@ -546,9 +546,6 @@ export default class MainScene extends Group {
           ],
         },
       });
-      await wait(200);
-      // .then(tokenBalances => {
-      // console.log(tokenBalances);
       let ownedTokenBalances = [];
       console.log(tokenBalances);
       for (let i = 0; i < tokenBalances.balances.length; i++) {
@@ -562,6 +559,15 @@ export default class MainScene extends Group {
 
         gridContainer.appendChild(panel);
       });
+      const marketPlaceButton = document.createElement('a');
+          marketPlaceButton.id = 'marketPlaceButton';
+          marketPlaceButton.innerHTML = 'Marketplace';
+          marketPlaceButton.role = 'button';
+          marketPlaceButton.class = 'secondary';
+          marketPlaceButton.ariaDisabled = 'false';
+          marketPlaceButton.href = '#';
+          marketPlaceButton.setAttribute('onclick', 'switchToMarketplace(event)');
+          modalFooter.appendChild(marketPlaceButton);
       self.loadPlanes(ownedTokenBalances);
     } else {
       gridContainer.innerHTML = '<div class="spinner"></div>'; // Add your spinner HTML here
