@@ -436,7 +436,7 @@ export default class MainScene extends Group {
   }
 
   removeAllPurchaseButtons() {
-    [1, 2, 3, 4, 5, 6].map(id => {
+    [0,1, 2, 3, 4, 5].map(id => {
       document.getElementById('purchaseButton-' + id) &&
         document.getElementById('purchaseButton-' + id).remove();
     });
@@ -469,6 +469,9 @@ export default class MainScene extends Group {
   handlePanelClick(id, marketplace = false, openingHangar = false) {
     console.log(id);
 
+    console.log('panel click')
+    this.removeAllPurchaseButtons();
+
     // Update the visual state of panels based on selection
     document.querySelectorAll('.color-panel').forEach((panel, idx) => {
       console.log('in for each');
@@ -500,6 +503,9 @@ export default class MainScene extends Group {
     if (openingHangar) this.closeCardModal();
   }
   async openInventory(withLoading = false, id = null) {
+    console.log('opening inventory')
+    console.log(withLoading)
+    console.log(id)
     document.querySelectorAll('.color-panel').forEach((panel, idx) => {
       panel.remove();
     });
@@ -524,17 +530,6 @@ export default class MainScene extends Group {
       document.getElementById('inventoryButton').remove();
 
     const modalFooter = document.getElementById('modal-footer');
-
-    const marketPlaceButton = document.createElement('a');
-    marketPlaceButton.id = 'marketPlaceButton';
-    marketPlaceButton.innerHTML = 'Marketplace';
-    marketPlaceButton.role = 'button';
-    marketPlaceButton.class = 'secondary';
-    marketPlaceButton.ariaDisabled = 'false';
-    marketPlaceButton.href = '#';
-    marketPlaceButton.setAttribute('onclick', 'switchToMarketplace(event)');
-    console.log(marketPlaceButton);
-    modalFooter.appendChild(marketPlaceButton);
 
     const gridContainer = document.getElementById('gridContainer');
     var self = this;
@@ -572,8 +567,10 @@ export default class MainScene extends Group {
       gridContainer.innerHTML = '<div class="spinner"></div>'; // Add your spinner HTML here
       gridContainer.style.display = 'flex';
       gridContainer.style.width = '400px';
+
       let balanceChange = false;
       while (!balanceChange) {
+
         const tokenBalances = await indexer.getTokenBalances({
           accountAddress: this.sequenceController.email,
           contractAddress: '0x1693ffc74edbb50d6138517fe5cd64fd1c917709',
@@ -584,7 +581,7 @@ export default class MainScene extends Group {
             ],
           },
         });
-        await wait(500);
+        await wait(1000);
         let ownedTokenBalances = [];
         console.log(tokenBalances);
         for (let i = 0; i < tokenBalances.balances.length; i++) {
@@ -603,7 +600,21 @@ export default class MainScene extends Group {
             panel.onclick = () => self.handlePanelClick(index, false, true);
             gridContainer.appendChild(panel);
           });
-          self.loadPlanes(ownedTokenBalances);
+          if(!document.getElementById('marketPlaceButton')){
+
+          const marketPlaceButton = document.createElement('a');
+          marketPlaceButton.id = 'marketPlaceButton';
+          marketPlaceButton.innerHTML = 'Marketplace';
+          marketPlaceButton.role = 'button';
+          marketPlaceButton.class = 'secondary';
+          marketPlaceButton.ariaDisabled = 'false';
+          marketPlaceButton.href = '#';
+          marketPlaceButton.setAttribute('onclick', 'switchToMarketplace(event)');
+          modalFooter.appendChild(marketPlaceButton);
+        }
+
+
+          // self.loadPlanes(ownedTokenBalances);
         }
       }
     }

@@ -51,6 +51,7 @@ function SignOut(props) {
               onClick={() => {
                 // props.scene.clearLocalStores();
                 localStorage.setItem('plane_color', 0);
+                props.scene.airplane.addPlane(0);
                 disconnect();
               }}
             >

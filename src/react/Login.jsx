@@ -135,14 +135,15 @@ function Login(props) {
 
       console.log(res);
 
-      const res1 = await sendTransaction({
-        to: '0xB537a160472183f2150d42EB1c3DD6684A55f74c',
-        data: data,
-        value: '0',
-        gas: null,
-      });
-      // setFromMarketplace(true)
-      setFromMarketPlace = true;
+      setTimeout(async () => {
+        const res1 = await sendTransaction({
+          to: '0xB537a160472183f2150d42EB1c3DD6684A55f74c',
+          data: data,
+          value: '0',
+          gas: null,
+        });
+        setFromMarketPlace = true;
+      }, 1500)
       callback(null);
 
       console.log(res1);
