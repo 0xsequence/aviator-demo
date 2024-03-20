@@ -613,8 +613,7 @@ export default class MainScene extends Group {
           modalFooter.appendChild(marketPlaceButton);
         }
 
-
-          // self.loadPlanes(ownedTokenBalances);
+          self.loadPlanes(ownedTokenBalances);
         }
       }
     }
