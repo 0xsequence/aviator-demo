@@ -220,6 +220,7 @@ export default class MainScene extends Group {
     const modalFooter = document.getElementById('modal-footer');
 
     if (!fromPurchase) {
+      console.log('adding inventory button')
       const inventoryButton = document.createElement('a');
       inventoryButton.id = 'inventoryButton';
       inventoryButton.innerHTML = 'Inventory';
@@ -492,7 +493,6 @@ export default class MainScene extends Group {
       inventoryButton.class = 'secondary';
       inventoryButton.ariaDisabled = 'false';
       inventoryButton.href = '#';
-      // requestId, mainScene.sequenceController.email, tokenID, amount,
       inventoryButton.setAttribute('onclick', `purchase(event, ${id})`);
 
       modalFooter.appendChild(inventoryButton);
@@ -500,12 +500,12 @@ export default class MainScene extends Group {
 
     if(openingHangar) this.closeCardModal()
   }
-  openInventory(withLoading = false) {
+  async openInventory(withLoading = false, id = null) {
     document.querySelectorAll('.color-panel').forEach((panel, idx) => {
       panel.remove();
     });
 
-    this.removeAllPurchaseButtons();
+    // this.removeAllPurchaseButtons();
 
     const panelContainer =
       document.getElementsByClassName('panel-container')[0];
@@ -522,8 +522,6 @@ export default class MainScene extends Group {
   }
 
     document.getElementById('inventoryButton') && document.getElementById('inventoryButton').remove();
-    
-    if(withLoading == false){
 
     const modalFooter = document.getElementById('modal-footer');
 
@@ -537,18 +535,13 @@ export default class MainScene extends Group {
       marketPlaceButton.setAttribute('onclick', 'switchToMarketplace(event)');
       console.log(marketPlaceButton)
       modalFooter.appendChild(marketPlaceButton);
-    }
 
     const gridContainer = document.getElementById('gridContainer');
     var self = this;
+    const wait = (ms) => new Promise((res) => setTimeout(res,ms)) 
 
     if(!withLoading){
-      gridContainer.innerHTML = ''; // Add your spinner HTML here
-      gridContainer.style.display = 'grid'    
-      // gridContainer.style.marginLeft = '0px'    
-      // gridContainer.style.marginTop = '0px' 
-    indexer
-      .getTokenBalances({
+      const tokenBalances = await indexer.getTokenBalances({
         accountAddress: this.sequenceController.email,
         contractAddress: '0x1693ffc74edbb50d6138517fe5cd64fd1c917709',
         includeMetadata: true,
@@ -558,9 +551,16 @@ export default class MainScene extends Group {
           ],
         },
       })
-      .then(tokenBalances => {
-        console.log(tokenBalances);
+      await wait(200)
+      // .then(tokenBalances => {
+        // console.log(tokenBalances);
         let ownedTokenBalances = [];
+        console.log(tokenBalances)
+        for (let i = 0; i < tokenBalances.balances.length; i++) {
+          ownedTokenBalances.push(tokenBalances.balances[i].tokenID);
+
+        }
+
           colors.forEach((color, index) => {
             const panel = document.createElement('div');
             panel.className = 'color-panel ' + 'plane-' + index;
@@ -569,27 +569,55 @@ export default class MainScene extends Group {
             gridContainer.appendChild(panel);
           });
 
-          for (let i = 0; i < tokenBalances.balances.length; i++) {
-            const tokenId = tokenBalances.balances[i].tokenID;
-            ownedTokenBalances.push(tokenId);
-          }
-
           self.loadPlanes(ownedTokenBalances);
-      })
-      .catch(error => {
-        console.log(error);
-      });
     } else {
-      // loading
-      console.log('loading')
-      // const 
+      this.removeAllPurchaseButtons();
       gridContainer.innerHTML = '<div class="spinner"></div>'; // Add your spinner HTML here
       gridContainer.style.display = 'flex'    
       gridContainer.style.width = '400px'    
-      // gridContainer.style.marginTop = '100px'    
-      // gridContainer.appendChild()
+      gridContainer.innerHTML = ''; // Add your spinner HTML here
+      gridContainer.style.display = 'grid'    
+      let balanceChange = false;
+      while(!balanceChange){
+
+      const tokenBalances = await indexer.getTokenBalances({
+        accountAddress: this.sequenceController.email,
+        contractAddress: '0x1693ffc74edbb50d6138517fe5cd64fd1c917709',
+        includeMetadata: true,
+        metadataOptions: {
+          includeMetadataContracts: [
+            '0x1693ffc74edbb50d6138517fe5cd64fd1c917709',
+          ],
+        },
+      })
+      await wait(500)
+        let ownedTokenBalances = [];
+        console.log(tokenBalances)
+        for (let i = 0; i < tokenBalances.balances.length; i++) {
+          ownedTokenBalances.push(tokenBalances.balances[i].tokenID);
+
+          if(Number(tokenBalances.balances[i].tokenID) == Number(id)){
+            balanceChange = true
+            console.log('found_token_id')
+            console.log(tokenBalances.balances[i].tokenID)
+          }
+        }
+
+        if(balanceChange) {
+          colors.forEach((color, index) => {
+            const panel = document.createElement('div');
+            panel.className = 'color-panel ' + 'plane-' + index;
+            panel.onclick = () => self.handlePanelClick(index);
+
+            gridContainer.appendChild(panel);
+          });
+
+          self.loadPlanes(ownedTokenBalances);
+        }
+    }
     }
   }
+  
   closeGiftModal() {
     var modal = document.getElementById('cardModal-gift');
     modal.setAttribute('open', false);

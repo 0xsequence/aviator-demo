@@ -32,14 +32,14 @@ const GameModes = {
 };
 
 const ContractAddress = '0xbb35dcf99a74b4a6c38d69789232fa63e1e69e31';
-
+let setFromMarketPlace = false
 function Login(props) {
   const { setOpenConnectModal } = useOpenConnectModal();
   const [burnCallback, setBurnCallback] = useState(null);
   const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
   const { data: walletClient } = useWalletClient();
-  const [fromMarketplace, setFromMarketplace] = useState(false)
+  // const [fromMarketplace, setFromMarketplace] = useState(false)
   const {
     data: txnData,
     sendTransaction,
@@ -87,7 +87,8 @@ function Login(props) {
         value: '0',
         gas: null,
       });
-      setFromMarketplace(false)
+      // setFromMarketplace(false)
+      setFromMarketPlace = false
       // setBurnCallback(callback)
       callback(null, null)
     } catch (error) {
@@ -140,7 +141,8 @@ function Login(props) {
         value: '0',
         gas: null,
       });
-      setFromMarketplace(true)
+      // setFromMarketplace(true)
+      setFromMarketPlace = true
       callback(null);
 
       console.log(res1);
@@ -150,14 +152,14 @@ function Login(props) {
   };
 
   useEffect(() => {
-    if (txnData && fromMarketplace) {
+    if (txnData && setFromMarketPlace) {
       console.log(txnData);
-      const withLoading = false
-      props.scene.openInventory(withLoading);
-      setFromMarketPlace(false)
+      // const withLoading = false
+      // props.scene.openInventory(withLoading);
+      setFromMarketPlace = false
       // props.scene.sequenceController.fetchWalletTokens();
     }
-  }, [isSendTxnLoading, txnData, fromMarketplace]);
+  }, [isSendTxnLoading, txnData]);
   useEffect(() => {
       // if(fromMarketplace == false && burnCallback) {
       //   burnCallback(null, null)

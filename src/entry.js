@@ -156,7 +156,7 @@ window.purchase = (event, id) => {
       console.log('IN CALLBACK')
       document.getElementById('marketplace-title') &&
         document.getElementById('marketplace-title').remove();
-      mainScene.openInventory(true);
+      mainScene.openInventory(true, id);
       mainScene.removeAllPurchaseButtons()
     }
   );
