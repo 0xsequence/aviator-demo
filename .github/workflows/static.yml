@@ -26,18 +26,12 @@ jobs:
 
       - name: Build webpack
         env:
-          projectAccessKey: ${{ secrets.PROJECTACCESSKEY }}
-          waasConfigKey: ${{ secrets.WAASCONFIGKEY }}
-          projectId: ${{ secrets.PROJECTID }}
-          walletConnectId: ${{ secrets.WALLETCONNECTID }}
-          identityPoolId: ${{ secrets.IDENTITYPOOLID }}
-          emailClientId: ${{ secrets.EMAILCLIENTID }}
-          googleClientId: ${{ secrets.GOOGLECLIENTID }}
-          idpRegion: ${{ secrets.IDPREGIONIDPREGION }}
-          rpcServer: ${{ secrets.RPCSERVER }}
-          kmsRegion: ${{ secrets.KMSREGION }}
-          emailRegion: ${{ secrets.EMAILREGION }}
-          keyId: ${{ secrets.KEYID }}
+          PROJECT_ACCESS_KEY_NEXT: ${{ secrets.PROJECTACCESSKEY }}
+          PROJECT_ACCESS_KEY_PROD: ${{ secrets.PROJECTACCESSKEY_PROD }}
+          WAAS_CONFIG_KEY: ${{ secrets.WAASCONFIGKEY }}
+          WALLET_CONNECT_ID: ${{ secrets.WALLETCONNECTID }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLECLIENTID }}
+          APPLE_CLIENT_ID: ${{ secrets.APPLECLIENTID }}
         run: npm run build
       - name: Setup Pages
         uses: actions/setup-node@v2

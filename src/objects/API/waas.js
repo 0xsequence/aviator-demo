@@ -12,7 +12,7 @@ class SequenceController {
   constructor() {
     this.indexer = new SequenceIndexer(
       'https://arbitrum-sepolia-indexer.sequence.app',
-      ENV.projectAccessKeyProd
+      process.env.PROJECT_ACCESS_KEY_PROD
     );
 
     this.chainId = null;

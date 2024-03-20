@@ -1,10 +1,10 @@
 const path = require('path');
 const pkg = require('./package.json');
-const { ENV } = require('./env.js');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const buildPath = './build/';
 const webpack = require('webpack');
+const Dotenv = require('dotenv-webpack');
 
 console.log(process.env);
 
@@ -46,18 +46,7 @@ module.exports = {
       title: 'Aviator Sequence Demo',
       template: './src/index.html',
     }),
-    new webpack.DefinePlugin({
-      ENV: true
-        ? JSON.stringify({
-            appleClientId: 'app.sequence.aviator',
-            projectAccessKeyProd: 'QymuJkTf4nZUoMTWRo3qyUPAAAAAAAAAA',
-            projectAccessKey: process.env.projectAccessKey,
-            waasConfigKey: process.env.waasConfigKey,
-            walletConnectId: process.env.walletConnectId,
-            googleClientId: process.env.googleClientId,
-          })
-        : JSON.stringify(ENV),
-    }),
+    new Dotenv()
   ],
   resolve: {
     fallback: {

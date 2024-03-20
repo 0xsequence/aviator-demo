@@ -18,7 +18,7 @@ import { SequenceIndexer } from '@0xsequence/indexer';
 
 const indexer = new SequenceIndexer(
   'https://arbitrum-sepolia-indexer.sequence.app',
-  ENV.projectAccessKeyProd
+  process.env.PROJECT_ACCESS_KEY_PROD
 );
 
 const colors = [

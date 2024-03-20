@@ -9,12 +9,12 @@ import { createConfig, http, WagmiProvider } from 'wagmi';
 import { mainnet, polygon, arbitrumSepolia, Chain } from 'wagmi/chains';
 
 const queryClient = new QueryClient();
-console.log(ENV.projectAccessKey);
+console.log(process.env.PROJECT_ACCESS_KEY_NEXT);
 const chains = [mainnet, arbitrumSepolia];
-const projectAccessKey = ENV.projectAccessKey;
-const waasConfigKey = ENV.waasConfigKey;
-const googleClientId = ENV.googleClientId;
-const appleClientId = ENV.appleClientId;
+const projectAccessKey = process.env.PROJECT_ACCESS_KEY_NEXT;
+const waasConfigKey = process.env.WAAS_CONFIG_KEY;
+const googleClientId = process.env.GOOGLE_CLIENT_ID;
+const appleClientId = process.env.APPLE_CLIENT_ID;
 
 // TODO: update this
 const appleRedirectURI =
@@ -23,7 +23,7 @@ const appleRedirectURI =
 function App(props) {
   const connectors = [
     ...getDefaultWaasConnectors({
-      walletConnectProjectId: ENV.walletConnectId,
+      walletConnectProjectId: process.env.WALLET_CONNECT_ID,
       defaultChainId: 421614,
       waasConfigKey,
       googleClientId,
