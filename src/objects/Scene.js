@@ -286,8 +286,7 @@ export default class MainScene extends Group {
             titleMarketplace.id = 'marketplace-title';
             titleMarketplace.innerHTML =
               'Marketplace &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' +
-              'Balance (⌨) ' +
-              Number(balance / 10 ** 18).toFixed(0);
+              'Balance (⌨) ' + (Number(balance) == 0 ? '0' : Number(balance / 10 ** 18).toFixed(0));
             titleMarketplace.style = 'position: relative; text-align: center;';
             panelContainer.prepend(titleMarketplace);
           }
