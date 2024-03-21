@@ -24,14 +24,18 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: 'Create env file'
+        run: |
+          touch .env
+          echo PROJECT_ACCESS_KEY_NEXT=${{ secrets.PROJECTACCESSKEY }} >> .env
+          echo PROJECT_ACCESS_KEY_PROD=${{ secrets.PROJECTACCESSKEY_PROD }} >> .env
+          echo WAAS_CONFIG_KEY=${{ secrets.WAASCONFIGKEY }} >> .env
+          echo WALLET_CONNECT_ID=${{ secrets.WALLETCONNECTID }} >> .env
+          echo GOOGLE_CLIENT_ID=${{ secrets.GOOGLECLIENTID }} >> .env
+          echo APPLE_CLIENT_ID=${{ secrets.APPLECLIENTID }} >> .env
+          cat .env
+      
       - name: Build webpack
-        env:
-          PROJECT_ACCESS_KEY_NEXT: ${{ secrets.PROJECTACCESSKEY }}
-          PROJECT_ACCESS_KEY_PROD: ${{ secrets.PROJECTACCESSKEY_PROD }}
-          WAAS_CONFIG_KEY: ${{ secrets.WAASCONFIGKEY }}
-          WALLET_CONNECT_ID: ${{ secrets.WALLETCONNECTID }}
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLECLIENTID }}
-          APPLE_CLIENT_ID: ${{ secrets.APPLECLIENTID }}
         run: npm run build
       - name: Setup Pages
         uses: actions/setup-node@v2
