@@ -885,7 +885,6 @@ export default class MainScene extends Group {
     const cardSlots = document.getElementsByClassName('card-slot')
     const cardSlotsCurrentHeight = cardSlotsContainer.offsetHeight;
 
-    const scaleFactorHeight = availableHeight / cardSlotsCurrentHeight * multiplier
     const scaleFactorHeightWithoutMultiplier = availableHeight / cardSlotsCurrentHeight
     const boundingRect = document.getElementById('activeCard').getBoundingClientRect();
 
