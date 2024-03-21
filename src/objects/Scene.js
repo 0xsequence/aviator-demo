@@ -276,11 +276,13 @@ export default class MainScene extends Group {
         contractAddress: '0xa9c88358862211870db6f18bc9b3f6e4f8b3eae7',
       })
       .then(tokenBalances => {
+        let balanceCheck = false
         for (let i = 0; i < tokenBalances.balances.length; i++) {
           if (
             tokenBalances.balances[i].contractAddress ==
             '0xa9c88358862211870db6f18bc9b3f6e4f8b3eae7'
           ) {
+            balanceCheck = true
             const balance = tokenBalances.balances[i].balance;
             const titleMarketplace = document.createElement('p');
             titleMarketplace.id = 'marketplace-title';
@@ -290,6 +292,16 @@ export default class MainScene extends Group {
             titleMarketplace.style = 'position: relative; text-align: center;';
             panelContainer.prepend(titleMarketplace);
           }
+        }
+        
+        if(!balanceCheck){
+          const titleMarketplace = document.createElement('p');
+            titleMarketplace.id = 'marketplace-title';
+            titleMarketplace.innerHTML =
+              'Marketplace &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' +
+              'Balance (⌨) 0';
+            titleMarketplace.style = 'position: relative; text-align: center;';
+            panelContainer.prepend(titleMarketplace);
         }
       })
       .catch(error => {
