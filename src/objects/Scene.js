@@ -293,7 +293,7 @@ export default class MainScene extends Group {
             panelContainer.prepend(titleMarketplace);
           }
         }
-        
+
         if(!balanceCheck){
           const titleMarketplace = document.createElement('p');
             titleMarketplace.id = 'marketplace-title';
@@ -1126,8 +1126,25 @@ export default class MainScene extends Group {
     localStorage.setItem(LocalStorageKeys.LastRunID, String(lastRun + 1));
   }
 
-  isFirstCrash() {
-    return Number(localStorage.getItem(LocalStorageKeys.LastRunID)) === 1;
+  async isFirstCrash() {
+    const ContractAddress = '0xbb35dcf99a74b4a6c38d69789232fa63e1e69e31';
+    let isFirstCrashBoolean = false
+    const tokenBalances = await indexer
+      .getTokenBalances({
+        accountAddress: this.walletAddress,
+        contractAddress: ContractAddress,
+      })
+
+      console.log(tokenBalances);
+      this.ownedTokenBalances = [];
+
+      for (let i = 0; i < tokenBalances.balances.length; i++) {
+        if(Number(tokenBalances.balances[i].tokenID) == 1){
+          isFirstCrashBoolean = true
+        }
+      }
+
+    return isFirstCrashBoolean;
   }
 
   isCardWon(cardID) {
@@ -1143,7 +1160,7 @@ export default class MainScene extends Group {
     return false;
   }
 
-  switchGameMode(new_game_mode) {
+  async switchGameMode(new_game_mode) {
     if (this.game_mode === new_game_mode) return;
 
     this.game_mode = new_game_mode;
@@ -1269,7 +1286,7 @@ export default class MainScene extends Group {
             );
           }
         );
-      } else if (this.isFirstCrash() && !this.isCardWon(CardTypes.FirstCrash)) {
+      } else if (await this.isFirstCrash() && !this.isCardWon(CardTypes.FirstCrash)) {
         this.showCard(CardTypes.FirstCrash);
         this.sequenceController.callContract(
           CardTypes.FirstCrash,
