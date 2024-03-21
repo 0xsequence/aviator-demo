@@ -33,13 +33,13 @@ const GameModes = {
 
 const ContractAddress = '0xbb35dcf99a74b4a6c38d69789232fa63e1e69e31';
 let setFromMarketPlace = false;
+let approveCallback = null;
 function Login(props) {
   const { setOpenConnectModal } = useOpenConnectModal();
-  const [burnCallback, setBurnCallback] = useState(null);
   const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
   const { data: walletClient } = useWalletClient();
-  // const [fromMarketplace, setFromMarketplace] = useState(false)
+  const [fullfillOrderData, setFulfillOrderData] = useState(null)
   const {
     data: txnData,
     sendTransaction,
@@ -87,9 +87,7 @@ function Login(props) {
         value: '0',
         gas: null,
       });
-      // setFromMarketplace(false)
       setFromMarketPlace = false;
-      // setBurnCallback(callback)
       callback(null, null);
     } catch (error) {
       callback(error);
@@ -115,10 +113,11 @@ function Login(props) {
       [],
     ]);
 
+    setFulfillOrderData(data)
+
     const erc20Interface = new ethers.utils.Interface([
       'function approve(address spender, uint256 amount) public returns (bool)',
     ]);
-    // const amountBigNumber = ethers.utils.parseUnits(String(price), 18); // Convert 1 token to its smallest unit based on 18 decimals
 
     const dataApprove = erc20Interface.encodeFunctionData('approve', [
       '0xB537a160472183f2150d42EB1c3DD6684A55f74c',
@@ -126,42 +125,41 @@ function Login(props) {
     ]);
 
     try {
-      const res = await sendTransaction({
+      setFromMarketPlace = true;
+      callback(null)
+      await sendTransaction({
         to: '0xa9c88358862211870db6f18bc9b3f6e4f8b3eae7',
         data: dataApprove,
         value: '0',
         gas: null,
       });
-
-      setTimeout(async () => {
-        const res1 = await sendTransaction({
-          to: '0xB537a160472183f2150d42EB1c3DD6684A55f74c',
-          data: data,
-          value: '0',
-          gas: null,
-        });
-        setFromMarketPlace = true;
-      }, 3000)
-      callback(null);
-
     } catch (error) {
+      alert('there was an error in approving tokens, refresh the page')
       console.log(error)
     }
   };
 
   useEffect(() => {
     if (txnData && setFromMarketPlace) {
-      console.log(txnData);
-      // props.scene.openInventory(withLoading);
-      setFromMarketPlace = false;
+      setTimeout(async () => {
+        try{
+          setFromMarketPlace = false;
+          await sendTransaction({
+            to: '0xB537a160472183f2150d42EB1c3DD6684A55f74c',
+            data: fullfillOrderData,
+            value: '0',
+            gas: null,
+          });
+        }catch(err){
+          console.log(err)
+          alert('there was an error in fulfilling the order, refresh the page')
+        }
+      }, 1000) 
+    } else {
+      console.log(txnData)
     }
-  }, [isSendTxnLoading, txnData]);
-  useEffect(() => {
-    // if(fromMarketplace == false && burnCallback) {
-    //   burnCallback(null, null)
-    // }
-    props.scene.sequenceController.fetchWalletTokens();
-  }, [txnData]);
+  }, [txnData, fullfillOrderData]);
+
   return (
     <>
       <div style={{ textAlign: 'center', zIndex: 100 }}>
