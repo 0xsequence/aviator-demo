@@ -360,7 +360,7 @@ export default class MainScene extends Group {
     marketplaceButton.ariaDisabled = 'false';
     marketplaceButton.href = '#';
     marketplaceButton.setAttribute('onclick', 'switchToMarketplace(event)');
-    console.log(marketplaceButton);
+  
     modalFooter.appendChild(marketplaceButton);
 
     var self = this;
@@ -376,7 +376,6 @@ export default class MainScene extends Group {
         },
       })
       .then(tokenBalances => {
-        console.log(tokenBalances);
         let ownedTokenBalances = [];
 
         for (let i = 0; i < tokenBalances.balances.length; i++) {
@@ -386,7 +385,6 @@ export default class MainScene extends Group {
 
         const ids = ['0', '1', '2', '3', '4', '5'];
         const blanks = this.arrayDelta(ids, ownedTokenBalances);
-        console.log(blanks)
         const gridContainer = document.getElementById('gridContainer');
 
         colors.forEach((color, index) => {

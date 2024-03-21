@@ -120,19 +120,16 @@ div.logo {
 
 .achievements {
   display: none;
-  float: left;
-  position: fixed;
-  margin-top: 10px;
+  position: absolute;
   font-weight: bold;
-  width: 50vw;
+  width: 200px;
   max-width: 700px;
-  top: 25px;
-  left: -150px;
-  text-align: center;
+  top: 15px;
+  left: 20px;
+  text-align: left;
   text-transform: uppercase;
   pointer-events: none;
-  font-size: 1.25vw;
-  text-indent: 0.5em;
+  font-size: 14px;
   letter-spacing: 0.5em;
   color: #d1b790;
 }
@@ -246,11 +243,9 @@ div.logo {
 }
 
 .card-slots {
-  transform: scale(0.5);
-  margin-top: -100px;
-  position: fixed;
-  top: 2vh;
-  left: 2vh;
+  position: absolute;
+  top: 0px;
+  left: 18px;
   display: none;
 }
 

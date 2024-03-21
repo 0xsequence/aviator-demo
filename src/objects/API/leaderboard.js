@@ -23,8 +23,6 @@ class LeaderboardManager {
             document.createElement('li')
           );
           const entry = this.leaderboard[i];
-          console.log(entry);
-
           listItem.innerHTML =
             '<mark>' +
             entry.address.slice(0, 7) +

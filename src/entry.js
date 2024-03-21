@@ -85,7 +85,6 @@ function handleMouseMove(event) {
 document.addEventListener('mousemove', handleMouseMove, false);
 
 function handleMouseUp(event) {
-  console.log('howdy');
   mainScene.handleMouseClick();
 }
 document
@@ -141,7 +140,6 @@ window.openHangar = event => {
 window.purchase = (event, id) => {
   event.preventDefault();
 
-  console.log(id);
   const order = mainScene.requestIds.filter(
     order => Number(order.tokenId) === id
   );
@@ -153,7 +151,6 @@ window.purchase = (event, id) => {
     id,
     order[0].pricePerToken,
     () => {
-      console.log('IN CALLBACK');
       document.getElementById('marketplace-title') &&
         document.getElementById('marketplace-title').remove();
       mainScene.openInventory(true, id);
@@ -180,7 +177,6 @@ document.getElementById('world').appendChild(renderer.domElement);
 
 const root = createRoot(document.getElementById('login'));
 
-console.log(Number(localStorage.getItem('plane_color')));
 mainScene.airplane.addPlane(Number(localStorage.getItem('plane_color')));
 
 root.render(

@@ -39,7 +39,6 @@ class SequenceController {
   }
 
   async init(walletClient, sendTransactionBurn, sendTransactionRequest) {
-    console.log(walletClient);
     this.walletAddress = walletClient.account.address;
     this.switchAuthMode(AuthModes.Completed);
     this.email = walletClient.account.address;
@@ -62,10 +61,8 @@ class SequenceController {
       })
       .then(async tokenBalances => {
         let requiresGift = true;
-        console.log(tokenBalances);
         for (let i = 0; i < tokenBalances.balances.length; i++) {
           const tokenId = tokenBalances.balances[i].tokenID;
-          console.log(tokenId);
           if (Number(tokenId) == 0) {
             requiresGift = false;
           }
@@ -102,7 +99,6 @@ class SequenceController {
 
             const url = ' https://sparkling-lake-c48f.tpin.workers.dev';
             // const url = 'http://localhost:8787';
-            console.log(self.email);
             const data = {
               address: self.email,
               tokenId: 0,
