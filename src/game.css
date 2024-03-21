@@ -99,10 +99,10 @@ dialog input {
 
 div.logo {
   background-image: url('../images/Sequence-Icon-Square.png');
-  background-size: cover;
+  background-size: auto 150px;
+  background-position: center;
   width: 300px;
-  height: 295px;
-  transform: scale(0.5);
+  height: 150px;
   display: block;
   margin: 0 auto;
 }
