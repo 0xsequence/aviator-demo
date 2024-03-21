@@ -123,7 +123,7 @@ class SequenceController {
               cancelButton.onclick = function (event) {
                 closeGiftModal(event); // Assuming this function is defined elsewhere to handle the modal closing
               };
-              localStorage.setItem('plane_color', 1);
+              localStorage.setItem('plane_color', 0);
             } catch (error) {
               console.error('Error:', error);
             }
