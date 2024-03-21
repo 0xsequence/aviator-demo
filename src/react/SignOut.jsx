@@ -50,6 +50,7 @@ function SignOut(props) {
               id="signOutBtn"
               onClick={() => {
                 // props.scene.clearLocalStores();
+                localStorage.clear();
                 localStorage.setItem('plane_color', 0);
                 props.scene.airplane.addPlane(0);
                 disconnect();
