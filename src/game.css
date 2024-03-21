@@ -1,5 +1,12 @@
 @import '~@picocss/pico';
 
+:root {
+	--card-width: 48px; /* Default width */
+	--card-height: 65px; /* Default height */
+	--card-slot-width: 52px; /* Default width */
+	--card-slot-height: 69px; /* Default height */
+  }
+
 html {
   /* zoom: 0.90; */
   overflow: hidden;
@@ -250,8 +257,8 @@ div.logo {
 }
 
 .card-slot {
-  width: 104px;
-  height: 138px;
+  width: var(--card-slot-width);
+  height: var(--card-slot-height);
   border: 2px solid #333;
   border-radius: 5px;
   background: rgba(0, 0, 0, 0.8);
@@ -260,8 +267,10 @@ div.logo {
 }
 
 .card-slot .card {
-  width: 100px;
-  height: 134px;
+  width: var(--card-width);
+  height: var(--card-height);
+  /* width: 100px; */
+  /* height: 134px; */
   transform: none;
   transition: none;
   z-index: 6;
@@ -270,8 +279,8 @@ div.logo {
 
 .card-tooltip {
   position: fixed;
-  bottom: -80px;
-  left: -40px;
+  /* bottom: -80px; */
+  left: -25px;
   width: 400px;
   transform: scale(0.8);
   font-weight: bold;

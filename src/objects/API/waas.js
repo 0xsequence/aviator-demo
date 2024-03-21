@@ -189,8 +189,10 @@ class SequenceController {
           this.ownedTokenBalances.push(balance);
         }
 
-        if (this.balancesChangedCallback !== null && !onAddedCard)
-          this.balancesChangedCallback();
+        if (this.balancesChangedCallback !== null && !onAddedCard){
+     
+            this.balancesChangedCallback();
+        }
       })
       .catch(error => {
         console.log(error);

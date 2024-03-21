@@ -85,6 +85,44 @@ export default class MainScene extends Group {
       }
     }, 1000);
 
+        let intervalCardSlotsBtn = setInterval(() => {
+      const cardSlotsContainer = document.getElementById('cardSlots');
+      if (cardSlotsContainer && cardSlotsContainer.offsetHeight > 0) { // Ensure the element is rendered and visible
+        // Calculate the available space (viewport height - 20vh for top and bottom)
+        const viewportHeight = window.innerHeight;
+        const desiredTopAndBottomSpace = viewportHeight * 0.15 * 2; // 10vh from top and 10vh from bottom
+        const availableHeight = viewportHeight - desiredTopAndBottomSpace;
+
+        const cards = document.getElementsByClassName('card')
+        const cardSlots = document.getElementsByClassName('card-slot')
+        const cardSlotsCurrentHeight = cardSlotsContainer.offsetHeight;
+        const scaleFactor = availableHeight / cardSlotsCurrentHeight;
+        const multiplier = scaleFactor*1.1
+
+        for (let i = 0; i < cards.length; i++) {
+            cards[i].style.setProperty('width', `${48 * multiplier + 0.2 * multiplier}px`, 'important');
+            cards[i].style.setProperty('height', `${65 * multiplier + 0.2 * multiplier}px`, 'important');
+        }
+        
+        for (let i = 0; i < cardSlots.length; i++) {
+            cardSlots[i].style.setProperty('width', `${52 * multiplier}px`, 'important');
+            cardSlots[i].style.setProperty('height', `${69 * multiplier}px`, 'important');
+        }
+
+        document.documentElement.style.setProperty('--card-width', `${48 * multiplier + 0.2 * multiplier}px`, 'important');
+        document.documentElement.style.setProperty('--card-height', `${65 * multiplier + 0.2 * multiplier}px`, 'important');
+        document.documentElement.style.setProperty('--card-slot-width', `${52 * multiplier}px`, 'important');
+        document.documentElement.style.setProperty('--card-slot-height', `${69 * multiplier}px`, 'important');
+      
+        // // Apply the scale factor to the cardSlots
+        // cardSlots.style.transform = `scale(${scaleFactor})`;
+        // cardSlots.style.top = -50-viewportHeight*.1*scaleFactor;
+        // cardSlots.style.position = 'fixed'
+    
+        clearInterval(intervalCardSlotsBtn);
+      }
+    }, 100);
+
     this.message_box = document.getElementById('replayMessage');
     this.distance_box = document.getElementById('distValue');
     this.score_box = document.getElementById('score');
@@ -716,7 +754,6 @@ export default class MainScene extends Group {
     let cardTooltipContainer = document.getElementById('cardTooltip');
 
     cardTooltipContainer.style.display = 'block';
-
     switch (cardID) {
       case CardTypes.FirstCrash:
         cardTooltipContainer.innerHTML = this.isCardWon(cardID)
@@ -837,22 +874,29 @@ export default class MainScene extends Group {
     const cardSlot = this.card_containers[parseInt(cardID) - 1];
     const { x, y, width, height } = cardSlot.getBoundingClientRect();
     const card = document.getElementById('activeCard');
+
+    
+    const viewportHeight = window.innerHeight;
+    const availableHeight = viewportHeight
+
+    const cardSlotsContainer = document.getElementById('cardSlots');
+
+    const cards = document.getElementsByClassName('card')
+    const cardSlots = document.getElementsByClassName('card-slot')
+    const cardSlotsCurrentHeight = cardSlotsContainer.offsetHeight;
+
+    const scaleFactorHeight = availableHeight / cardSlotsCurrentHeight * multiplier
+    const scaleFactorHeightWithoutMultiplier = availableHeight / cardSlotsCurrentHeight
+    const boundingRect = document.getElementById('activeCard').getBoundingClientRect();
+
     tl.to(card, {
       duration: 1.25,
-      x:
-        x -
-        card.getBoundingClientRect().left +
-        window.scrollX -
-        width -
-        window.innerWidth * 0.3 * 0.188333333,
+      x: boundingRect.x - boundingRect.width-200,
       y:
         y -
-        card.getBoundingClientRect().top +
-        window.scrollY -
-        height -
-        window.innerHeight * 0.16,
+        2000,
       rotationY: 360,
-      scale: 0.175,
+      scale: 0.22*scaleFactorHeightWithoutMultiplier,
       ease: 'power1.out',
     });
 
@@ -939,6 +983,8 @@ export default class MainScene extends Group {
 
       this.addCard(tokenBalance.tokenID);
     }
+
+
   }
 
   authModeChanged() {
