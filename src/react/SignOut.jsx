@@ -54,9 +54,9 @@ function SignOut(props) {
               id="signOutBtn"
               onClick={() => {
                 disconnect();
-                localStorage.clear();
-                localStorage.setItem('plane_color', 0);
-                props.scene.airplane.addPlane(0);
+                // localStorage.clear();
+                // localStorage.setItem('plane_color', 0);
+                // props.scene.airplane.addPlane(0);
               }}
             >
               Sign Out
