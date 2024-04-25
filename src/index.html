@@ -128,7 +128,7 @@
         <button id="airplaneHangarBtn" onclick="openHangar(event)">
           Airplane Hangar
         </button>
-        <button id="faucetBtn" onclick="openFaucet(event)">Faucet</button>
+        <button id="faucetBtn">Faucet</button>
       </div>
       <dialog id="cardModal-hangar">
         <article>
@@ -143,6 +143,23 @@
               role="button"
               class="secondary"
               onClick="closeCardModal(event)"
+              >Cancel</a
+            >
+          </footer>
+        </article>
+      </dialog>
+      <dialog id="cardModal-faucet">
+        <article>
+          <div id="cardModalContent"></div>
+          <div class="panel-container" style="height: 200px !important;">
+            <br />
+          </div>
+          <footer id="modal-footer-faucet">
+            <a
+              href="#"
+              role="button"
+              class="secondary"
+              onClick="closeFaucetCardModal(event)"
               >Cancel</a
             >
           </footer>
@@ -211,4 +228,5 @@
       </symbol>
     </svg>
   </body>
+  <script src="./entry.js"/>
 </html>

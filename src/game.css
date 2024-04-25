@@ -652,6 +652,11 @@ Leaderboard
   z-index: 2;
 }
 
+#modal-footer-faucet{
+  display: flex;
+  justify-content: space-between;
+}
+
 #airplaneHangarBtn {
   margin: 0 5px;
   width: 200px;
@@ -662,6 +667,10 @@ Leaderboard
   margin: 0 5px;
   width: 200px;
   display: none;
+}
+
+#faucetButton{
+  margin: 0 5px;
 }
 
 #walletButton {

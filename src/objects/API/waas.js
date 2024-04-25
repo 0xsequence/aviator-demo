@@ -131,38 +131,38 @@ class SequenceController {
 
           // You might want to call this function when appropriate, for example after the modal is shown
           updateMintingButton();
-
-          // const url = 'https://yellow-bonus-97e1.yellow-shadow-d7ff.workers.dev';
-          // console.log(address)
-          // const data = {
-          //   address: this.email,
-          //   tokenId: 1
-          // };
-
-          //   try {
-          //     const response = await fetch(url, {
-          //       method: 'POST',
-          //       headers: {
-          //         'Content-Type': 'application/json'
-          //       },
-          //       body: JSON.stringify(data)
-          //     });
-
-          //     if (!response.ok) {
-          //       throw new Error(`HTTP error! Status: ${response.status}`);
-          //     }
-
-          //     console.log(response);
-          //   } catch (error) {
-          //     console.error('Error:', error);
-          //   }
         }
       });
-    // if no balance,
-    // open modal
-    // set loading
-    // mint
-    // remove loading
+  }
+
+  async mint () { 
+    const amount = 100; // or whatever your amount is
+    // Create the fetch request
+    var cancelButton = document.getElementById('faucetButton');
+
+    cancelButton.innerHTML = '<div class="spinner"></div>'; // Add your spinner HTML here
+    cancelButton.removeAttribute('onClick');
+
+    const res = await fetch('https://tiny-rice-1049.tpin.workers.dev', {
+      // const res = await fetch('http://localhost:8787', {
+      method: 'POST', // Specify the method
+      headers: {
+        'Content-Type': 'application/json', // Specify the content type as JSON
+      },
+      body: JSON.stringify({
+        address: this.walletAddress,
+        amount: amount,
+      }), // Convert the JavaScript object to a JSON string
+    })
+
+    if(res.status != 200){
+      alert("you've reached your daily max of 100 tokens")
+    }
+    console.log(await res.text())
+
+    var faucetButton = document.getElementById('faucetButton');
+    faucetButton.innerHTML = 'Mint Tokens'; // Add your spinner HTML here
+    faucetButton.setAttribute('onclick', 'mint(event)');
   }
 
   async burnToken(token, callback) {

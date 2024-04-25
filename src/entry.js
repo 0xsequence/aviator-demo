@@ -116,6 +116,15 @@ window.closeCardModal = event => {
   mainScene.closeCardModal();
 };
 
+window.closeFaucetCardModal = event => {
+  event.preventDefault();
+  mainScene.closeFaucetModal();
+};
+
+window.mint = () => {
+  mainScene.sequenceController.mint()
+}
+
 window.closeGiftModal = event => {
   event.preventDefault();
   mainScene.closeGiftModal();
@@ -160,7 +169,7 @@ window.purchase = (event, id) => {
 };
 
 window.openFaucet = event => {
-  window.open('https://sequence.energy/');
+  mainScene.openFaucet();
 };
 
 window.openWallet = event => {
