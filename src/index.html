@@ -39,69 +39,18 @@
         </h1>
         <div id="leaderboard"></div>
       </div>
-      <dialog id="loginModal">
-        <article>
-          <div id="emailVerify">
-            <p>
-              Enter your email address to start playing. You will receive an
-              email with a confirmation code shortly.
-            </p>
-            <input
-              type="email"
-              placeholder="you@email.com"
-              id="emailInput"
-              required
-            />
-          </div>
-          <div id="codeVerify">
-            <p>
-              Check your email and enter the 6-digit confirmation code to verify
-              your address:
-            </p>
-            <input type="text" id="codeInput" />
-          </div>
-          <footer>
-            <a
-              href="#"
-              id="googleButton"
-              role="button"
-              class="primary"
-              style="float: left"
-              onClick="onGoogleSignIn(event)"
-              ><img
-                width="40px"
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/2048px-Google_%22G%22_logo.svg.png"
-              />&nbsp;&nbsp;Google Sign-In</a
-            >
-            <a
-              href="#"
-              role="button"
-              class="secondary"
-              onClick="closeModal(event)"
-              >Cancel</a
-            >
-            <a
-              href="#"
-              role="button"
-              onClick="triggerLogin(event)"
-              id="loginButton"
-              >Verify</a
-            >
-          </footer>
-        </article>
-      </dialog>
       <dialog id="cardModal">
         <article>
           <div id="cardModalContent"></div>
           <footer>
             <a
               href="#"
+              id="closeCardModal-1"
               role="button"
               class="secondary"
-              onClick="closeCardModal(event)"
               >Cancel</a
             >
-            <a href="#" role="button" onClick="burnCard(event)" id="burnButton"
+            <a href="#" role="button" id="burnButton"
               >Burn</a
             >
           </footer>
@@ -123,9 +72,9 @@
         <div class="card-slot" id="cardSlot5"></div>
         <div class="card-tooltip" id="cardTooltip"></div>
       </div>
-      <button id="walletButton" onclick="openWallet(event)">Wallet</button>
+      <button id="walletButton">Wallet</button>
       <div class="buttons" id="buttons">
-        <button id="airplaneHangarBtn" onclick="openHangar(event)">
+        <button id="airplaneHangarBtn">
           Airplane Hangar
         </button>
         <button id="faucetBtn">Faucet</button>
@@ -142,7 +91,7 @@
               href="#"
               role="button"
               class="secondary"
-              onClick="closeCardModal(event)"
+              id="closeCardModal-2"
               >Cancel</a
             >
           </footer>
@@ -156,10 +105,10 @@
           </div>
           <footer id="modal-footer-faucet">
             <a
+              id="closeFaucetCardModal"
               href="#"
               role="button"
               class="secondary"
-              onClick="closeFaucetCardModal(event)"
               >Cancel</a
             >
           </footer>
@@ -187,7 +136,6 @@
               role="button"
               class="secondary"
               id="firstPlaneButton"
-              onClick="closeGiftModal(event)"
               >Cancel</a
             >
           </footer>

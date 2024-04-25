@@ -135,7 +135,7 @@ class SequenceController {
       });
   }
 
-  async mint () { 
+  async mintERC20 () { 
     const amount = 100; // or whatever your amount is
     // Create the fetch request
     var cancelButton = document.getElementById('faucetButton');

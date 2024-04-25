@@ -254,7 +254,7 @@ export default class MainScene extends Group {
 
     // adding elements
     const modalFooter = document.getElementById('modal-footer');
-
+    var self = this
     if (!fromPurchase) {
       const inventoryButton = document.createElement('a');
       inventoryButton.id = 'inventoryButton';
@@ -263,7 +263,10 @@ export default class MainScene extends Group {
       inventoryButton.class = 'secondary';
       inventoryButton.ariaDisabled = 'false';
       inventoryButton.href = '#';
-      inventoryButton.setAttribute('onclick', 'openInventory(event)');
+
+      inventoryButton.onclick = () => {
+        self.openInventory();
+      };
 
       modalFooter.appendChild(inventoryButton);
     }
@@ -406,7 +409,11 @@ export default class MainScene extends Group {
     marketplaceButton.class = 'secondary';
     marketplaceButton.ariaDisabled = 'false';
     marketplaceButton.href = '#';
-    marketplaceButton.setAttribute('onclick', 'switchToMarketplace(event)');
+
+    var self = this;
+    marketplaceButton.onclick = () => {
+      self.switchToMarketplace();
+    }
   
     modalFooter.appendChild(marketplaceButton);
 
@@ -497,7 +504,10 @@ export default class MainScene extends Group {
     marketplaceButton.class = 'secondary';
     marketplaceButton.ariaDisabled = 'false';
     marketplaceButton.href = '#';
-    marketplaceButton.setAttribute('onclick', 'mint(event)');
+    var self = this
+    marketplaceButton.onclick = () => {
+      self.sequenceController.mintERC20()
+    }
   
     modalFooter.appendChild(marketplaceButton);
 
@@ -639,13 +649,35 @@ export default class MainScene extends Group {
       inventoryButton.class = 'secondary';
       inventoryButton.ariaDisabled = 'false';
       inventoryButton.href = '#';
-      inventoryButton.setAttribute('onclick', `purchase(event, ${id})`);
+      var self = this
+      inventoryButton.onclick = () => self.purchase(event, id);
 
       modalFooter.appendChild(inventoryButton);
     }
 
     if (openingHangar) this.closeCardModal();
   }
+
+  async purchase(event, id){
+    const order = this.requestIds.filter(
+      order => Number(order.tokenId) === id
+    );
+    console.log(order);
+  
+    this.sequenceController.sendTransactionRequest(
+      order[0].orderId,
+      this.sequenceController.email,
+      id,
+      order[0].pricePerToken,
+      () => {
+        document.getElementById('marketplace-title') &&
+          document.getElementById('marketplace-title').remove();
+          this.openInventory(true, id);
+          this.removeAllPurchaseButtons();
+      }
+    );
+  }
+
   async openInventory(withLoading = false, id = null) {
     console.log('opening inventory')
     console.log(withLoading)
@@ -710,7 +742,11 @@ export default class MainScene extends Group {
           marketPlaceButton.class = 'secondary';
           marketPlaceButton.ariaDisabled = 'false';
           marketPlaceButton.href = '#';
-          marketPlaceButton.setAttribute('onclick', 'switchToMarketplace(event)');
+          var self = this;
+          marketPlaceButton.onclick = () => {
+            self.switchToMarketplace();
+          }
+
           modalFooter.appendChild(marketPlaceButton);
       self.loadPlanes(ownedTokenBalances);
     } else {
@@ -767,7 +803,11 @@ export default class MainScene extends Group {
           marketPlaceButton.class = 'secondary';
           marketPlaceButton.ariaDisabled = 'false';
           marketPlaceButton.href = '#';
-          marketPlaceButton.setAttribute('onclick', 'switchToMarketplace(event)');
+          var self = this;
+          marketPlaceButton.onclick = () => {
+            self.switchToMarketplace();
+          }
+  
           modalFooter.appendChild(marketPlaceButton);
         }
 
