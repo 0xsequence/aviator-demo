@@ -63,10 +63,8 @@ export default class MainScene extends Group {
     super();
 
     this.sequenceController = new SequenceController();
-    this.sequenceController.authModeChangedCallback =
-      this.authModeChanged.bind(this);
-    this.sequenceController.balancesChangedCallback =
-      this.walletBalancesChanged.bind(this);
+    this.sequenceController.authModeChangedCallback = this.authModeChanged.bind(this);
+    this.sequenceController.balancesChangedCallback = this.walletBalancesChanged.bind(this);
     this.leaderboardManager = new LeaderboardManager();
 
     this.game_mode = GameModes.Intro;
@@ -85,7 +83,7 @@ export default class MainScene extends Group {
       }
     }, 1000);
 
-        let intervalCardSlotsBtn = setInterval(() => {
+    let intervalCardSlotsBtn = setInterval(() => {
       const cardSlotsContainer = document.getElementById('cardSlots');
       if (cardSlotsContainer && cardSlotsContainer.offsetHeight > 0) { // Ensure the element is rendered and visible
         // Calculate the available space (viewport height - 20vh for top and bottom)

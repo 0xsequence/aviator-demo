@@ -28,7 +28,7 @@ function App(props) {
       googleClientId,
       appleClientId,
       appleRedirectURI,
-      appName: 'demo app',
+      appName: 'Embedded Wallet Airplane Demo',
       projectAccessKey,
       enableConfirmationModal: false,
     }),
