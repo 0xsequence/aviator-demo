@@ -272,7 +272,6 @@ class SequenceController {
 
   clearAddress() {
     this.email = null;
-    return this;
   }
 }
 

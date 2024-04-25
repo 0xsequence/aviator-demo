@@ -23,7 +23,7 @@ function App(props) {
   const connectors = [
     ...getDefaultWaasConnectors({
       walletConnectProjectId: process.env.WALLET_CONNECT_ID,
-      defaultChainId: 421614,
+      defaultChainId: arbitrumSepolia.id,
       waasConfigKey,
       googleClientId,
       appleClientId,
@@ -31,8 +31,7 @@ function App(props) {
       appName: 'Embedded Wallet Airplane Demo',
       projectAccessKey,
       enableConfirmationModal: false,
-    }),
-    ...getKitConnectWallets(projectAccessKey, []),
+    })
   ];
 
   const transports = {};

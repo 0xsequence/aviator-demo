@@ -25,9 +25,13 @@ function SignOut(props) {
 
   useEffect(() => {
     if (!isConnected) {
-      let sequenceController = props.scene.sequenceController.clearAddress();
+      let sequenceController = props.scene.sequenceController;
+
+      sequenceController.clearAddress();
       sequenceController.switchAuthMode(AuthModes.Email);
       sequenceController.resetForm();
+      
+      props.scene.clearLocalStores();
       props.scene.switchGameMode(GameModes.Intro);
       props.scene.resetGame();
       props.scene.achievement_cards.style.display = 'none';
@@ -49,11 +53,10 @@ function SignOut(props) {
             <button
               id="signOutBtn"
               onClick={() => {
-                // props.scene.clearLocalStores();
+                disconnect();
                 localStorage.clear();
                 localStorage.setItem('plane_color', 0);
                 props.scene.airplane.addPlane(0);
-                disconnect();
               }}
             >
               Sign Out
