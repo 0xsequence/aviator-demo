@@ -27,25 +27,27 @@ jobs:
       - name: 'Create env file'
         run: |
           touch .env
-          echo PROJECT_ACCESS_KEY_NEXT=${{ secrets.PROJECTACCESSKEY }} >> .env
-          echo PROJECT_ACCESS_KEY_PROD=${{ secrets.PROJECTACCESSKEY_PROD }} >> .env
-          echo WAAS_CONFIG_KEY=${{ secrets.WAASCONFIGKEY }} >> .env
-          echo WALLET_CONNECT_ID=${{ secrets.WALLETCONNECTID }} >> .env
-          echo GOOGLE_CLIENT_ID=${{ secrets.GOOGLECLIENTID }} >> .env
-          echo APPLE_CLIENT_ID=${{ secrets.APPLECLIENTID }} >> .env
+          echo PROJECT_ACCESS_KEY_PROD=${{ secrets.PROJECT_ACCESS_KEY_PROD }} >> .env
+          echo WAAS_CONFIG_KEY=${{ secrets.WAAS_CONFIG_KEY }} >> .env
+          echo WALLET_CONNECT_ID=${{ secrets.WALLET_CONNECT_ID }} >> .env
+          echo GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} >> .env
+          echo APPLE_CLIENT_ID=${{ secrets.APPLE_CLIENT_ID }} >> .env
           cat .env
       
       - name: Build webpack
         run: npm run build
+      
       - name: Setup Pages
         uses: actions/setup-node@v2
         with:
-          branch: cloudflare-integration
+          branch: main
           folder: build
+      
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
           path: './build'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
