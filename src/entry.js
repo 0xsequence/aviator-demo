@@ -91,97 +91,89 @@ document
   .getElementById('glass')
   .addEventListener('mouseup', handleMouseUp, false);
 
-window.closeModal = event => {
-  event.preventDefault();
-  mainScene.closeLoginModal();
-};
-
-window.triggerLogin = event => {
-  event.preventDefault();
-  mainScene.sequenceController.triggerLoginModalForm();
-};
-
-window.triggerGoogleLogin = event => {
-  event.preventDefault();
-  mainScene.sequenceController.googleLogin();
-};
-
-window.burnCard = event => {
-  event.preventDefault();
-  mainScene.burnActiveCard();
-};
-
-window.closeCardModal = event => {
-  event.preventDefault();
-  mainScene.closeCardModal();
-};
-
-window.closeFaucetCardModal = event => {
+const closeFaucetCardModal = event => {
   event.preventDefault();
   mainScene.closeFaucetModal();
 };
 
-window.mint = () => {
-  mainScene.sequenceController.mint()
-}
-
-window.closeGiftModal = event => {
+const closeGiftModal = event => {
   event.preventDefault();
   mainScene.closeGiftModal();
 };
 
-window.switchToMarketplace = async event => {
-  event.preventDefault();
-  mainScene.switchToMarketplace();
+const openFaucet = event => {
+  mainScene.openFaucet();
 };
 
-window.openInventory = event => {
-  event.preventDefault();
-
-  mainScene.openInventory();
-};
-
-window.openHangar = event => {
+const openHangar = event => {
   event.preventDefault();
   mainScene.openHangar();
 };
 
-window.purchase = (event, id) => {
+const closeCardModal = event => {
   event.preventDefault();
-
-  const order = mainScene.requestIds.filter(
-    order => Number(order.tokenId) === id
-  );
-  console.log(order);
-
-  mainScene.sequenceController.sendTransactionRequest(
-    order[0].orderId,
-    mainScene.sequenceController.email,
-    id,
-    order[0].pricePerToken,
-    () => {
-      document.getElementById('marketplace-title') &&
-        document.getElementById('marketplace-title').remove();
-      mainScene.openInventory(true, id);
-      mainScene.removeAllPurchaseButtons();
-    }
-  );
+  mainScene.closeCardModal();
 };
 
-window.openFaucet = event => {
-  mainScene.openFaucet();
+const burnCard = event => {
+  event.preventDefault();
+  mainScene.burnActiveCard();
 };
 
-window.openWallet = event => {
+const openWallet = event => {
   window.open(
     `https://sepolia.arbiscan.io/address/${mainScene.sequenceController.email}`
   );
 };
 
+document.addEventListener('DOMContentLoaded', () => {
+  // open faucet
+  const faucetBtn = document.getElementById('faucetBtn');
+  if (faucetBtn) {
+      faucetBtn.addEventListener('click', openFaucet);
+  }
+
+  // open hangar
+  const hangarBtn = document.getElementById('airplaneHangarBtn');
+  if (hangarBtn) {
+    hangarBtn.addEventListener('click', openHangar);
+  }
+
+  //firstPlaneButton
+  const firstPlaneButton = document.getElementById('firstPlaneButton');
+  if (firstPlaneButton) {
+    firstPlaneButton.addEventListener('click', closeGiftModal);
+  }
+
+  // closeFaucetCardModal
+  const closeFaucetCardModalEl = document.getElementById('closeFaucetCardModal')
+  if(closeFaucetCardModalEl){
+    closeFaucetCardModalEl.addEventListener('click', closeFaucetCardModal)
+  }
+
+  // closeCardModal
+  const closeCardModalEl = document.getElementById('closeCardModal-1')
+  if(closeCardModalEl){
+    closeCardModalEl.addEventListener('click', closeCardModal)
+  }
+
+  const closeCardModalEl2 = document.getElementById('closeCardModal-2')
+  if(closeCardModalEl2){
+    closeCardModalEl2.addEventListener('click', closeCardModal)
+  }
+
+  const burnButton = document.getElementById('burnButton')
+  if(burnButton){
+    burnButton.addEventListener('click', burnCard)
+  }
+  const walletButton = document.getElementById('walletButton')
+  if(walletButton){
+    walletButton.addEventListener('click', openWallet)
+  }
+});
+
 // dom
 document.body.style.margin = 0;
-// document.body.style.zoom = 0.77;
-// document.getElementById('world').style.zoom = 1.3;
 document.getElementById('world').appendChild(renderer.domElement);
 
 const root = createRoot(document.getElementById('login'));
