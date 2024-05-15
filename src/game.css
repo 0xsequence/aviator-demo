@@ -646,10 +646,15 @@ Leaderboard
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 65px;
+  bottom: 140px;
   display: flex;
   justify-content: center;
   z-index: 2;
+}
+
+#modal-footer-faucet{
+  display: flex;
+  justify-content: space-between;
 }
 
 #airplaneHangarBtn {
@@ -664,23 +669,27 @@ Leaderboard
   display: none;
 }
 
+#faucetButton{
+  margin: 0 5px;
+}
+
 #walletButton {
   width: 200px;
   position: fixed;
-  bottom: 125px;
+  bottom: 50px;
   z-index: 2;
   left: 50%;
-  transform: translateX(-50%) translateX(105px);
+  transform: translateX(-50%) translateX(-105px);
   display: none;
 }
 
 #signOutBtn {
   width: 200px;
   position: fixed;
-  bottom: 125px;
+  bottom: 50px;
   z-index: 2;
   left: 50%;
-  transform: translateX(-50%) translateX(-105px);
+  transform: translateX(-50%) translateX(105px);
 }
 
 .faucet {

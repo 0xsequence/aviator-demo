@@ -271,14 +271,14 @@ export default class MainScene extends Group {
     indexer
       .getTokenBalances({
         accountAddress: this.sequenceController.email,
-        contractAddress: '0xa9c88358862211870db6f18bc9b3f6e4f8b3eae7',
+        contractAddress: '0xb484c76a59074efc3da2fcfab57b03d3cdd96b80',
       })
       .then(tokenBalances => {
         let balanceCheck = false
         for (let i = 0; i < tokenBalances.balances.length; i++) {
           if (
             tokenBalances.balances[i].contractAddress ==
-            '0xa9c88358862211870db6f18bc9b3f6e4f8b3eae7'
+            '0xb484c76a59074efc3da2fcfab57b03d3cdd96b80'
           ) {
             balanceCheck = true
             const balance = tokenBalances.balances[i].balance;
@@ -317,7 +317,7 @@ export default class MainScene extends Group {
     ];
 
     const res = await fetch(
-      'https://dev-marketplace-api.sequence.app/arbitrum-sepolia/rpc/Marketplace/GetTopOrders',
+      'https://marketplace-api.sequence.app/arbitrum-sepolia/rpc/Marketplace/GetTopOrders',
       {
         method: 'POST',
         headers: {
@@ -325,7 +325,7 @@ export default class MainScene extends Group {
         },
         body: JSON.stringify({
           collectionAddress: '0x1693ffc74edbb50d6138517fe5cd64fd1c917709',
-          currencyAddresses: ['0xa9c88358862211870db6f18bc9b3f6e4f8b3eae7'],
+          currencyAddresses: ['0xb484c76a59074efc3da2fcfab57b03d3cdd96b80'],
           orderbookContractAddress:
             '0xB537a160472183f2150d42EB1c3DD6684A55f74c',
           tokenIDs: ['0', '1', '2', '3', '4', '5'],
@@ -455,6 +455,104 @@ export default class MainScene extends Group {
       .catch(error => {
         console.log(error);
       });
+  }
+
+  openFaucet() {
+    const panelContainer =
+      document.getElementsByClassName('panel-container')[1];
+
+    const titleMarketplace = document.createElement('p');
+    titleMarketplace.id = 'inventory-title';
+    titleMarketplace.innerHTML = 'Faucet';
+    titleMarketplace.style = 'position: relative; text-align: center;';
+
+    // Add CSS style for vertical and horizontal centering using Flexbox
+    panelContainer.style.display = 'flex';
+    panelContainer.style.flexDirection = 'column';
+    panelContainer.style.justifyContent = 'center';
+    panelContainer.style.alignItems = 'center';
+    panelContainer.style.height = '100px';  // Ensure the container has a height
+    panelContainer.style.width = '250px';  // Ensure the container has a height
+
+    // Creating the faucetInfo element
+    const faucetInfo = document.createElement('p');
+    faucetInfo.id = 'faucet-info';
+    faucetInfo.innerHTML = 'collect 100 tokens <br> per day';
+    faucetInfo.style.textAlign = 'center';
+    panelContainer.prepend(faucetInfo);
+
+    // Creating the faucetContent element
+    const faucetContent = document.createElement('p');
+    faucetContent.id = 'faucet-description';
+    faucetContent.innerHTML = '⌨';
+    faucetContent.style.textAlign = 'center';
+    panelContainer.prepend(faucetContent);
+
+    const modalFooter = document.getElementById('modal-footer-faucet');
+
+    const marketplaceButton = document.createElement('a');
+    marketplaceButton.id = 'faucetButton';
+    marketplaceButton.innerHTML = 'Mint Tokens';
+    marketplaceButton.role = 'button';
+    marketplaceButton.class = 'secondary';
+    marketplaceButton.ariaDisabled = 'false';
+    marketplaceButton.href = '#';
+    marketplaceButton.setAttribute('onclick', 'mint(event)');
+  
+    modalFooter.appendChild(marketplaceButton);
+
+
+    // const panel = document.createElement('div');
+    // panel.className = 'color-panel ' + 'plane-' + index;
+    // gridContainer.appendChild(panel);
+    var modal = document.getElementById('cardModal-faucet');
+    modal.setAttribute('open', true);
+
+    // var self = this;
+    // indexer
+    //   .getTokenBalances({
+    //     accountAddress: this.sequenceController.email,
+    //     contractAddress: '0x1693ffc74edbb50d6138517fe5cd64fd1c917709',
+    //     includeMetadata: true,
+    //     metadataOptions: {
+    //       includeMetadataContracts: [
+    //         '0x1693ffc74edbb50d6138517fe5cd64fd1c917709',
+    //       ],
+    //     },
+    //   })
+    //   .then(tokenBalances => {
+    //     let ownedTokenBalances = [];
+
+    //     for (let i = 0; i < tokenBalances.balances.length; i++) {
+    //       const tokenId = tokenBalances.balances[i].tokenID;
+    //       ownedTokenBalances.push(tokenId);
+    //     }
+
+    //     const ids = ['0', '1', '2', '3', '4', '5'];
+    //     const blanks = this.arrayDelta(ids, ownedTokenBalances);
+    //     const gridContainer = document.getElementById('gridContainer');
+
+    //     colors.forEach((color, index) => {
+    //       const panel = document.createElement('div');
+    //       panel.className = 'color-panel ' + 'plane-' + index;
+    //       if (!blanks.includes(String(index))) {
+    //         console.log('adding' + index)
+    //         panel.onclick = () => self.handlePanelClick(index, false, true);
+    //       }
+    //       gridContainer.appendChild(panel);
+    //     });
+
+    //     self.handlePanelClick(
+    //       Number(localStorage.getItem('plane_color')),
+    //       false,
+    //       false
+    //     );
+
+    //     self.loadPlanes(ownedTokenBalances);
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
   }
 
   loadPlanes(tokenIDs) {
@@ -689,6 +787,42 @@ export default class MainScene extends Group {
     modal.setAttribute('open', false);
     console.log('closing');
   }
+
+  closeFaucetModal() {
+    var modal = document.getElementById('cardModal-faucet');
+    modal.setAttribute('open', false);
+    console.log('closing modal');
+    // if (this.game_mode_previous == null) {
+    //   console.log('test');
+    //   this.game_mode = GameModes.Intro;
+    // } else {
+    //   this.game_mode = this.game_mode_previous;
+    //   this.game_mode_previous = null;
+    //   console.log('else');
+    // }
+
+    // this.removeAllPurchaseButtons();
+
+    // document.querySelectorAll('.color-panel').forEach((panel, idx) => {
+    //   panel.remove();
+    // });
+    // const marketPlaceBtn = document.getElementById('marketPlaceButton');
+    // const inventoryBtn = document.getElementById('inventoryButton');
+
+    document.getElementById('faucet-info') &&
+      document.getElementById('faucet-info').remove();
+    document.getElementById('faucet-description') &&
+    document.getElementById('faucet-description').remove();
+
+    document.getElementById('faucetButton') &&
+    document.getElementById('faucetButton').remove();
+    // document.getElementById('marketplace-title') &&
+    //   document.getElementById('marketplace-title').remove();
+
+    // marketPlaceBtn && marketPlaceBtn.remove();
+    // inventoryBtn && inventoryBtn.remove();
+  }
+
   closeCardModal() {
     this.activeToken = null;
     var modal = document.getElementById('cardModal-hangar');
