@@ -43,7 +43,7 @@ module.exports = {
       Buffer: ['buffer', 'Buffer'],
     }),
     new HtmlWebpackPlugin({
-      title: 'Aviator Sequence Demo',
+      title: 'Sequence Aviator Demo',
       template: './src/index.html',
     }),
     new Dotenv()
