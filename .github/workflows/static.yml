@@ -22,7 +22,7 @@ jobs:
           version: 8
 
       - name: Install dependencies
-        run: pnpm install
+        run: cd app && pnpm install
 
       - name: 'Create env file'
         run: |
