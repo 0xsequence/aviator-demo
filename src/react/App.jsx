@@ -28,7 +28,7 @@ function App(props) {
       googleClientId,
       appleClientId,
       appleRedirectURI,
-      appName: 'Embedded Wallet Airplane Demo',
+      appName: 'Aviator Demo',
       projectAccessKey,
       enableConfirmationModal: false,
     })
@@ -50,7 +50,7 @@ function App(props) {
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <KitProvider
-          config={{ defaultTheme: 'light', signIn: { showEmailInput: false } }}
+          config={{ projectAccessKey, defaultTheme: 'light', signIn: { showEmailInput: false } }}
         >
           <div id="app">
             <Login scene={props.scene} />

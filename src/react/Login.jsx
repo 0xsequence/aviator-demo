@@ -34,6 +34,7 @@ const GameModes = {
 const ContractAddress = '0xbb35dcf99a74b4a6c38d69789232fa63e1e69e31';
 let setFromMarketPlace = false;
 let approveCallback = null;
+
 function Login(props) {
   const { setOpenConnectModal } = useOpenConnectModal();
   const { isConnected } = useAccount();
