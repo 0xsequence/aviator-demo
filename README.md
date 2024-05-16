@@ -3,7 +3,7 @@ Sequence Aviator Demo
 
 This is a basic game demo that leverages [Sequence](https://sequence.xyz/)'s Wallet as a Service capabilities to seamlessly authenticate the player and create a multi-chain capable wallet behind the scenes. [Sequence stack](https://github.com/0xsequence/sequence.js) can then be further used to trigger contracts, award NFTs or other tokens, etc.
 
-You can [play a demo of the game here](https://d3sd3u0ja5dgz2.cloudfront.net/).
+You can [play a demo of the game here](https://0xsequence.github.io/aviator-demo/).
 
 ## Usage
 
