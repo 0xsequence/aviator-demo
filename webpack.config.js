@@ -46,7 +46,9 @@ module.exports = {
       title: 'Sequence Aviator Demo',
       template: './src/index.html',
     }),
-    new Dotenv()
+    new Dotenv({
+      path: `./.env`,
+    })
   ],
   resolve: {
     fallback: {
