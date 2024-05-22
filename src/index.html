@@ -9,8 +9,7 @@
       rel="stylesheet"
       type="text/css"
     />
-    <link src="./game.css" />
-    <!--[if IE]>
+      <!--[if IE]>
       <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
   </head>
@@ -39,23 +38,6 @@
         </h1>
         <div id="leaderboard"></div>
       </div>
-      <dialog id="cardModal">
-        <article>
-          <div id="cardModalContent"></div>
-          <footer>
-            <a
-              href="#"
-              id="closeCardModal-1"
-              role="button"
-              class="secondary"
-              >Cancel</a
-            >
-            <a href="#" role="button" id="burnButton"
-              >Burn</a
-            >
-          </footer>
-        </article>
-      </dialog>
       <div class="" id="login"></div>
       <div class="message message--replay" id="replayMessage"></div>
       <div class="achievement-prompt">
@@ -63,98 +45,121 @@
         <div class="card-label" id="cardLabel"></div>
       </div>
 
-      <p class="achievements" id="achievment-cards">Achievement Cards</p>
-      <div class="card-slots" id="cardSlots">
-        <div class="card-slot" id="cardSlot1"></div>
-        <div class="card-slot" id="cardSlot2"></div>
-        <div class="card-slot" id="cardSlot3"></div>
-        <div class="card-slot" id="cardSlot4"></div>
-        <div class="card-slot" id="cardSlot5"></div>
+      <p class="achievements" id="achievement-cards">Achievement Cards</p>
+      <div class="card-slots" id="card-slots">
+        <div class="card-slot" id="1"></div>
+        <div class="card-slot" id="2"></div>
+        <div class="card-slot" id="3"></div>
+        <div class="card-slot" id="4"></div>
+        <div class="card-slot" id="5"></div>
         <div class="card-tooltip" id="cardTooltip"></div>
       </div>
-      <button id="walletButton">Wallet</button>
       <div class="buttons" id="buttons">
-        <button id="airplaneHangarBtn">
-          Airplane Hangar
+        <button id="hangar-button">
+          Your Hangar
         </button>
-        <button id="faucetBtn">Faucet</button>
+        <button id="marketplace-button">Marketplace</button>
       </div>
-      <dialog id="cardModal-hangar">
-        <article>
-          <div id="cardModalContent"></div>
-          <div class="panel-container">
-            <br />
-            <div class="grid-container" id="gridContainer"></div>
+      <dialog id="achievement-card-modal">
+        <article id="article">
+          <div id="spinner-holder"></div>
+          <a
+          href="#"
+          role="button"
+          class="secondary close-button"
+          id="close"
+          >✕</a>
+          <p class="modal-title" id="title">Achievement</p>
+          <div id="modal-content">
+            <div class="modal-card" id="card"></div>
           </div>
-          <footer id="modal-footer">
-            <a
-              href="#"
-              role="button"
-              class="secondary"
-              id="closeCardModal-2"
-              >Cancel</a
-            >
+          <footer>
+            <a href="#" role="button" id="burn-button">Burn</a>
           </footer>
         </article>
       </dialog>
-      <dialog id="cardModal-faucet">
-        <article>
-          <div id="cardModalContent"></div>
-          <div class="panel-container" style="height: 200px !important;">
-            <br />
+      <dialog id="hangar-modal">
+        <article id="article">
+          <div id="spinner-holder"></div>
+          <a
+          href="#"
+          role="button"
+          class="secondary close-button"
+          id="close"
+          >✕</a>
+          <p class="modal-title">Your Hangar</p>
+          <div class="grid-container" id="grid-container">
+            <div class="color-panel selected" id="plane-0"></div>
+            <div class="color-panel" id="plane-1"></div>
+            <div class="color-panel" id="plane-2"></div>
+            <div class="color-panel" id="plane-3"></div>
+            <div class="color-panel" id="plane-4"></div>
+            <div class="color-panel" id="plane-5"></div>
           </div>
-          <footer id="modal-footer-faucet">
-            <a
-              id="closeFaucetCardModal"
-              href="#"
-              role="button"
-              class="secondary"
-              >Cancel</a
-            >
+          <footer id="footer">
           </footer>
         </article>
       </dialog>
-      <dialog id="cardModal-faucet">
-        <article>
-          <div id="cardModalContent"></div>
-          <div class="panel-container" style="height: 200px !important;">
+      <dialog id="marketplace-modal">
+        <article id="article">
+          <div id="spinner-holder"></div>
+          <a
+          href="#"
+          role="button"
+          class="secondary close-button"
+          id="close"
+          >✕</a>
+          <p class="modal-title">Marketplace</p>
+          <div id="modal-content"></div>
+          <div class="panel-container" id="panel-container">
             <br />
+            <div class="grid-container purchase-grid" id="grid-container">
+              <div class="color-panel" id="plane-0"><div id='title' class='plane-info'></div><div id='price' class='plane-info-price'>-</div></div>
+              <div class="color-panel" id="plane-1"><div id='title' class='plane-info'></div><div id='price' class='plane-info-price'>-</div></div>
+              <div class="color-panel" id="plane-2"><div id='title' class='plane-info'></div><div id='price' class='plane-info-price'>-</div></div>
+              <div class="color-panel" id="plane-3"><div id='title' class='plane-info'></div><div id='price' class='plane-info-price'>-</div></div>
+              <div class="color-panel" id="plane-4"><div id='title' class='plane-info'></div><div id='price' class='plane-info-price'>-</div></div>
+              <div class="color-panel" id="plane-5"><div id='title' class='plane-info'></div><div id='price' class='plane-info-price'>-</div></div>
+            </div>
           </div>
-          <footer id="modal-footer-faucet">
-            <a
-              href="#"
-              role="button"
-              class="secondary"
-              onClick="closeFaucetCardModal(event)"
-              >Cancel</a
-            >
+          <footer id="footer"><p id="bolt-balance">🔩 0</p>
+            <button 
+            href="#"
+            role="button"
+            class="secondary"
+            id="use-faucet-button"
+            >Mint 🔩 100</button>
           </footer>
         </article>
       </dialog>
-      <dialog id="cardModal-gift">
-        <article>
-          <div id="cardModalContentGift">
+      <dialog id="gift-modal">
+        <article id="article">
+          <a
+          href="#"
+          role="button"
+          class="secondary close-button"
+          id="close"
+          >✕</a>
+          <p class="modal-title">A Gift</p>
+          <div id="modal-content">
             <!-- Title "A gift for registering" will be added via JavaScript -->
           </div>
           <br />
           <p style="text-align: center">Falcon Mark IV Redtail</p>
           <!-- Added text -->
           <br />
-          <div class="card-container" id="gridContainerGift">
+          <div class="card-container" id="grid-container">
             <!-- Image or element representing the image will be added here -->
           </div>
           <br />
           <br />
           <br />
-
-          <footer id="modal-footer">
-            <a
-              href="#"
-              role="button"
-              class="secondary"
-              id="firstPlaneButton"
-              >Cancel</a
-            >
+          <footer id="footer"><button 
+            href="#"
+            role="button"
+            class="secondary"
+            id="firstPlaneButton"
+            >Continue</button>
           </footer>
         </article>
       </dialog>

@@ -197,7 +197,7 @@ div.logo {
   transform: translateX(-50%) translateY(-50%);
   transform-style: preserve-3d;
   z-index: 2;
-  pointer-events: none;
+  /* pointer-events: none; */
 }
 
 .card {
@@ -210,31 +210,34 @@ div.logo {
   backface-visibility: hidden;
   background-size: cover;
   background-position: center;
+  z-index: 6;
+}
+
+.modal-card {
+  width: 300px;
+  height: 400px;
+  background-size: cover;
+  background-position: center;
 }
 
 .card-1 {
   background-image: url('../images/card1-firstcrash.png');
-  z-index: 6;
 }
 
 .card-2 {
   background-image: url('../images/card2-1000m.png');
-  z-index: 6;
 }
 
 .card-3 {
   background-image: url('../images/card3-3runs.png');
-  z-index: 6;
 }
 
 .card-4 {
   background-image: url('../images/card4-2500m.png');
-  z-index: 6;
 }
 
 .card-5 {
   background-image: url('../images/card5-firstpylon.png');
-  z-index: 6;
 }
 
 .card-backface {
@@ -252,9 +255,15 @@ div.logo {
 
 .card-slots {
   position: absolute;
-  top: 0px;
+  top: 80px;
   left: 18px;
   display: none;
+  z-index: 5;
+}
+
+#marketplace-title {
+  position: relative;
+  text-align: center;
 }
 
 .card-slot {
@@ -265,6 +274,7 @@ div.logo {
   background: rgba(0, 0, 0, 0.8);
   z-index: 1;
   margin-bottom: 10px;
+  cursor: pointer;
 }
 
 .card-slot .card {
@@ -276,6 +286,7 @@ div.logo {
   transition: none;
   z-index: 6;
   pointer-events: none;
+  margin: 2px;
 }
 
 .card-tooltip {
@@ -475,26 +486,13 @@ Leaderboard
   transition: all 0.35s ease-in-out;
 }
 
-#cardSlot1 {
-  margin-top: 80px;
-}
-
-#marketPlaceButton {
-  background-color: green;
-  border: 1px solid green;
-}
-
-#marketPlaceButton {
-  background-color: green;
-  border: 1px solid green;
-}
-
 .grid-container {
   display: grid;
   grid-template-columns: repeat(3, 120px); /* 3-column grid */
   grid-template-rows: repeat(2, 120px); /* 2-row grid */
   gap: 10px;
   justify-items: center;
+  margin-top: 14px;
 }
 
 #gridContainerGift {
@@ -517,7 +515,7 @@ Leaderboard
   border-radius: 5px;
   cursor: pointer;
   transition: box-shadow 0.3s ease;
-  padding: 30px;
+  padding: 20px;
   background-size: contain;
   align-items: center;
   justify-content: center;
@@ -526,22 +524,22 @@ Leaderboard
   font-size: 50px;
 }
 
-.plane-0 {
+#plane-0 {
   background-image: url('../images/planes/Falcon_Mark_IV_Redtail.png');
 }
-.plane-1 {
+#plane-1 {
   background-image: url('../images/planes/Hawkwind_P-22_Emerald.png');
 }
-.plane-2 {
+#plane-2 {
   background-image: url('../images/planes/Lightning_Spectre_G6.png');
 }
-.plane-3 {
+#plane-3 {
   background-image: url('../images/planes/Raptor_Fury_X2.png');
 }
-.plane-4 {
+#plane-4 {
   background-image: url('../images/planes/Skyraider_Z-11_Onyx.png');
 }
-.plane-5 {
+#plane-5 {
   background-image: url('../images/planes/Thunderbolt_XR-5_Cobalt.png');
 }
 
@@ -565,7 +563,9 @@ Leaderboard
   padding: 0px !important;
 }
 
-.marketplace-title {
+p.modal-title {
+  position: relative; 
+  text-align: center;
 }
 
 #inventoryButton {
@@ -573,37 +573,37 @@ Leaderboard
   border: 1px solid hsl(225 83% 25% / 1);
 }
 
-#purchaseButton-0 {
+.purchase-grid #plane-0 {
   background-color: red;
   border: 1px solid red;
   color: white;
 }
 
-#purchaseButton-1 {
+.purchase-grid #plane-1 {
   background-color: green;
   border: 1px solid green;
   color: white;
 }
 
-#purchaseButton-2 {
+.purchase-grid #plane-2 {
   background-color: white;
   border: 1px solid white;
   color: black;
 }
 
-#purchaseButton-3 {
+.purchase-grid #plane-3 {
   background-color: orange;
   border: 1px solid orange;
   color: white;
 }
 
-#purchaseButton-4 {
+.purchase-grid #plane-4 {
   background-color: black;
   border: 1px solid black;
   color: white;
 }
 
-#purchaseButton-5 {
+.purchase-grid #plane-5 {
   background-color: blue;
   border: 1px solid blue;
 }
@@ -621,7 +621,9 @@ Leaderboard
 .plane-info-price {
   font-size: 20px;
   display: block;
-  margin-top: 5px; /* Adjust as needed */
+  margin-top: 36px; /* Adjust as needed */
+  border-radius: 8px;
+  background-color: #00000080;
 }
 
 .spinner {
@@ -658,39 +660,24 @@ Leaderboard
   justify-content: space-between;
 }
 
-#airplaneHangarBtn {
+#hangar-button {
   margin: 0 5px;
   width: 200px;
   display: none;
 }
 
-#faucetBtn {
+#marketplace-button {
   margin: 0 5px;
   width: 200px;
   display: none;
 }
 
-#faucetButton{
-  margin: 0 5px;
-}
-
-#walletButton {
+#sign-out-button {
   width: 200px;
   position: fixed;
-  bottom: 50px;
+  bottom: 0px;
   z-index: 2;
-  left: 50%;
-  transform: translateX(-50%) translateX(-105px);
-  display: none;
-}
-
-#signOutBtn {
-  width: 200px;
-  position: fixed;
-  bottom: 50px;
-  z-index: 2;
-  left: 50%;
-  transform: translateX(-50%) translateX(105px);
+  right: 20px
 }
 
 .faucet {
@@ -713,4 +700,66 @@ Leaderboard
 
 #achievement-cards {
   display: none;
+}
+
+article {
+  position: relative;
+  padding-top: 14px;
+}
+
+article footer{
+  position: relative;
+  height: 65px;
+}
+
+article footer p#bolt-balance{
+  position: absolute;
+  left: 16px;
+  top: 14px;
+}
+
+article footer button#use-faucet-button{
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  padding: 4px 12px;
+  width: 140px;
+  height: 50px;
+}
+
+.faded {
+  opacity: 30%;
+}
+
+.close-button {
+  position: absolute;
+    top: 6px !important;
+    right: 6px !important;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    padding: 4px;
+}
+
+dialog {
+  cursor:alias;
+}
+
+dialog article {
+  cursor: default;
+}
+
+#spinner-holder {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -18px;
+}
+
+.faucet-info {
+  text-align:  center;
+}
+
+#achievement-card-modal article footer {
+  margin: 0px;
 }

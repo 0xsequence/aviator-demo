@@ -16,8 +16,9 @@
     "deploy": "gh-pages -d build"
   },
   "dependencies": {
-    "0xsequence": "1.9.26",
-    "@0xsequence/indexer": "1.9.26",
+    "0xsequence": "1.9.27",
+    "@0xsequence/indexer": "1.9.27",
+    "@0xsequence/metadata": "1.9.27",
     "@0xsequence/kit": "2.6.1",
     "@0xsequence/kit-connectors": "2.6.1",
     "@0xsequence/kit-wallet": "2.6.1",

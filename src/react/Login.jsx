@@ -11,29 +11,10 @@ import './styles.css';
 import SequenceMarketABI from '../abi/ISequenceMarket.json';
 
 import { ethers } from 'ethers';
-import { config } from './App.jsx';
+import { acheivementsContractAddress, boltContractAddress, orderbookContractAddress } from '../constants.js';
+import { AuthModes, GameModes } from '../gameConstants.js';
 
-const AuthModes = {
-  Email: 'email',
-  Code: 'code',
-  Completed: 'completed',
-};
-
-const GameModes = {
-  Intro: 'intro',
-  Playing: 'playing',
-  Paused: 'paused',
-  GameEnding: 'gameending',
-  GameOver: 'gameover',
-  CardWon: 'cardwon',
-  CardReady: 'cardready',
-  SigningOut: 'signingout',
-  CardDetails: 'carddetails',
-};
-
-const ContractAddress = '0xbb35dcf99a74b4a6c38d69789232fa63e1e69e31';
 let setFromMarketPlace = false;
-let approveCallback = null;
 
 function Login(props) {
   const { setOpenConnectModal } = useOpenConnectModal();
@@ -66,7 +47,7 @@ function Login(props) {
       props.scene.sequenceController.init(
         walletClient,
         sendBurnToken,
-        sendAcceptRequest
+        sendTransactionRequest
       );
       props.scene.switchGameMode(GameModes.Intro);
       props.scene.sequenceController.switchAuthMode(AuthModes.Completed);
@@ -75,7 +56,7 @@ function Login(props) {
 
   const sendBurnToken = async (tokenID, amount, callback) => {
     const contractABI = ['function burn(uint256 tokenId, uint256 amount)']; // Replace with your contract's ABI
-    const contract = new ethers.Contract(ContractAddress, contractABI);
+    const contract = new ethers.Contract(acheivementsContractAddress, contractABI);
     const data = contract.interface.encodeFunctionData('burn', [
       tokenID,
       amount,
@@ -83,7 +64,7 @@ function Login(props) {
 
     try {
       await sendTransaction({
-        to: ContractAddress,
+        to: acheivementsContractAddress,
         data: data,
         value: '0',
         gas: null,
@@ -95,7 +76,7 @@ function Login(props) {
     }
   };
 
-  const sendAcceptRequest = async (
+  const sendTransactionRequest = async (
     requestId,
     address,
     tokenID,
@@ -121,15 +102,14 @@ function Login(props) {
     ]);
 
     const dataApprove = erc20Interface.encodeFunctionData('approve', [
-      '0xB537a160472183f2150d42EB1c3DD6684A55f74c',
+      orderbookContractAddress,
       String(amount),
     ]);
 
     try {
       setFromMarketPlace = true;
-      callback(null)
       await sendTransaction({
-        to: '0xb484c76a59074efc3da2fcfab57b03d3cdd96b80',
+        to: boltContractAddress,
         data: dataApprove,
         value: '0',
         gas: null,
@@ -138,6 +118,7 @@ function Login(props) {
       alert('there was an error in approving tokens, refresh the page')
       console.log(error)
     }
+    callback(null)
   };
 
   useEffect(() => {
@@ -146,7 +127,7 @@ function Login(props) {
         try{
           setFromMarketPlace = false;
           await sendTransaction({
-            to: '0xB537a160472183f2150d42EB1c3DD6684A55f74c',
+            to: orderbookContractAddress,
             data: fullfillOrderData,
             value: '0',
             gas: null,

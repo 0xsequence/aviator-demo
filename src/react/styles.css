@@ -20,31 +20,3 @@
   font-weight: bold;
   text-transform: uppercase;
 }
-
-#cardSlots {
-  z-index: 5;
-}
-
-#cardSlot1 {
-  z-index: 1;
-}
-#cardSlot2 {
-  z-index: 1;
-}
-#cardSlot3 {
-  z-index: 1;
-}
-#cardSlot4 {
-  z-index: 1;
-}
-#cardSlot5 {
-  z-index: 1;
-}
-#cardSlot6 {
-  z-index: 1;
-}
-
-#marketplace-title {
-  position: relative;
-  text-align: center;
-}

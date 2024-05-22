@@ -2,11 +2,11 @@ import React from 'react';
 import Login from './Login.jsx';
 import SignOut from './SignOut.jsx';
 
-import { KitProvider, getKitConnectWallets } from '@0xsequence/kit';
+import { KitProvider } from '@0xsequence/kit';
 import { getDefaultWaasConnectors } from '@0xsequence/kit-connectors';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createConfig, http, WagmiProvider } from 'wagmi';
-import { mainnet, polygon, arbitrumSepolia, Chain } from 'wagmi/chains';
+import { mainnet, arbitrumSepolia } from 'wagmi/chains';
 
 const queryClient = new QueryClient();
 const chains = [mainnet, arbitrumSepolia];
