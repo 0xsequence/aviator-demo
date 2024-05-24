@@ -547,6 +547,10 @@ Leaderboard
   box-shadow: 0 0 0 3px white;
 }
 
+.selected:hover {
+  box-shadow: 0 0 0 9px white;
+}
+
 .greyed-out {
   opacity: 0.5;
 }
@@ -568,50 +572,60 @@ p.modal-title {
   text-align: center;
 }
 
-#inventoryButton {
-  background-color: hsl(225 83% 25% / 1);
-  border: 1px solid hsl(225 83% 25% / 1);
+.grid-container .color-panel {
+  position: relative;
+  transition: 0.1s;
+  transition-timing-function: ease-out;
+  border: 1px solid;
+  outline: 0px solid;
+}
+.grid-container .color-panel:hover {
+  /* border: 0px solid; */
+  outline: 6px solid;
 }
 
-.purchase-grid #plane-0 {
-  background-color: red;
-  border: 1px solid red;
-  color: white;
+.purchase-grid .color-panel #price {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  padding: 0px 4px;
+  border-color: black;
+  border-width: 1px;
+  border-style: solid;
 }
 
-.purchase-grid #plane-1 {
-  background-color: green;
-  border: 1px solid green;
-  color: white;
+.grid-container #plane-0 {
+  border-color: red;
+  outline-color: red;
 }
 
-.purchase-grid #plane-2 {
-  background-color: white;
-  border: 1px solid white;
-  color: black;
+.grid-container #plane-1 {
+  border-color: green;
+  outline-color: green;
 }
 
-.purchase-grid #plane-3 {
-  background-color: orange;
-  border: 1px solid orange;
-  color: white;
+.grid-container #plane-2 {
+  border-color: white;
+  outline-color: white;
 }
 
-.purchase-grid #plane-4 {
-  background-color: black;
-  border: 1px solid black;
-  color: white;
+.grid-container #plane-3 {
+  border-color: orange;
+  outline-color: orange;
 }
 
-.purchase-grid #plane-5 {
-  background-color: blue;
-  border: 1px solid blue;
+.grid-container #plane-4 {
+  border-color: black;
+  outline-color: black;
+}
+
+.grid-container #plane-5 {
+  border-color: blue;
+  outline-color: blue;
 }
 
 #firstPlaneButton {
-  background-color: red;
   border: 1px solid red;
-  color: white;
 }
 
 .plane-info {
