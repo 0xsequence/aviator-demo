@@ -166,8 +166,7 @@ export default class MainScene extends Group {
       myBolts.balanceSignal.listen(bolts => {
         if (bolts.ownsAny('0')) {
           balanceEl.innerHTML = `🔩 ${parseFriendlyTokenAmount(
-            bolts.tokenBalances.get('0'),
-            2
+            bolts.tokenBalances.get('0')
           )}`;
         } else {
           balanceEl.innerHTML = '🔩 0.00';
@@ -218,8 +217,7 @@ export default class MainScene extends Group {
           const priceEl = getChildByIDChain(planeEl, 'price');
           if (order) {
             priceEl.textContent = `🔩${parseFriendlyTokenAmount(
-              order.pricePerToken,
-              2
+              order.pricePerToken
             )}`;
           }
           planeEl.classList[!order ? 'add' : 'remove']('faded');
