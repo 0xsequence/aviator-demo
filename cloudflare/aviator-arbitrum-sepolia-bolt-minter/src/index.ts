@@ -9,9 +9,87 @@ export interface Env {
 	CHAIN_HANDLE: string; // Standardized chain name – See https://docs.sequence.xyz/multi-chain-support
 }
 
+async function handleRequest(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+	if (env.PKEY === undefined || env.PKEY === '') {
+		return new Response('Make sure PKEY is configured in your environment', { status: 400 });
+	}
+
+	if (env.CONTRACT_ADDRESS === undefined || env.CONTRACT_ADDRESS === '') {
+		return new Response('Make sure CONTRACT_ADDRESS is configured in your environment', { status: 400 });
+	}
+
+	if (env.PROJECT_ACCESS_KEY === undefined || env.PROJECT_ACCESS_KEY === '') {
+		return new Response('Make sure PROJECT_ACCESS_KEY is configured in your environment', { status: 400 });
+	}
+
+	if (env.CHAIN_HANDLE === undefined || env.CHAIN_HANDLE === '') {
+		return new Response('Make sure CHAIN_HANDLE is configured in your environment', { status: 400 });
+	}
+
+	const chainConfig = findSupportedNetwork(env.CHAIN_HANDLE);
+
+	if (chainConfig === undefined) {
+		return new Response('Unsupported network or unknown CHAIN_HANDLE', { status: 400 });
+	}
+
+	if (request.method === "POST") {
+		const body = await request.json();
+		const { address, amount } = body as any;
+		if (amount > 100) {
+		  return new Response(`Bad amount`, { status: 400 });
+		}
+		try {
+			const res = await callContract(env, address, Number(amount));
+			return new Response(`${res.hash}`, { status: 200 });
+		} catch (err: any) {
+			console.log(err);
+			return new Response(`Something went wrong: ${JSON.stringify(err)}`, { status: 400 });
+		}
+	} else {
+		try {
+			// mocked call
+			const res = await getBlockNumber(env.CHAIN_HANDLE, request);
+			const signer = await generateSigner(env);
+			return new Response(`Block Number: ${res} 🖱️ & Relayer: ${signer.account.address} 🔏`);
+		} catch (err: any) {
+			return new Response(`Something went wrong: ${JSON.stringify(err)}`, { status: 500 });
+		}
+	}
+}
+
+const getBlockNumber = async (chainId: string, request: Request): Promise<number> => {
+	const nodeUrl = `https://nodes.sequence.app/${chainId}`;
+	const provider = new ethers.providers.JsonRpcProvider({ url: nodeUrl, skipFetchSetup: true });
+	return await provider.getBlockNumber();
+};
+
+const callContract = async (
+	env: Env,
+	address: string,
+	amount: number,
+): Promise<ethers.providers.TransactionResponse> => {
+	const contractAddress = env.CONTRACT_ADDRESS;
+	const signer = await generateSigner(env);
+
+	// create interface from partial abi
+	const collectibleInterface = new ethers.utils.Interface(["function mint(address to, uint256 amount)"]);
+	
+	const amountBIG = ethers.utils.parseUnits(String(amount), 18);
+	// create calldata
+	const data = collectibleInterface.encodeFunctionData('mint', [address, amountBIG]);
+
+	// create transaction object
+	const txn = { to: contractAddress, data };
+	try {
+		return await signer.sendTransaction(txn);
+	} catch (err) {
+		throw err;
+	}
+};
+
 async function generateSigner(env: any): Promise<any> {
 	const nodeUrl = `https://nodes.sequence.app/${env.CHAIN_HANDLE}`;
-	const relayerUrl = `https://dev-${env.CHAIN_HANDLE}-relayer.sequence.app`;
+	const relayerUrl = `https://${env.CHAIN_HANDLE}-relayer.sequence.app`;
 	const provider = new ethers.providers.JsonRpcProvider({ url: nodeUrl, skipFetchSetup: true });
 
 	// create EOA from private key
@@ -44,90 +122,6 @@ async function generateSigner(env: any): Promise<any> {
 	// get signer
 	return session.account.getSigner(findSupportedNetwork(env.CHAIN_HANDLE)!.chainId);
 }
-
-async function handleRequest(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-	if (env.PKEY === undefined || env.PKEY === '') {
-		return new Response('Make sure PKEY is configured in your environment', { status: 400 });
-	}
-
-	if (env.CONTRACT_ADDRESS === undefined || env.CONTRACT_ADDRESS === '') {
-		return new Response('Make sure CONTRACT_ADDRESS is configured in your environment', { status: 400 });
-	}
-
-	if (env.PROJECT_ACCESS_KEY === undefined || env.PROJECT_ACCESS_KEY === '') {
-		return new Response('Make sure PROJECT_ACCESS_KEY is configured in your environment', { status: 400 });
-	}
-
-	if (env.CHAIN_HANDLE === undefined || env.CHAIN_HANDLE === '') {
-		return new Response('Make sure CHAIN_HANDLE is configured in your environment', { status: 400 });
-	}
-
-	const chainConfig = findSupportedNetwork(env.CHAIN_HANDLE);
-
-	if (chainConfig === undefined) {
-		return new Response('Unsupported network or unknown CHAIN_HANDLE', { status: 400 });
-	}
-
-	const url = new URL(request.url);
-
-	// Get the pathname and split it into segments
-	const pathSegments = url.pathname.split('/').filter((segment) => segment !== '');
-
-	// Assuming the slug is the last part of the pathname
-	const slug = pathSegments.length > 0 ? pathSegments[pathSegments.length - 1] : '';
-	const address = url.searchParams.get('address'); // Get the value of "query" parameter
-	const tokenId = url.searchParams.get('tokenId');
-
-	// POST request
-	if (address && tokenId) {
-		try {
-			const res = await callContract(request, env, address, Number(tokenId));
-			return new Response(`${res.hash}`, { status: 200 });
-		} catch (err: any) {
-			console.log(err);
-			return new Response(`Something went wrong: ${JSON.stringify(err)}`, { status: 400 });
-		}
-	} else {
-		try {
-			// mocked call
-			const res = await getBlockNumber(env.CHAIN_HANDLE, request);
-			const signer = await generateSigner(env);
-			return new Response(`Block Number: ${res} 🖱️ & Relayer: ${signer.account.address} 🔏`);
-		} catch (err: any) {
-			return new Response(`Something went wrong: ${JSON.stringify(err)}`, { status: 500 });
-		}
-	}
-}
-
-const getBlockNumber = async (chainId: string, request: Request): Promise<number> => {
-	const nodeUrl = `https://nodes.sequence.app/${chainId}`;
-	const provider = new ethers.providers.JsonRpcProvider({ url: nodeUrl, skipFetchSetup: true });
-	return await provider.getBlockNumber();
-};
-
-const callContract = async (
-	request: Request,
-	env: Env,
-	address: string,
-	tokenId: number,
-): Promise<ethers.providers.TransactionResponse> => {
-	const contractAddress = env.CONTRACT_ADDRESS;
-	const signer = await generateSigner(env);
-
-	// create interface from partial abi
-	const collectibleInterface = new ethers.utils.Interface(['function mint(address to, uint256 tokenId, uint256 amount, bytes data)']);
-
-	// create calldata
-	const data = collectibleInterface.encodeFunctionData('mint', [address, tokenId, 1, '0x00']);
-
-	// create transaction object
-	const txn = { to: contractAddress, data };
-	try {
-		return await signer.sendTransaction(txn);
-	} catch (err) {
-		throw err;
-	}
-};
 
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext) {

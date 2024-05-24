@@ -7,6 +7,8 @@ import {
   boltContractAddress,
   acheivementTokenIDs,
   airplaneTokenIDs,
+  boltsMintingWorkerAddress,
+  achievementCardsMintingWorkerAddress,
 } from '../../constants';
 import { MyTokenData } from './MyTokenData';
 import { AuthModes } from '../../gameConstants';
@@ -16,11 +18,11 @@ class SequenceController {
     this.onInitd = onInitd;
     this.metadata = new SequenceMetadata(
       'https://metadata.sequence.app',
-      process.env.PROJECT_ACCESS_KEY_PROD
+      process.env.PROJECT_ACCESS_KEY
     );
     this.indexer = new SequenceIndexer(
       'https://arbitrum-sepolia-indexer.sequence.app',
-      process.env.PROJECT_ACCESS_KEY_PROD
+      process.env.PROJECT_ACCESS_KEY
     );
 
     this.chainId = null;
@@ -86,7 +88,7 @@ class SequenceController {
     const amount = 100; // or whatever your amount is
     // Create the fetch request
 
-    const res = await fetch('https://tiny-rice-1049.tpin.workers.dev', {
+    const res = await fetch(boltsMintingWorkerAddress, {
       // const res = await fetch('http://localhost:8787', {
       method: 'POST', // Specify the method
       headers: {
@@ -155,7 +157,7 @@ class SequenceController {
 
   callAchievementMinterContract(tokenId, callback, waas = false) {
     console.log('Minting token:', tokenId);
-    const url = 'https://icy-pond-97da.tpin.workers.dev';
+    const url = achievementCardsMintingWorkerAddress;
     // const url = 'http://localhost:8787';
     const data = {
       address: this.walletAddress,

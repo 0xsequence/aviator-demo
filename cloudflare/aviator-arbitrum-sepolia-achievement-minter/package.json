@@ -1,0 +1,20 @@
+{
+	"name": "aviator-arbitrum-sepolia-achievement-minter",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"deploy": "wrangler deploy",
+		"dev": "wrangler dev",
+		"start": "wrangler dev"
+	},
+	"devDependencies": {
+		"@cloudflare/workers-types": "^4.20240222.0",
+		"typescript": "^5.0.4",
+		"wrangler": "^3.31.0"
+	},
+	"dependencies": {
+		"@0xsequence/auth": "^1.9.4",
+		"@0xsequence/network": "^1.9.4",
+		"ethers": "5.7.2"
+	}
+}
