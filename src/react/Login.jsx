@@ -4,8 +4,7 @@ import {
   useDisconnect,
   useAccount,
   useWalletClient,
-  useSendTransaction,
-  useSwitchChain
+  useSendTransaction
 } from 'wagmi';
 import './styles.css';
 import { arbitrumSepolia } from 'wagmi/chains';
@@ -29,7 +28,6 @@ function Login(props) {
     sendTransaction,
     isLoading: isSendTxnLoading,
   } = useSendTransaction();
-  const { chains, switchChain } = useSwitchChain()
   const onClick = () => {
     setOpenConnectModal(true);
     console.log(document.getElementById('container'));
@@ -113,12 +111,7 @@ function Login(props) {
 
     try {
       setFromMarketPlace = true;
-      const chainId = arbitrumSepolia.id.toString();
-      const r = switchChain({ chainId })
-      debugger
       await sendTransaction({
-        // chainId: chainID,
-        // chainID: chainID,
         to: boltContractAddress,
         data: dataApprove,
         value: '0',

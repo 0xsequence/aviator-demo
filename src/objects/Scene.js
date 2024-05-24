@@ -181,69 +181,8 @@ export default class MainScene extends Group {
         this.myAcheivementsChanged
       );
     });
-    const marketplaceSpinnerHolder = getElByIDChain(
-      'marketplace-modal',
-      'article',
-      'spinner-holder'
-    );
-    marketplaceSpinnerHolder.innerHTML = '<div class="spinner"></div>';
-    fetch(
-      'https://marketplace-api.sequence.app/arbitrum-sepolia/rpc/Marketplace/GetTopOrders',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          collectionAddress: airplanesContractAddress,
-          currencyAddresses: [boltContractAddress],
-          orderbookContractAddress,
-          tokenIDs: airplaneTokenIDs,
-          isListing: true,
-          priceSort: 'DESC',
-        }),
-      }
-    ).then(res => {
-      res.json().then(result => {
-        const gridEl = getElByIDChain(
-          'marketplace-modal',
-          'article',
-          'panel-container',
-          'grid-container'
-        );
-        for (const id of airplaneTokenIDs) {
-          const order = result.orders.find(o => o.tokenId === id);
-          const planeEl = getChildByIDChain(gridEl, `plane-${id}`);
-          const priceEl = getChildByIDChain(planeEl, 'price');
-          if (order) {
-            priceEl.textContent = `🔩${parseFriendlyTokenAmount(
-              order.pricePerToken
-            )}`;
-          }
-          planeEl.classList[!order ? 'add' : 'remove']('faded');
-          planeEl.onclick = order
-            ? () => {
-                marketplaceSpinnerHolder.innerHTML =
-                  '<div class="spinner"></div>';
-                this.sequenceController.sendTransactionRequest(
-                  order.orderId,
-                  this.sequenceController.email,
-                  id,
-                  order.pricePerToken,
-                  () => {
-                    marketplaceSpinnerHolder.innerHTML = ''; // Add your spinner HTML here
-                    this.closeMarketplace();
-                    this.openHangar(true, id);
-                    this.sequenceController.myPlanes.expectChanges();
-                  }
-                );
-              }
-            : null;
-        }
-        marketplaceSpinnerHolder.innerHTML = ''; // Add your spinner HTML here
-      });
-    });
 
+    this.updateMarketplaceData()
     this.sequenceController.authModeChangedCallback = this.authModeChanged;
     this.leaderboardManager = new LeaderboardManager();
 
@@ -351,6 +290,71 @@ export default class MainScene extends Group {
 
     this.add(this.sky, this.sea, this.airplane, this.lights);
     this.resetGame();
+  }
+
+  updateMarketplaceData() {
+    const marketplaceSpinnerHolder = getElByIDChain(
+      'marketplace-modal',
+      'article',
+      'spinner-holder'
+    );
+    marketplaceSpinnerHolder.innerHTML = '<div class="spinner"></div>';
+    fetch(
+      'https://marketplace-api.sequence.app/arbitrum-sepolia/rpc/Marketplace/GetTopOrders',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          collectionAddress: airplanesContractAddress,
+          currencyAddresses: [boltContractAddress],
+          orderbookContractAddress,
+          tokenIDs: airplaneTokenIDs,
+          isListing: true,
+          priceSort: 'DESC',
+        }),
+      }
+    ).then(res => {
+      res.json().then(result => {
+        const gridEl = getElByIDChain(
+          'marketplace-modal',
+          'article',
+          'panel-container',
+          'grid-container'
+        );
+        for (const id of airplaneTokenIDs) {
+          const order = result.orders.find(o => o.tokenId === id);
+          const planeEl = getChildByIDChain(gridEl, `plane-${id}`);
+          const priceEl = getChildByIDChain(planeEl, 'price');
+          if (order) {
+            priceEl.textContent = `🔩${parseFriendlyTokenAmount(
+              order.pricePerToken
+            )}`;
+          }
+          planeEl.classList[!order ? 'add' : 'remove']('faded');
+          planeEl.onclick = order
+            ? () => {
+                marketplaceSpinnerHolder.innerHTML =
+                  '<div class="spinner"></div>';
+                this.sequenceController.sendTransactionRequest(
+                  order.orderId,
+                  this.sequenceController.email,
+                  id,
+                  order.pricePerToken,
+                  () => {
+                    marketplaceSpinnerHolder.innerHTML = ''; // Add your spinner HTML here
+                    this.closeMarketplace();
+                    this.openHangar(true, id);
+                    this.sequenceController.myPlanes.expectChanges();
+                  }
+                );
+              }
+            : null;
+        }
+        marketplaceSpinnerHolder.innerHTML = ''; // Add your spinner HTML here
+      });
+    });
   }
 
   getPlane() {

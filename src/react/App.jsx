@@ -9,7 +9,7 @@ import { createConfig, http, WagmiProvider } from 'wagmi';
 import { mainnet, arbitrumSepolia } from 'wagmi/chains';
 
 const queryClient = new QueryClient();
-const chains = [mainnet, arbitrumSepolia];
+const chains = [arbitrumSepolia];
 const projectAccessKey = process.env.PROJECT_ACCESS_KEY;
 const waasConfigKey = process.env.WAAS_CONFIG_KEY;
 const googleClientId = process.env.GOOGLE_CLIENT_ID;
