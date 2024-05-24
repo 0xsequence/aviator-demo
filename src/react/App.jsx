@@ -10,7 +10,7 @@ import { mainnet, arbitrumSepolia } from 'wagmi/chains';
 
 const queryClient = new QueryClient();
 const chains = [mainnet, arbitrumSepolia];
-const projectAccessKey = process.env.PROJECT_ACCESS_KEY_PROD;
+const projectAccessKey = process.env.PROJECT_ACCESS_KEY;
 const waasConfigKey = process.env.WAAS_CONFIG_KEY;
 const googleClientId = process.env.GOOGLE_CLIENT_ID;
 const appleClientId = process.env.APPLE_CLIENT_ID;

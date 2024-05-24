@@ -5,8 +5,10 @@ import {
   useAccount,
   useWalletClient,
   useSendTransaction,
+  useSwitchChain
 } from 'wagmi';
 import './styles.css';
+import { arbitrumSepolia } from 'wagmi/chains';
 
 import SequenceMarketABI from '../abi/ISequenceMarket.json';
 
@@ -27,6 +29,7 @@ function Login(props) {
     sendTransaction,
     isLoading: isSendTxnLoading,
   } = useSendTransaction();
+  const { chains, switchChain } = useSwitchChain()
   const onClick = () => {
     setOpenConnectModal(true);
     console.log(document.getElementById('container'));
@@ -61,9 +64,11 @@ function Login(props) {
       tokenID,
       amount,
     ]);
-
+    const chainID = arbitrumSepolia.id.toString();
     try {
       await sendTransaction({
+        chainId: chainID,
+        chainID: chainID,
         to: acheivementsContractAddress,
         data: data,
         value: '0',
@@ -108,7 +113,12 @@ function Login(props) {
 
     try {
       setFromMarketPlace = true;
+      const chainId = arbitrumSepolia.id.toString();
+      const r = switchChain({ chainId })
+      debugger
       await sendTransaction({
+        // chainId: chainID,
+        // chainID: chainID,
         to: boltContractAddress,
         data: dataApprove,
         value: '0',

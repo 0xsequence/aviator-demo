@@ -31,6 +31,7 @@ import {
   AchievementVerbageTitle,
   GameModes,
 } from '../gameConstants.js';
+import { freePlaneGiftMintingWorkerAddress } from '../constants.js';
 
 const LocalStorageKeys = {
   LastRunID: 'last_run_id',
@@ -90,7 +91,7 @@ export default class MainScene extends Group {
             cancelButton.innerHTML = '<div class="spinner"></div>'; // Add your spinner HTML here
             cancelButton.removeAttribute('onClick'); // Remove the initial click handler to prevent closing the modal prematurel
 
-            const url = 'https://sparkling-lake-c48f.tpin.workers.dev';
+            const url = freePlaneGiftMintingWorkerAddress;
             // const url = 'http://localhost:8787';
             const data = {
               address: this.sequenceController.email,
