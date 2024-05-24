@@ -35,6 +35,9 @@ importers:
       ethers:
         specifier: ^5.7.2
         version: 5.7.2(bufferutil@4.0.8)
+      gsap:
+        specifier: ^3.12.2
+        version: 3.12.2
       process:
         specifier: ^0.11.10
         version: 0.11.10
@@ -78,9 +81,6 @@ importers:
       gh-pages:
         specifier: ^6.1.1
         version: 6.1.1
-      gsap:
-        specifier: ^3.12.2
-        version: 3.12.2
       html-webpack-plugin:
         specifier: ^5.5.0
         version: 5.5.3(webpack@5.89.0(esbuild@0.17.19)(webpack-cli@5.1.4))
