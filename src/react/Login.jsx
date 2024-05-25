@@ -38,10 +38,10 @@ function Login(props) {
   };
 
   useEffect(() => {
-    setInterval(() => {
-      if (document.getElementById('webpack-dev-server-client-overlay'))
-        document.getElementById('webpack-dev-server-client-overlay').remove();
-    }, 10);
+    // setInterval(() => {
+    //   if (document.getElementById('webpack-dev-server-client-overlay'))
+    //     document.getElementById('webpack-dev-server-client-overlay').remove();
+    // }, 10);
 
     if (isConnected && walletClient) {
       console.log(walletClient);
@@ -82,26 +82,14 @@ function Login(props) {
   const sendTransactionRequest = async (
     requestId,
     address,
-    tokenID,
     amount,
-    callback
   ) => {
-    const sequenceMarketInterface = new ethers.utils.Interface(
-      SequenceMarketABI.abi
-    );
-
-    const data = sequenceMarketInterface.encodeFunctionData('acceptRequest', [
-      requestId,
-      1,
-      address,
-      [],
-      [],
-    ]);
-
-    setFulfillOrderData(data)
-
     const erc20Interface = new ethers.utils.Interface([
       'function approve(address spender, uint256 amount) public returns (bool)',
+    ]);
+
+    const sequenceMarketInterface = new ethers.utils.Interface([
+      "function acceptRequest(uint256 requestId, uint256 quantity, address recipient, uint256[] calldata additionalFees, address[] calldata additionalFeeRecipients)"
     ]);
 
     const dataApprove = erc20Interface.encodeFunctionData('approve', [
@@ -109,41 +97,39 @@ function Login(props) {
       String(amount),
     ]);
 
-    try {
-      setFromMarketPlace = true;
-      await sendTransaction({
-        to: boltContractAddress,
-        data: dataApprove,
-        value: '0',
-        gas: null,
-      });
-    } catch (error) {
-      alert('there was an error in approving tokens, refresh the page')
-      console.log(error)
-    }
-    callback(null)
-  };
+    const dataAcceptRequest = sequenceMarketInterface.encodeFunctionData('acceptRequest', [
+      requestId,
+      1,
+      address,
+      [],
+      [],
+    ]);
 
-  useEffect(() => {
-    if (txnData && setFromMarketPlace) {
-      setTimeout(async () => {
-        try{
-          setFromMarketPlace = false;
-          await sendTransaction({
-            to: orderbookContractAddress,
-            data: fullfillOrderData,
-            value: '0',
-            gas: null,
-          });
-        }catch(err){
-          console.log(err)
-          alert('there was an error in fulfilling the order, refresh the page')
-        }
-      }, 1000) 
-    } else {
-      console.log(txnData)
-    }
-  }, [txnData, fullfillOrderData]);
+    const txApprove = {
+      to: boltContractAddress, // an ERC20 token contract
+      data: dataApprove,
+      onError(error) {
+        console.log('Errorz', error)
+      },
+      onSettled(data, error) {
+        console.log('Settled', { data, error })
+      },
+    };
+
+    const tx = {
+      to: orderbookContractAddress, // sequence market contract (same address on all offered networks)
+      data: dataAcceptRequest,
+      onError(error) {
+        console.log('Errorz', error)
+      },
+    };
+
+    console.log('test 1')
+    await sendTransaction(txApprove);
+    console.log('test 2')
+    await sendTransaction(tx);
+    console.log('test 3')
+  };
 
   return (
     <>

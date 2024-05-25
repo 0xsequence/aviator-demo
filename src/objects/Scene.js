@@ -182,7 +182,7 @@ export default class MainScene extends Group {
       );
     });
 
-    this.updateMarketplaceData()
+    this.updateMarketplaceData();
     this.sequenceController.authModeChangedCallback = this.authModeChanged;
     this.leaderboardManager = new LeaderboardManager();
 
@@ -337,18 +337,18 @@ export default class MainScene extends Group {
             ? () => {
                 marketplaceSpinnerHolder.innerHTML =
                   '<div class="spinner"></div>';
-                this.sequenceController.sendTransactionRequest(
-                  order.orderId,
-                  this.sequenceController.email,
-                  id,
-                  order.pricePerToken,
-                  () => {
+                this.sequenceController
+                  .sendTransactionRequest(
+                    order.orderId,
+                    this.sequenceController.email,
+                    order.pricePerToken
+                  )
+                  .then(() => {
                     marketplaceSpinnerHolder.innerHTML = ''; // Add your spinner HTML here
                     this.closeMarketplace();
                     this.openHangar(true, id);
                     this.sequenceController.myPlanes.expectChanges();
-                  }
-                );
+                  });
               }
             : null;
         }
