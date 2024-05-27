@@ -9,14 +9,14 @@
       rel="stylesheet"
       type="text/css"
     />
-    <!--[if IE]>
+      <!--[if IE]>
       <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
   </head>
   <body>
     <div id="glass"></div>
     <div id="root"></div>
-    <div class="game-holder" id="gameHolder" style="display: none">
+    <div class="game-holder" id="gameHolder" style="display: none;">
       <div class="header">
         <div class="logo"></div>
         <div class="score" id="score">
@@ -55,15 +55,20 @@
         <div class="card-tooltip" id="cardTooltip"></div>
       </div>
       <div class="buttons" id="buttons">
-        <button id="hangar-button">Your Hangar</button>
+        <button id="hangar-button">
+          Your Hangar
+        </button>
         <button id="marketplace-button">Marketplace</button>
       </div>
       <dialog id="achievement-card-modal">
         <article id="article">
           <div id="spinner-holder"></div>
-          <a href="#" role="button" class="secondary close-button" id="close"
-            >✕</a
-          >
+          <a
+          href="#"
+          role="button"
+          class="secondary close-button"
+          id="close"
+          >✕</a>
           <p class="modal-title" id="title">Achievement</p>
           <div id="modal-content">
             <div class="modal-card" id="card"></div>
@@ -76,9 +81,12 @@
       <dialog id="hangar-modal">
         <article id="article">
           <div id="spinner-holder"></div>
-          <a href="#" role="button" class="secondary close-button" id="close"
-            >✕</a
-          >
+          <a
+          href="#"
+          role="button"
+          class="secondary close-button"
+          id="close"
+          >✕</a>
           <p class="modal-title">Your Hangar</p>
           <div class="grid-container" id="grid-container">
             <div class="color-panel selected" id="plane-0"></div>
@@ -88,100 +96,61 @@
             <div class="color-panel" id="plane-4"></div>
             <div class="color-panel" id="plane-5"></div>
           </div>
-          <footer id="footer"></footer>
+          <footer id="footer">
+          </footer>
         </article>
       </dialog>
       <dialog id="marketplace-modal">
         <article id="article">
           <div id="spinner-holder"></div>
-          <a href="#" role="button" class="secondary close-button" id="close"
-            >✕</a
-          >
+          <a
+          href="#"
+          role="button"
+          class="secondary close-button"
+          id="close"
+          >✕</a>
           <p class="modal-title">Marketplace</p>
+          <div id="modal-content"></div>
           <div class="panel-container" id="panel-container">
             <br />
             <div class="grid-container purchase-grid" id="grid-container">
-              <div class="color-panel" id="plane-0">
-                <div id="title" class="plane-info"></div>
-                <div id="price" class="plane-info-price">-</div>
-              </div>
-              <div class="color-panel" id="plane-1">
-                <div id="title" class="plane-info"></div>
-                <div id="price" class="plane-info-price">-</div>
-              </div>
-              <div class="color-panel" id="plane-2">
-                <div id="title" class="plane-info"></div>
-                <div id="price" class="plane-info-price">-</div>
-              </div>
-              <div class="color-panel" id="plane-3">
-                <div id="title" class="plane-info"></div>
-                <div id="price" class="plane-info-price">-</div>
-              </div>
-              <div class="color-panel" id="plane-4">
-                <div id="title" class="plane-info"></div>
-                <div id="price" class="plane-info-price">-</div>
-              </div>
-              <div class="color-panel" id="plane-5">
-                <div id="title" class="plane-info"></div>
-                <div id="price" class="plane-info-price">-</div>
-              </div>
+              <div class="color-panel" id="plane-0"><div id='title' class='plane-info'></div><div id='price' class='plane-info-price'>-</div></div>
+              <div class="color-panel" id="plane-1"><div id='title' class='plane-info'></div><div id='price' class='plane-info-price'>-</div></div>
+              <div class="color-panel" id="plane-2"><div id='title' class='plane-info'></div><div id='price' class='plane-info-price'>-</div></div>
+              <div class="color-panel" id="plane-3"><div id='title' class='plane-info'></div><div id='price' class='plane-info-price'>-</div></div>
+              <div class="color-panel" id="plane-4"><div id='title' class='plane-info'></div><div id='price' class='plane-info-price'>-</div></div>
+              <div class="color-panel" id="plane-5"><div id='title' class='plane-info'></div><div id='price' class='plane-info-price'>-</div></div>
             </div>
           </div>
-          <div id="modal-content"></div>
-          <footer id="footer">
-            <p id="bolt-balance">🔩 0</p>
-            <button
-              href="#"
-              role="button"
-              class="secondary"
-              id="use-faucet-button"
-            >
-              Mint 🔩 100
-            </button>
+          <footer id="footer"><p id="bolt-balance">🔩 0</p>
+            <button 
+            href="#"
+            role="button"
+            class="secondary"
+            id="use-faucet-button"
+            >Mint 🔩 100</button>
           </footer>
         </article>
       </dialog>
-      <dialog id="gift-modal" class="single-plane-modal">
+      <dialog id="gift-modal">
         <article id="article">
-          <a href="#" role="button" class="secondary close-button" id="close"
-            >✕</a
-          >
+          <a
+          href="#"
+          role="button"
+          class="secondary close-button"
+          id="close"
+          >✕</a>
           <p class="modal-title">A Gift</p>
-          <div class="color-panel" id="plane-0">
-            <div id="title" class="plane-info">Falcon Mark IV Redtail</div>
+          <div class="color-panel" id="plane-0"><div id='title' class='plane-info'>Falcon Mark IV Redtail</div></div>
+          <div id="modal-content">
+            Minting your first airplane...
           </div>
-          <div id="modal-content">Minting your first airplane...</div>
-          <footer id="footer">
-            <button
-              href="#"
-              role="button"
-              class="secondary"
-              id="first-plane-button"
-            >
-              Continue
-            </button>
-          </footer>
-        </article>
-      </dialog>
-      <dialog id="purchase-modal" class="single-plane-modal">
-        <article id="article">
-          <a href="#" role="button" class="secondary close-button" id="close"
-            >✕</a
-          >
-          <p class="modal-title">Purchase</p>
-          <div class="color-panel" id="plane-0">
-            <div id="title" class="plane-info">Falcon Mark IV Redtail</div>
-            <div id="price" class="plane-info-price">100.0</div>
-          </div>
-          <footer id="footer">
-            <button
-              href="#"
-              role="button"
-              class="secondary"
-              id="purchase-button"
-            >
-              Purchase
-            </button>
+          <footer id="footer"><button 
+            href="#"
+            role="button"
+            class="secondary"
+            id="first-plane-button"
+            >Continue</button>
           </footer>
         </article>
       </dialog>
@@ -220,5 +189,5 @@
       </symbol>
     </svg>
   </body>
-  <script src="./entry.js" />
+  <script src="./entry.js"/>
 </html>

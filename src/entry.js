@@ -129,16 +129,10 @@ document.addEventListener('DOMContentLoaded', () => {
   );
 
   makeElementsClickable(
-    [getElByIDChain('purchase-modal', 'article', 'close'), getElByID('purchase-modal')],
-    mainScene.closePurchaseConfirmation
-  );
-
-  makeElementsClickable(
     [
       getElByIDChain('hangar-modal', 'article'),
       getElByIDChain('marketplace-modal', 'article'),
       getElByIDChain('gift-modal', 'article'),
-      getElByIDChain('purchase-modal', 'article'),
     ],
     blockClick
   );
