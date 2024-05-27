@@ -220,6 +220,30 @@ div.logo {
   background-position: center;
 }
 
+.single-plane-modal article .color-panel {
+  position: relative;
+}
+
+.single-plane-modal article .color-panel #price {
+  position: absolute;
+  font-size: 24px;
+  padding: 4px 12px;
+  border-color: black;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 10px;
+  right: 10px;
+  bottom: 10px;
+}
+
+.pulseTextRed {
+  animation: pulseTextRed 1s;
+}
+
+.pulseButtonBackgroundGreen {
+  animation: pulseButtonBackgroundGreen 1s;
+}
+
 .card-1 {
   background-image: url('../images/card1-firstcrash.png');
 }
@@ -511,20 +535,20 @@ Leaderboard
   font-size: 50px;
 }
 
-#gift-modal article {
+.single-plane-modal article {
   text-align: center;
 }
 
-#gift-modal article .color-panel {
+.single-plane-modal article .color-panel {
   display: inline-block;
   box-sizing: unset;
   margin: 20px;
   padding: 60px;
 }
-#gift-modal article .color-panel #title{
+.single-plane-modal article .color-panel #title{
   font-size: 16px;
 }
-#gift-modal article footer {
+.single-plane-modal article footer {
   margin-top: 0px;
   margin-bottom: 0px;
 }
@@ -709,6 +733,15 @@ article footer{
   height: 65px;
 }
 
+#marketplace-modal article footer {
+  margin-top: 0px;
+}
+
+#marketplace-modal article #modal-content {
+  text-align: center;
+  margin-top: 10px;
+}
+
 article footer p#bolt-balance{
   position: absolute;
   left: 16px;
@@ -755,4 +788,31 @@ dialog article {
 
 #achievement-card-modal article footer {
   margin: 0px;
+}
+
+@keyframes pulseTextRed {
+	0% {
+		color: #bbc6ce;
+	}
+
+	10% {
+		color: red;
+	}
+
+	100% {
+		color: #bbc6ce;
+	}
+}
+@keyframes pulseButtonBackgroundGreen {
+	0% {
+		background-color: hsl(205, 15%, 41%);
+	}
+
+	10% {
+		background-color: hsl(124, 91%, 48%);
+	}
+
+	100% {
+		background-color: hsl(205, 15%, 41%);
+	}
 }
