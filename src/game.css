@@ -495,19 +495,6 @@ Leaderboard
   margin-top: 14px;
 }
 
-#gridContainerGift {
-  display: grid;
-  grid-template-columns: repeat(1, 120px); /* 3-column grid */
-  grid-template-rows: repeat(1, 120px); /* 2-row grid */
-  gap: 10px;
-  justify-items: center;
-}
-
-#gridContainer {
-  justify-content: center; /* Center horizontally */
-  align-items: center;
-}
-
 .color-panel {
   width: 120px;
   height: 120px;
@@ -522,6 +509,24 @@ Leaderboard
   text-align: center;
   color: white;
   font-size: 50px;
+}
+
+#gift-modal article {
+  text-align: center;
+}
+
+#gift-modal article .color-panel {
+  display: inline-block;
+  box-sizing: unset;
+  margin: 20px;
+  padding: 60px;
+}
+#gift-modal article .color-panel #title{
+  font-size: 16px;
+}
+#gift-modal article footer {
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 
 #plane-0 {
@@ -624,10 +629,6 @@ p.modal-title {
   outline-color: blue;
 }
 
-#firstPlaneButton {
-  border: 1px solid red;
-}
-
 .plane-info {
   font-size: 10px;
 }
@@ -669,11 +670,6 @@ p.modal-title {
   z-index: 2;
 }
 
-#modal-footer-faucet{
-  display: flex;
-  justify-content: space-between;
-}
-
 #hangar-button {
   margin: 0 5px;
   width: 200px;
@@ -692,19 +688,6 @@ p.modal-title {
   bottom: 0px;
   z-index: 2;
   right: 20px
-}
-
-.faucet {
-  position: fixed;
-  top: 30px !important;
-  right: 30px !important;
-  font-size: 1.25vw;
-  bottom: 50vh;
-  text-indent: 0.5em;
-  letter-spacing: 0.5em;
-  color: #d1b790;
-  font-weight: bold;
-  text-transform: uppercase;
 }
 
 .achievement-prompt {
@@ -768,10 +751,6 @@ dialog article {
   top: 50%;
   left: 50%;
   margin: -18px;
-}
-
-.faucet-info {
-  text-align:  center;
 }
 
 #achievement-card-modal article footer {
