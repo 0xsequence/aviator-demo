@@ -108,13 +108,13 @@ function Login(props) {
     const txApprove = {
       to: boltContractAddress, // an ERC20 token contract
       data: dataApprove,
-      value: BigInt(0)
+      gas: null
     };
 
     const tx = {
       to: orderbookContractAddress, // sequence market contract (same address on all offered networks)
       data: dataAcceptRequest,
-      value: BigInt(0)
+      gas: null
     };
 
     console.log('test 1')
