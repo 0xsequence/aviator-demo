@@ -25,7 +25,7 @@ function Login(props) {
   const [fullfillOrderData, setFulfillOrderData] = useState(null)
   const {
     data: txnData,
-    sendTransaction,
+    sendTransactionAsync,
     isLoading: isSendTxnLoading,
   } = useSendTransaction();
   const onClick = () => {
@@ -108,26 +108,19 @@ function Login(props) {
     const txApprove = {
       to: boltContractAddress, // an ERC20 token contract
       data: dataApprove,
-      onError(error) {
-        console.log('Errorz', error)
-      },
-      onSettled(data, error) {
-        console.log('Settled', { data, error })
-      },
+      value: BigInt(0)
     };
 
     const tx = {
       to: orderbookContractAddress, // sequence market contract (same address on all offered networks)
       data: dataAcceptRequest,
-      onError(error) {
-        console.log('Errorz', error)
-      },
+      value: BigInt(0)
     };
 
     console.log('test 1')
-    await sendTransaction(txApprove);
+    const r1 = await sendTransactionAsync(txApprove);
     console.log('test 2')
-    await sendTransaction(tx);
+    const r2 = await sendTransactionAsync(tx);
     console.log('test 3')
   };
 
