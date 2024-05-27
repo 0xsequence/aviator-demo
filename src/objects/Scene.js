@@ -32,6 +32,7 @@ import {
   GameModes,
 } from '../gameConstants.js';
 import { freePlaneGiftMintingWorkerAddress } from '../constants.js';
+import { getChildByClassChain } from '../utils/getChildByClassChain.js';
 
 const LocalStorageKeys = {
   LastRunID: 'last_run_id',
@@ -271,69 +272,142 @@ export default class MainScene extends Group {
     this.resetGame();
   }
 
-  updateMarketplaceData() {
+  cachedOrders = 'unknown';
+
+  async updateMarketplaceData() {
     const marketplaceSpinnerHolder = getElByIDChain(
       'marketplace-modal',
       'article',
       'spinner-holder'
     );
     marketplaceSpinnerHolder.innerHTML = '<div class="spinner"></div>';
-    fetch(
-      'https://marketplace-api.sequence.app/arbitrum-sepolia/rpc/Marketplace/GetTopOrders',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          collectionAddress: airplanesContractAddress,
-          currencyAddresses: [boltContractAddress],
-          orderbookContractAddress,
-          tokenIDs: airplaneTokenIDs,
-          isListing: true,
-          priceSort: 'DESC',
-        }),
-      }
-    ).then(res => {
-      res.json().then(result => {
-        const gridEl = getElByIDChain(
-          'marketplace-modal',
-          'article',
-          'panel-container',
-          'grid-container'
-        );
-        for (const id of airplaneTokenIDs) {
-          const order = result.orders.find(o => o.tokenId === id);
-          const planeEl = getChildByIDChain(gridEl, `plane-${id}`);
-          const priceEl = getChildByIDChain(planeEl, 'price');
-          if (order) {
-            priceEl.textContent = `🔩${parseFriendlyTokenAmount(
-              order.pricePerToken
-            )}`;
-          }
-          planeEl.classList[!order ? 'add' : 'remove']('faded');
-          planeEl.onclick = order
-            ? () => {
-                marketplaceSpinnerHolder.innerHTML =
-                  '<div class="spinner"></div>';
-                this.sequenceController
-                  .sendTransactionRequest(
-                    order.orderId,
-                    this.sequenceController.email,
-                    order.pricePerToken
-                  )
-                  .then(() => {
-                    marketplaceSpinnerHolder.innerHTML = ''; // Add your spinner HTML here
-                    this.closeMarketplace();
-                    this.openHangar(true, id);
-                    this.sequenceController.myPlanes.expectChanges();
-                  });
-              }
-            : null;
+    let newResultsDetected = false;
+    while (!newResultsDetected) {
+      const res = await fetch(
+        'https://marketplace-api.sequence.app/arbitrum-sepolia/rpc/Marketplace/GetTopOrders',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            collectionAddress: airplanesContractAddress,
+            currencyAddresses: [boltContractAddress],
+            orderbookContractAddress,
+            tokenIDs: airplaneTokenIDs,
+            isListing: true,
+            priceSort: 'DESC',
+          }),
         }
-        marketplaceSpinnerHolder.innerHTML = ''; // Add your spinner HTML here
-      });
-    });
+      );
+      const result = await res.json();
+      const newHashedOrders = result.orders
+        .map(order => order.orderId)
+        .join(' ');
+      if (newHashedOrders === this.cachedOrders) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        continue;
+      }
+      newResultsDetected = true;
+      this.cachedOrders = newHashedOrders;
+      const gridEl = getElByIDChain(
+        'marketplace-modal',
+        'article',
+        'panel-container',
+        'grid-container'
+      );
+      for (const id of airplaneTokenIDs) {
+        const order = result.orders.find(o => o.tokenId === id);
+        const planeEl = getChildByIDChain(gridEl, `plane-${id}`);
+        const priceEl = getChildByIDChain(planeEl, 'price');
+        if (order) {
+          priceEl.textContent = `🔩${parseFriendlyTokenAmount(
+            order.pricePerToken
+          )}`;
+        } else {
+          priceEl.textContent = '-';
+        }
+        planeEl.classList[!order ? 'add' : 'remove']('faded');
+        planeEl.onclick = order
+          ? () => {
+              const boltBank = this.sequenceController.myBolts.tokenBalances;
+              if (
+                !boltBank.has('0') ||
+                boltBank.get('0') < Number(order.pricePerToken)
+              ) {
+                getElByIDChain(
+                  'marketplace-modal',
+                  'article',
+                  'modal-content'
+                ).textContent = 'Not enough 🔩 Mint more!';
+                const balanceEl = getElByIDChain(
+                  'marketplace-modal',
+                  'article',
+                  'footer',
+                  'bolt-balance'
+                );
+                balanceEl.classList.add('pulseTextRed');
+                const mintButtonEl = getElByIDChain(
+                  'marketplace-modal',
+                  'article',
+                  'footer',
+                  'use-faucet-button'
+                );
+                mintButtonEl.classList.add('pulseButtonBackgroundGreen');
+                setTimeout(() => {
+                  balanceEl.classList.remove('pulseTextRed');
+                  mintButtonEl.classList.remove('pulseButtonBackgroundGreen');
+                }, 500);
+              } else {
+                getElByIDChain(
+                  'marketplace-modal',
+                  'article',
+                  'modal-content'
+                ).textContent = ' ';
+                this.openPurchaseConfirmation();
+                const el = getElByIDChain('purchase-modal', 'article');
+                const panelEl = getChildByClassChain(el, 'color-panel');
+                getChildByIDChain(
+                  panelEl,
+                  'price'
+                ).textContent = `🔩${parseFriendlyTokenAmount(
+                  order.pricePerToken
+                )}`;
+                const planeMetadata =
+                  this.sequenceController.myPlanes.tokenMetadatas.get(
+                    order.tokenId
+                  );
+                getChildByIDChain(panelEl, 'title').textContent =
+                  planeMetadata.name;
+                panelEl.id = `plane-${order.tokenId}`;
+                const purchaseButton = getChildByIDChain(
+                  el,
+                  'footer',
+                  'purchase-button'
+                );
+                purchaseButton.onclick = () => {
+                  purchaseButton.innerHTML = '<div class="spinner"></div>';
+                  this.sequenceController
+                    .sendTransactionRequest(
+                      order.orderId,
+                      this.sequenceController.email,
+                      order.pricePerToken
+                    )
+                    .then(() => {
+                      purchaseButton.innerHTML = 'Purchase'; // Add your spinner HTML here
+                      this.closePurchaseConfirmation();
+                      this.closeMarketplace();
+                      this.openHangar(true, id);
+                      this.sequenceController.myPlanes.expectChanges();
+                    });
+                  this.updateMarketplaceData();
+                };
+              }
+            }
+          : null;
+      }
+      marketplaceSpinnerHolder.innerHTML = ''; // Add your spinner HTML here
+    }
   }
 
   getPlane() {
@@ -342,6 +416,11 @@ export default class MainScene extends Group {
 
   openMarketplace = () => {
     var modal = getElByID('marketplace-modal');
+    modal.setAttribute('open', true);
+  };
+
+  openPurchaseConfirmation = () => {
+    var modal = getElByID('purchase-modal');
     modal.setAttribute('open', true);
   };
 
@@ -360,6 +439,11 @@ export default class MainScene extends Group {
     mintButton.innerHTML = '<div class="spinner"></div>'; // Add your spinner HTML here
 
     this.sequenceController.mintERC20().then(() => {
+      getElByIDChain(
+        'marketplace-modal',
+        'article',
+        'modal-content'
+      ).textContent = ' ';
       mintButton.innerHTML = 'Mint 🔩 100';
       this.minting = false;
       this.sequenceController.myBolts.expectChanges();
@@ -377,7 +461,11 @@ export default class MainScene extends Group {
   closeGiftModal = () => {
     var modal = getElByID('gift-modal');
     modal.setAttribute('open', false);
-    console.log('closing');
+  };
+
+  closePurchaseConfirmation = () => {
+    var modal = getElByID('purchase-modal');
+    modal.setAttribute('open', false);
   };
 
   closeHangar = () => {

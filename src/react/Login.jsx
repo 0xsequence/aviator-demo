@@ -117,11 +117,8 @@ function Login(props) {
       gas: null
     };
 
-    console.log('test 1')
-    const r1 = await sendTransactionAsync(txApprove);
-    console.log('test 2')
-    const r2 = await sendTransactionAsync(tx);
-    console.log('test 3')
+    await sendTransactionAsync(txApprove);
+    await sendTransactionAsync(tx);
   };
 
   return (
