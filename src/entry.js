@@ -11,10 +11,13 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { WebGLRenderer, PerspectiveCamera, Scene, Fog } from 'three';
 import MainScene from './objects/Scene.js';
+import './game.css';
 
 import App from './react/App.jsx';
-import ColorPanels from './react/ColorPanels.jsx';
-import './game.css';
+import { getElByID } from './utils/getElByID.js';
+import { getElByIDChain } from './utils/getElByIDChain.js';
+import { acheivementTokenIDs } from './constants.js';
+import { getChildByIDChain } from './utils/getChildByIDChain.js';
 
 const { innerHeight, innerWidth } = window;
 var aspectRatio = innerHeight / innerWidth;
@@ -91,84 +94,99 @@ document
   .getElementById('glass')
   .addEventListener('mouseup', handleMouseUp, false);
 
-const closeFaucetCardModal = event => {
-  event.preventDefault();
-  mainScene.closeFaucetModal();
-};
-
-const closeGiftModal = event => {
-  event.preventDefault();
-  mainScene.closeGiftModal();
-};
-
-const openFaucet = event => {
-  mainScene.openFaucet();
-};
-
-const openHangar = event => {
-  event.preventDefault();
-  mainScene.openHangar();
-};
-
-const closeCardModal = event => {
-  event.preventDefault();
-  mainScene.closeCardModal();
-};
-
-const burnCard = event => {
-  event.preventDefault();
-  mainScene.burnActiveCard();
-};
-
 const openWallet = event => {
   window.open(
     `https://sepolia.arbiscan.io/address/${mainScene.sequenceController.email}`
   );
 };
 
+const blockClick = event => {
+  event.stopPropagation();
+};
+
+function makeElementsClickable(els, onClick) {
+  if (!onClick) {
+    throw new Error('onClick method might not exist');
+  }
+  for (const el of els) {
+    el.addEventListener('click', event => {
+      event.preventDefault();
+      onClick(event);
+    });
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-  // open faucet
-  const faucetBtn = document.getElementById('faucetBtn');
-  if (faucetBtn) {
-      faucetBtn.addEventListener('click', openFaucet);
-  }
+  makeElementsClickable([getElByID('hangar-button')], mainScene.openHangar);
+  makeElementsClickable(
+    [getElByID('marketplace-button')],
+    mainScene.openMarketplace
+  );
 
-  // open hangar
-  const hangarBtn = document.getElementById('airplaneHangarBtn');
-  if (hangarBtn) {
-    hangarBtn.addEventListener('click', openHangar);
-  }
+  makeElementsClickable(
+    [getElByIDChain('gift-modal', 'article', 'close'), getElByID('gift-modal')],
+    mainScene.closeGiftModal
+  );
 
-  //firstPlaneButton
-  const firstPlaneButton = document.getElementById('firstPlaneButton');
-  if (firstPlaneButton) {
-    firstPlaneButton.addEventListener('click', closeGiftModal);
-  }
+  makeElementsClickable(
+    [
+      getElByIDChain('hangar-modal', 'article'),
+      getElByIDChain('marketplace-modal', 'article'),
+      getElByIDChain('gift-modal', 'article'),
+    ],
+    blockClick
+  );
 
-  // closeFaucetCardModal
-  const closeFaucetCardModalEl = document.getElementById('closeFaucetCardModal')
-  if(closeFaucetCardModalEl){
-    closeFaucetCardModalEl.addEventListener('click', closeFaucetCardModal)
-  }
+  makeElementsClickable(
+    [
+      getElByIDChain('hangar-modal', 'article', 'close'),
+      getElByID('hangar-modal'),
+    ],
+    mainScene.closeHangar
+  );
 
-  // closeCardModal
-  const closeCardModalEl = document.getElementById('closeCardModal-1')
-  if(closeCardModalEl){
-    closeCardModalEl.addEventListener('click', closeCardModal)
-  }
+  makeElementsClickable(
+    [
+      getElByIDChain('marketplace-modal', 'article', 'close'),
+      getElByID('marketplace-modal'),
+    ],
+    mainScene.closeMarketplace
+  );
 
-  const closeCardModalEl2 = document.getElementById('closeCardModal-2')
-  if(closeCardModalEl2){
-    closeCardModalEl2.addEventListener('click', closeCardModal)
-  }
+  makeElementsClickable(
+    [
+      getElByIDChain('achievement-card-modal', 'article', 'close'),
+      getElByID('achievement-card-modal'),
+    ],
+    mainScene.closeAchievementCard
+  );
+  makeElementsClickable([getElByID('burn-button')], mainScene.burnActiveCard);
 
-  const burnButton = document.getElementById('burnButton')
-  if(burnButton){
-    burnButton.addEventListener('click', burnCard)
-  }
-  const walletButton = document.getElementById('walletButton')
-  if(walletButton){
-    walletButton.addEventListener('click', openWallet)
+  makeElementsClickable(
+    [getElByIDChain('gift-modal', 'article', 'close'), getElByID('gift-modal')],
+    mainScene.closeGiftModal
+  );
+
+  makeElementsClickable([getElByID('use-faucet-button')], mainScene.useFaucet);
+
+  const cardSlotsEl = getElByID('card-slots');
+  for (const id of acheivementTokenIDs) {
+    const cardContainer = getChildByIDChain(cardSlotsEl, id);
+    cardContainer.addEventListener(
+      'mouseover',
+      mainScene.handleCardSlotHover,
+      false
+    );
+    cardContainer.addEventListener(
+      'mouseout',
+      mainScene.handleCardSlotHoverOut,
+      false
+    );
+    cardContainer.addEventListener(
+      'mouseup',
+      mainScene.handleCardSlotClick,
+      false
+    );
   }
 });
 
@@ -185,3 +203,7 @@ root.render(
     <App scene={mainScene} />
   </div>
 );
+
+window.debug = {
+  mainScene
+}

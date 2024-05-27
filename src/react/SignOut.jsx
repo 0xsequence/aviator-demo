@@ -1,23 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDisconnect, useAccount } from 'wagmi';
-
-const GameModes = {
-  Intro: 'intro',
-  Playing: 'playing',
-  Paused: 'paused',
-  GameEnding: 'gameending',
-  GameOver: 'gameover',
-  CardWon: 'cardwon',
-  CardReady: 'cardready',
-  SigningOut: 'signingout',
-  CardDetails: 'carddetails',
-};
-
-const AuthModes = {
-  Email: 'email',
-  Code: 'code',
-  Completed: 'completed',
-};
+import { AuthModes, GameModes } from '../gameConstants';
 
 function SignOut(props) {
   const { isConnected } = useAccount();
@@ -43,7 +26,7 @@ function SignOut(props) {
         <br />
         {isConnected && (
           <div
-            id="signOutContainer"
+            id="sign-out-container"
             style={{
               display: 'flex',
               justifyContent: 'center',
@@ -51,7 +34,7 @@ function SignOut(props) {
             }}
           >
             <button
-              id="signOutBtn"
+              id="sign-out-button"
               onClick={() => {
                 disconnect();
                 // localStorage.clear();
@@ -59,7 +42,7 @@ function SignOut(props) {
                 // props.scene.airplane.addPlane(0);
               }}
             >
-              Sign Out
+              ⏻ Sign Out
             </button>
           </div>
         )}

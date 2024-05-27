@@ -4,36 +4,18 @@ import {
   useDisconnect,
   useAccount,
   useWalletClient,
-  useSendTransaction,
+  useSendTransaction
 } from 'wagmi';
 import './styles.css';
+import { arbitrumSepolia } from 'wagmi/chains';
 
 import SequenceMarketABI from '../abi/ISequenceMarket.json';
 
 import { ethers } from 'ethers';
-import { config } from './App.jsx';
+import { acheivementsContractAddress, boltContractAddress, orderbookContractAddress } from '../constants.js';
+import { AuthModes, GameModes } from '../gameConstants.js';
 
-const AuthModes = {
-  Email: 'email',
-  Code: 'code',
-  Completed: 'completed',
-};
-
-const GameModes = {
-  Intro: 'intro',
-  Playing: 'playing',
-  Paused: 'paused',
-  GameEnding: 'gameending',
-  GameOver: 'gameover',
-  CardWon: 'cardwon',
-  CardReady: 'cardready',
-  SigningOut: 'signingout',
-  CardDetails: 'carddetails',
-};
-
-const ContractAddress = '0xbb35dcf99a74b4a6c38d69789232fa63e1e69e31';
 let setFromMarketPlace = false;
-let approveCallback = null;
 
 function Login(props) {
   const { setOpenConnectModal } = useOpenConnectModal();
@@ -43,7 +25,7 @@ function Login(props) {
   const [fullfillOrderData, setFulfillOrderData] = useState(null)
   const {
     data: txnData,
-    sendTransaction,
+    sendTransactionAsync,
     isLoading: isSendTxnLoading,
   } = useSendTransaction();
   const onClick = () => {
@@ -56,17 +38,17 @@ function Login(props) {
   };
 
   useEffect(() => {
-    setInterval(() => {
-      if (document.getElementById('webpack-dev-server-client-overlay'))
-        document.getElementById('webpack-dev-server-client-overlay').remove();
-    }, 10);
+    // setInterval(() => {
+    //   if (document.getElementById('webpack-dev-server-client-overlay'))
+    //     document.getElementById('webpack-dev-server-client-overlay').remove();
+    // }, 10);
 
     if (isConnected && walletClient) {
       console.log(walletClient);
       props.scene.sequenceController.init(
         walletClient,
         sendBurnToken,
-        sendAcceptRequest
+        sendTransactionRequest
       );
       props.scene.switchGameMode(GameModes.Intro);
       props.scene.sequenceController.switchAuthMode(AuthModes.Completed);
@@ -75,15 +57,17 @@ function Login(props) {
 
   const sendBurnToken = async (tokenID, amount, callback) => {
     const contractABI = ['function burn(uint256 tokenId, uint256 amount)']; // Replace with your contract's ABI
-    const contract = new ethers.Contract(ContractAddress, contractABI);
+    const contract = new ethers.Contract(acheivementsContractAddress, contractABI);
     const data = contract.interface.encodeFunctionData('burn', [
       tokenID,
       amount,
     ]);
-
+    const chainID = arbitrumSepolia.id.toString();
     try {
       await sendTransaction({
-        to: ContractAddress,
+        chainId: chainID,
+        chainID: chainID,
+        to: acheivementsContractAddress,
         data: data,
         value: '0',
         gas: null,
@@ -95,18 +79,25 @@ function Login(props) {
     }
   };
 
-  const sendAcceptRequest = async (
+  const sendTransactionRequest = async (
     requestId,
     address,
-    tokenID,
     amount,
-    callback
   ) => {
-    const sequenceMarketInterface = new ethers.utils.Interface(
-      SequenceMarketABI.abi
-    );
+    const erc20Interface = new ethers.utils.Interface([
+      'function approve(address spender, uint256 amount) public returns (bool)',
+    ]);
 
-    const data = sequenceMarketInterface.encodeFunctionData('acceptRequest', [
+    const sequenceMarketInterface = new ethers.utils.Interface([
+      "function acceptRequest(uint256 requestId, uint256 quantity, address recipient, uint256[] calldata additionalFees, address[] calldata additionalFeeRecipients)"
+    ]);
+
+    const dataApprove = erc20Interface.encodeFunctionData('approve', [
+      orderbookContractAddress,
+      String(amount),
+    ]);
+
+    const dataAcceptRequest = sequenceMarketInterface.encodeFunctionData('acceptRequest', [
       requestId,
       1,
       address,
@@ -114,52 +105,24 @@ function Login(props) {
       [],
     ]);
 
-    setFulfillOrderData(data)
+    const txApprove = {
+      to: boltContractAddress, // an ERC20 token contract
+      data: dataApprove,
+      gas: null
+    };
 
-    const erc20Interface = new ethers.utils.Interface([
-      'function approve(address spender, uint256 amount) public returns (bool)',
-    ]);
+    const tx = {
+      to: orderbookContractAddress, // sequence market contract (same address on all offered networks)
+      data: dataAcceptRequest,
+      gas: null
+    };
 
-    const dataApprove = erc20Interface.encodeFunctionData('approve', [
-      '0xB537a160472183f2150d42EB1c3DD6684A55f74c',
-      String(amount),
-    ]);
-
-    try {
-      setFromMarketPlace = true;
-      callback(null)
-      await sendTransaction({
-        to: '0xb484c76a59074efc3da2fcfab57b03d3cdd96b80',
-        data: dataApprove,
-        value: '0',
-        gas: null,
-      });
-    } catch (error) {
-      alert('there was an error in approving tokens, refresh the page')
-      console.log(error)
-    }
+    console.log('test 1')
+    const r1 = await sendTransactionAsync(txApprove);
+    console.log('test 2')
+    const r2 = await sendTransactionAsync(tx);
+    console.log('test 3')
   };
-
-  useEffect(() => {
-    if (txnData && setFromMarketPlace) {
-      setTimeout(async () => {
-        try{
-          setFromMarketPlace = false;
-          await sendTransaction({
-            to: '0xB537a160472183f2150d42EB1c3DD6684A55f74c',
-            data: fullfillOrderData,
-            value: '0',
-            gas: null,
-          });
-        }catch(err){
-          console.log(err)
-          alert('there was an error in fulfilling the order, refresh the page')
-        }
-      }, 1000) 
-    } else {
-      console.log(txnData)
-    }
-  }, [txnData, fullfillOrderData]);
 
   return (
     <>

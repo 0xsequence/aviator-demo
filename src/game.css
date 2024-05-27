@@ -197,7 +197,7 @@ div.logo {
   transform: translateX(-50%) translateY(-50%);
   transform-style: preserve-3d;
   z-index: 2;
-  pointer-events: none;
+  /* pointer-events: none; */
 }
 
 .card {
@@ -210,31 +210,34 @@ div.logo {
   backface-visibility: hidden;
   background-size: cover;
   background-position: center;
+  z-index: 6;
+}
+
+.modal-card {
+  width: 300px;
+  height: 400px;
+  background-size: cover;
+  background-position: center;
 }
 
 .card-1 {
   background-image: url('../images/card1-firstcrash.png');
-  z-index: 6;
 }
 
 .card-2 {
   background-image: url('../images/card2-1000m.png');
-  z-index: 6;
 }
 
 .card-3 {
   background-image: url('../images/card3-3runs.png');
-  z-index: 6;
 }
 
 .card-4 {
   background-image: url('../images/card4-2500m.png');
-  z-index: 6;
 }
 
 .card-5 {
   background-image: url('../images/card5-firstpylon.png');
-  z-index: 6;
 }
 
 .card-backface {
@@ -252,9 +255,15 @@ div.logo {
 
 .card-slots {
   position: absolute;
-  top: 0px;
+  top: 80px;
   left: 18px;
   display: none;
+  z-index: 5;
+}
+
+#marketplace-title {
+  position: relative;
+  text-align: center;
 }
 
 .card-slot {
@@ -265,6 +274,7 @@ div.logo {
   background: rgba(0, 0, 0, 0.8);
   z-index: 1;
   margin-bottom: 10px;
+  cursor: pointer;
 }
 
 .card-slot .card {
@@ -276,6 +286,7 @@ div.logo {
   transition: none;
   z-index: 6;
   pointer-events: none;
+  margin: 2px;
 }
 
 .card-tooltip {
@@ -475,39 +486,13 @@ Leaderboard
   transition: all 0.35s ease-in-out;
 }
 
-#cardSlot1 {
-  margin-top: 80px;
-}
-
-#marketPlaceButton {
-  background-color: green;
-  border: 1px solid green;
-}
-
-#marketPlaceButton {
-  background-color: green;
-  border: 1px solid green;
-}
-
 .grid-container {
   display: grid;
   grid-template-columns: repeat(3, 120px); /* 3-column grid */
   grid-template-rows: repeat(2, 120px); /* 2-row grid */
   gap: 10px;
   justify-items: center;
-}
-
-#gridContainerGift {
-  display: grid;
-  grid-template-columns: repeat(1, 120px); /* 3-column grid */
-  grid-template-rows: repeat(1, 120px); /* 2-row grid */
-  gap: 10px;
-  justify-items: center;
-}
-
-#gridContainer {
-  justify-content: center; /* Center horizontally */
-  align-items: center;
+  margin-top: 14px;
 }
 
 .color-panel {
@@ -517,7 +502,7 @@ Leaderboard
   border-radius: 5px;
   cursor: pointer;
   transition: box-shadow 0.3s ease;
-  padding: 30px;
+  padding: 20px;
   background-size: contain;
   align-items: center;
   justify-content: center;
@@ -526,27 +511,49 @@ Leaderboard
   font-size: 50px;
 }
 
-.plane-0 {
+#gift-modal article {
+  text-align: center;
+}
+
+#gift-modal article .color-panel {
+  display: inline-block;
+  box-sizing: unset;
+  margin: 20px;
+  padding: 60px;
+}
+#gift-modal article .color-panel #title{
+  font-size: 16px;
+}
+#gift-modal article footer {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+#plane-0 {
   background-image: url('../images/planes/Falcon_Mark_IV_Redtail.png');
 }
-.plane-1 {
+#plane-1 {
   background-image: url('../images/planes/Hawkwind_P-22_Emerald.png');
 }
-.plane-2 {
+#plane-2 {
   background-image: url('../images/planes/Lightning_Spectre_G6.png');
 }
-.plane-3 {
+#plane-3 {
   background-image: url('../images/planes/Raptor_Fury_X2.png');
 }
-.plane-4 {
+#plane-4 {
   background-image: url('../images/planes/Skyraider_Z-11_Onyx.png');
 }
-.plane-5 {
+#plane-5 {
   background-image: url('../images/planes/Thunderbolt_XR-5_Cobalt.png');
 }
 
 .selected {
   box-shadow: 0 0 0 3px white;
+}
+
+.selected:hover {
+  box-shadow: 0 0 0 9px white;
 }
 
 .greyed-out {
@@ -565,53 +572,61 @@ Leaderboard
   padding: 0px !important;
 }
 
-.marketplace-title {
+p.modal-title {
+  position: relative; 
+  text-align: center;
 }
 
-#inventoryButton {
-  background-color: hsl(225 83% 25% / 1);
-  border: 1px solid hsl(225 83% 25% / 1);
+.grid-container .color-panel {
+  position: relative;
+  transition: 0.1s;
+  transition-timing-function: ease-out;
+  border: 1px solid;
+  outline: 0px solid;
+}
+.grid-container .color-panel:hover {
+  /* border: 0px solid; */
+  outline: 6px solid;
 }
 
-#purchaseButton-0 {
-  background-color: red;
-  border: 1px solid red;
-  color: white;
+.purchase-grid .color-panel #price {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  padding: 0px 4px;
+  border-color: black;
+  border-width: 1px;
+  border-style: solid;
 }
 
-#purchaseButton-1 {
-  background-color: green;
-  border: 1px solid green;
-  color: white;
+.grid-container #plane-0 {
+  border-color: red;
+  outline-color: red;
 }
 
-#purchaseButton-2 {
-  background-color: white;
-  border: 1px solid white;
-  color: black;
+.grid-container #plane-1 {
+  border-color: green;
+  outline-color: green;
 }
 
-#purchaseButton-3 {
-  background-color: orange;
-  border: 1px solid orange;
-  color: white;
+.grid-container #plane-2 {
+  border-color: white;
+  outline-color: white;
 }
 
-#purchaseButton-4 {
-  background-color: black;
-  border: 1px solid black;
-  color: white;
+.grid-container #plane-3 {
+  border-color: orange;
+  outline-color: orange;
 }
 
-#purchaseButton-5 {
-  background-color: blue;
-  border: 1px solid blue;
+.grid-container #plane-4 {
+  border-color: black;
+  outline-color: black;
 }
 
-#firstPlaneButton {
-  background-color: red;
-  border: 1px solid red;
-  color: white;
+.grid-container #plane-5 {
+  border-color: blue;
+  outline-color: blue;
 }
 
 .plane-info {
@@ -621,7 +636,9 @@ Leaderboard
 .plane-info-price {
   font-size: 20px;
   display: block;
-  margin-top: 5px; /* Adjust as needed */
+  margin-top: 36px; /* Adjust as needed */
+  border-radius: 8px;
+  background-color: #00000080;
 }
 
 .spinner {
@@ -653,57 +670,24 @@ Leaderboard
   z-index: 2;
 }
 
-#modal-footer-faucet{
-  display: flex;
-  justify-content: space-between;
-}
-
-#airplaneHangarBtn {
+#hangar-button {
   margin: 0 5px;
   width: 200px;
   display: none;
 }
 
-#faucetBtn {
+#marketplace-button {
   margin: 0 5px;
   width: 200px;
   display: none;
 }
 
-#faucetButton{
-  margin: 0 5px;
-}
-
-#walletButton {
+#sign-out-button {
   width: 200px;
   position: fixed;
-  bottom: 50px;
+  bottom: 0px;
   z-index: 2;
-  left: 50%;
-  transform: translateX(-50%) translateX(-105px);
-  display: none;
-}
-
-#signOutBtn {
-  width: 200px;
-  position: fixed;
-  bottom: 50px;
-  z-index: 2;
-  left: 50%;
-  transform: translateX(-50%) translateX(105px);
-}
-
-.faucet {
-  position: fixed;
-  top: 30px !important;
-  right: 30px !important;
-  font-size: 1.25vw;
-  bottom: 50vh;
-  text-indent: 0.5em;
-  letter-spacing: 0.5em;
-  color: #d1b790;
-  font-weight: bold;
-  text-transform: uppercase;
+  right: 20px
 }
 
 .achievement-prompt {
@@ -713,4 +697,62 @@ Leaderboard
 
 #achievement-cards {
   display: none;
+}
+
+article {
+  position: relative;
+  padding-top: 14px;
+}
+
+article footer{
+  position: relative;
+  height: 65px;
+}
+
+article footer p#bolt-balance{
+  position: absolute;
+  left: 16px;
+  top: 14px;
+}
+
+article footer button#use-faucet-button{
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  padding: 4px 12px;
+  width: 140px;
+  height: 50px;
+}
+
+.faded {
+  opacity: 30%;
+}
+
+.close-button {
+  position: absolute;
+    top: 6px !important;
+    right: 6px !important;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    padding: 4px;
+}
+
+dialog {
+  cursor:alias;
+}
+
+dialog article {
+  cursor: default;
+}
+
+#spinner-holder {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -18px;
+}
+
+#achievement-card-modal article footer {
+  margin: 0px;
 }
