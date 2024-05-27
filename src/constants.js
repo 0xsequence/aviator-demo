@@ -1,6 +1,6 @@
 export const boltContractAddress = '0xc45e015251812bb59c0b1b248bbd6d38414cdfb5';
 export const airplanesContractAddress =
-  '0xdbac91902dce61d231154bbcbb16227dca31141c';
+  '0x9358b8b397c93337d41b933d52f7f607cb95bcf7';
 export const acheivementsContractAddress =
   '0xdb05100116fc703620307f17f922728f4c17fa1d';
 
