@@ -117,11 +117,10 @@ class SequenceController {
   switchAuthMode(mode) {
     if (this.mode === mode) return;
     this.mode = mode;
-    self = this;
     let interval = setInterval(() => {
       console.log('switching auth mode');
       this.authModeChangedCallback();
-      if (self.email || this.mode == AuthModes.Email) {
+      if (this.email || this.mode == AuthModes.Email) {
         clearInterval(interval);
       }
     }, 500);

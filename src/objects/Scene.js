@@ -54,42 +54,19 @@ export default class MainScene extends Group {
     this.sequenceController = new SequenceController(() => {
       const myPlanes = this.sequenceController.myPlanes;
 
+      const urlParams = new URLSearchParams(window.location.search);
+      const forceFreePlane = urlParams.get('gift') === 'true';
+
       myPlanes.balanceSignal.listenOnce(planes => {
-        if (!planes.ownsAny('0')) {
+        if (!planes.ownsAny('0') || forceFreePlane) {
           var modal = getElByID('gift-modal');
           modal.setAttribute('open', true);
 
-          var modalContent = getChildByIDChain(
-            modal,
-            'article',
-            'modal-content'
-          );
-
-          const titleGift = document.createElement('p');
-          titleGift.id = 'first-mint-msg';
-          titleGift.innerHTML = 'Minting your first airplane...';
-          titleGift.style = 'position: relative; text-align: center;';
-
-          modalContent.appendChild(titleGift);
-
-          const gridContainer = getChildByIDChain(
-            modal,
-            'article',
-            'grid-container'
-          );
-
-          const panel = document.createElement('div');
-          panel.className = 'color-panel plane-0';
-          // Assuming there is a defined function handlePanelClick
-          // panel.onclick = () => handlePanelClick(index + 1, true);
-
-          gridContainer.appendChild(panel);
-
           // Adding spinner and updating button text after 2 seconds
-          var cancelButton = document.getElementById('firstPlaneButton');
+          var footerButton = document.getElementById('first-plane-button');
           const updateMintingButton = async () => {
-            cancelButton.innerHTML = '<div class="spinner"></div>'; // Add your spinner HTML here
-            cancelButton.removeAttribute('onClick'); // Remove the initial click handler to prevent closing the modal prematurel
+            footerButton.innerHTML = '<div class="spinner"></div>'; // Add your spinner HTML here
+            footerButton.removeAttribute('onClick'); // Remove the initial click handler to prevent closing the modal prematurel
 
             const url = freePlaneGiftMintingWorkerAddress;
             // const url = 'http://localhost:8787';
@@ -114,9 +91,11 @@ export default class MainScene extends Group {
               myPlanes.expectChanges();
 
               console.log(response);
-              document.getElementById('first-mint-msg').innerHTML = '';
-              cancelButton.innerHTML = 'Continue';
-              cancelButton.onclick = event => {
+              footerButton.innerHTML = 'Continue';
+              getChildByIDChain(modal, 'article', 'modal-content').textContent =
+                'Enjoy your new airplane!';
+
+              footerButton.onclick = event => {
                 this.closeGiftModal(event); // Assuming this function is defined elsewhere to handle the modal closing
               };
               localStorage.setItem('plane_color', 0);

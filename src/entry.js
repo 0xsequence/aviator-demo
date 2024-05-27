@@ -203,3 +203,7 @@ root.render(
     <App scene={mainScene} />
   </div>
 );
+
+window.debug = {
+  mainScene
+}
