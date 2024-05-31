@@ -10,11 +10,11 @@ You can [play a demo of the game here](https://0xsequence.github.io/aviator-demo
 To play the game locally, clone the repo and run:
 
 ```
-npm install
-npm start
+pnpm install
+pnpm start
 ```
 
-You can also use `npm run build` to generate a static, deployable version.
+You can also use `pnpm run build` to generate a static, deployable version.
 
 ## CREDITS
 
