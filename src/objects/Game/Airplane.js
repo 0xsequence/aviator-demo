@@ -232,8 +232,7 @@ export default class Airplane extends Group {
   }
 
   addPlane(id) {
-    console.log(id);
-    console.log('adding a plane');
+    console.log('adding a plane', id);
     this.remove(this.getObjectByName('cabin'));
     this.remove(this.getObjectByName('tailPlane'));
     this.remove(this.getObjectByName('suspension'));
