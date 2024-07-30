@@ -12,10 +12,10 @@ export const airplaneTokenIDs = ['0', '1', '2', '3', '4', '5'];
 export const acheivementTokenIDs = ['1', '2', '3', '4', '5'];
 
 export const freePlaneGiftMintingWorkerAddress =
-  'https://aviator-arbitrum-sepolia-airplane-minter.tpin.workers.dev';
+  'https://aviator-arbitrum-sepolia-airplane-minter.0xhorizon.workers.dev';
 
 export const boltsMintingWorkerAddress =
-  'https://aviator-arbitrum-sepolia-bolt-minter.tpin.workers.dev';
+  'https://aviator-arbitrum-sepolia-bolt-minter.0xhorizon.workers.dev';
 
 export const achievementCardsMintingWorkerAddress =
-  'https://aviator-arbitrum-sepolia-achievement-minter.tpin.workers.dev';
+  'https://aviator-arbitrum-sepolia-achievement-minter.0xhorizon.workers.dev';
