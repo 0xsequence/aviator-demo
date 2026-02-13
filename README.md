@@ -24,4 +24,4 @@ Game is ported from the [WebGL tutorial by Karim Maaloul](https://tympanus.net/c
 
 MIT
 
-Copyright (c) 2023-present Sequence Platforms ULC Inc. / https://horizon.io
+Copyright (c) 2023-present Sequence Platforms ULC Inc. / https://sequence.xyz
